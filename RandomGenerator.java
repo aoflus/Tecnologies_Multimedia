@@ -6,8 +6,6 @@
 package huffman_parser.Tecnologies_Multimedia;
 
 import java.io.File;
-import java.util.Enumeration;
-import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
@@ -24,16 +22,15 @@ public class RandomGenerator {
     private final HuffmanParser hfp;
     private final TreeMap<Float, String> intervals;
     
-    public RandomGenerator(int length, File file){
+    public RandomGenerator(int length, File file, HuffmanParser hfp){
         sequence = new String[length];
-        hfp = new HuffmanParser();
-        hfp.createList(file);
+        this.hfp = hfp;
         intervals = new TreeMap();
         this.randomCriteria();
         this.generateRandomList();
     }
     
-    public void randomCriteria(){
+    private void randomCriteria(){
         float acum = 0.0f;
         for(Node node : hfp.getList()){
             acum = acum + node.getValue();
@@ -41,9 +38,9 @@ public class RandomGenerator {
         }
     }
     
-    public void generateRandomList(){
-        float value = 0.0f;
-        float key = 0.0f;
+    private void generateRandomList(){
+        float value;
+        float key;
         boolean out;
         for(int i = 0; i < sequence.length; i++){
             out = false;
@@ -67,4 +64,6 @@ public class RandomGenerator {
         }
         System.out.println();
     }
+    
+    public String[] getSequence(){ return this.sequence;}
 }

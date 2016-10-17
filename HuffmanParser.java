@@ -11,6 +11,8 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.TreeMap;
 
 /**
  *
@@ -18,13 +20,26 @@ import java.util.ArrayList;
  */
 public class HuffmanParser {
 
-    private final ArrayList<Node> nodeList = new ArrayList<>();
-    private final ArrayList<String> alphabet = new ArrayList<>();
-    private final ValueComparator vc = new ValueComparator();
-    private final ArrayList<String> solutionList = new ArrayList<>();
-    private final SolutionComparator sc = new SolutionComparator();
+    private final ArrayList<Node> nodeList;
+    private ArrayList<Node> listNode;
+    private final ArrayList<String> alphabet;
+    private final ValueComparator vc;
+    private final TreeMap<String, String> solutionList;
+    private final SolutionComparator sc;
 
-    public void createList(File file) {
+    public HuffmanParser(File file){
+        nodeList = new ArrayList<>();
+        alphabet = new ArrayList<>();
+        vc = new ValueComparator();
+        sc = new SolutionComparator();
+        solutionList = new TreeMap();
+        listNode = new ArrayList<>();
+        this.createList(file);
+        this.createTree();
+        this.createSolution();
+    }
+    
+    private void createList(File file) {
         try {
             BufferedReader br = new BufferedReader(new FileReader(file));
             String line;
@@ -37,6 +52,7 @@ public class HuffmanParser {
                 nodeList.add(node);
             }
             nodeList.sort(vc);
+            listNode = (ArrayList<Node>) nodeList.clone();
         } catch (FileNotFoundException ex) {
             System.err.println("The specified file does not exist. Please check the given path.");
         } catch (IOException ex) {
@@ -45,18 +61,8 @@ public class HuffmanParser {
             System.err.println("There was an error reading a value.");
         }
     }
-    
-    public ArrayList<Node> getList(){
-        return this.nodeList;
-    }
 
-    public void printList() {
-        nodeList.stream().forEach((n) -> {
-            System.out.println(n.getSymbol() + "||" + n.getValue());
-        });
-    }
-
-    public void createTree() {
+    private void createTree() {
         while (nodeList.size() > 2) {
             Node n1 = nodeList.remove(nodeList.size() - 1);
             Node n2 = nodeList.remove(nodeList.size() - 1);
@@ -70,7 +76,7 @@ public class HuffmanParser {
         }
     }
 
-    public void createSolution() {
+    private void createSolution() {
         String result = "";
         Node node;
         for (String letter : alphabet) {
@@ -96,18 +102,33 @@ public class HuffmanParser {
                     }
                 }
             }
-            solutionList.add(letter + " " + result);
+            solutionList.put(letter, result);
+           // solutionList.add(letter + " " + result);
             result = "";
         }
+        //solutionList.sort(sc);
     }
 
     public void printSolution() {
-        solutionList.sort(sc);
-        solutionList.stream().forEach((s) -> {
-            System.out.println(s);
+        //   solutionList.stream().forEach((s) -> {
+        //       System.out.println(s);
+        //    });
+        solutionList.keySet().stream().forEach((s) -> {
+            System.out.println(s + " " + solutionList.get(s));
         });
     }
     
-    public ArrayList<String> getSolutionList(){ return this.solutionList;}
+    //public ArrayList<String> getSolutionList(){ return this.solutionList;}
     
+    public TreeMap<String, String> getSolutionList(){return this.solutionList;}
+        
+    public ArrayList<Node> getList(){
+        return this.listNode;
+    }
+
+    public void printList() {
+        nodeList.stream().forEach((n) -> {
+            System.out.println(n.getSymbol() + "||" + n.getValue());
+        });
+    }
 }

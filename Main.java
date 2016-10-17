@@ -25,18 +25,25 @@ public class Main {
         File text = new File("text.txt");
         
         /* Test apartado A*/
-        HuffmanParser hp = new HuffmanParser();
-        hp.createList(file);
-        hp.createTree();
-        hp.createSolution();
+        HuffmanParser hp = new HuffmanParser(file);
+        System.out.println("This is the table of equivalences");
+        hp.printSolution();
+        System.out.println();
          
         /* Test apartado B*/
-        HuffmanTranslator hft = new HuffmanTranslator(file, "save.txt");
-        hft.createTables();
+        HuffmanTranslator hft = new HuffmanTranslator(file, "save.txt", hp);
         hft.parseFile(text);
-  
+
         /* Test apartado C */
-        RandomGenerator rdg = new RandomGenerator(100, file);
+        int length = 100;
+        RandomGenerator rdg = new RandomGenerator(length, file, hp);
+        System.out.println("This is the random sequence of length [" + length +"] generated:");
         rdg.printSequence();
+        System.out.println();
+        
+        /* Test apartado D*/
+        System.out.println("Here are the performance results:");
+        PerformanceCalc perf = new PerformanceCalc(rdg.getSequence(), hp);
+        perf.getPerformanceRatio();
     }
 }
