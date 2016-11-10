@@ -6,6 +6,9 @@
 
 package compressio_lz.pkg77;
 import java.lang.Math;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 /**
  *
  * @author vikos
@@ -22,7 +25,18 @@ public class Compressio_LZ77 {
     public static void main(String[] args) {
         // TODO code application logic here
         gestionParametros(args);
-        Compress.compress(ventanaEntrada, ventanaDeslizante);
+        //Compress.compress(ventanaEntrada, ventanaDeslizante);
+        //Al comprimir se le pasa un valor de bits igual al tamaño de la ventana deslizante.
+        Compress comprime = new Compress();
+        HashMap<Integer, String> resultados = comprime.comprimir("01010110","0101",ventanaEntrada, ventanaDeslizante);
+        System.out.println("Imprimimos los resultados");
+        
+        Iterator it = resultados.entrySet().iterator();
+        while (it.hasNext()) {
+        Map.Entry pair = (Map.Entry)it.next();
+        System.out.println(pair.getKey() + " = " + pair.getValue());
+        it.remove(); // avoids a ConcurrentModificationException
+    }
     }
     
     /**
