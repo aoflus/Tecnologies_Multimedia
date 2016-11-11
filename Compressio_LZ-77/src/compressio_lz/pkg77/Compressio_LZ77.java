@@ -20,23 +20,18 @@ public class Compressio_LZ77 {
      */
     public static int ventanaEntrada;
     public static int ventanaDeslizante;
+    public static int numBitsRandomGenerados;
     public static boolean error=true;
     
     public static void main(String[] args) {
         // TODO code application logic here
+        //Gestionamos los params
         gestionParametros(args);
-        //Compress.compress(ventanaEntrada, ventanaDeslizante);
-        //Al comprimir se le pasa un valor de bits igual al tamaño de la ventana deslizante.
-        Compress comprime = new Compress();
-        HashMap<Integer, String> resultados = comprime.comprimir("01010110","0101",ventanaEntrada, ventanaDeslizante);
-        System.out.println("Imprimimos los resultados");
         
-        Iterator it = resultados.entrySet().iterator();
-        while (it.hasNext()) {
-        Map.Entry pair = (Map.Entry)it.next();
-        System.out.println(pair.getKey() + " = " + pair.getValue());
-        it.remove(); // avoids a ConcurrentModificationException
-    }
+        Interfaz interfaz = new Interfaz();
+        
+
+
     }
     
     /**
@@ -53,7 +48,7 @@ public class Compressio_LZ77 {
                         System.out.println(args[i]+" "+ventanaEntrada);
                         i++;
                     }catch(java.lang.NumberFormatException exc){
-                        System.out.println("No puedes parsear un string a un integer");
+                        System.out.println("No puedes parsear un string a un integer1");
                         error=true;
                     }
                     break;
@@ -64,7 +59,17 @@ public class Compressio_LZ77 {
                         System.out.println(args[i]+" "+ventanaDeslizante);
                         i++;
                     }catch(java.lang.NumberFormatException exc){
-                        System.out.println("No puedes parsear un string a un integer");
+                        System.out.println("No puedes parsear un string a un integer2");
+                        error = true;
+                    }
+                    
+                case "-Rndmval":
+                    try{
+                        numBitsRandomGenerados = Integer.valueOf(args[i+1]);
+                        System.out.println(args[i]+" "+numBitsRandomGenerados);
+                        i++;
+                    }catch(java.lang.NumberFormatException exc){
+                        System.out.println("No puedes parsear un string a un integer3");
                         error = true;
                     }
                 break;
@@ -85,6 +90,7 @@ public class Compressio_LZ77 {
                 error = false;
             }
         }
+        
         if(error){
             int defaultEntrada = 4;
             int defaultDeslizante = 8;
@@ -92,4 +98,5 @@ public class Compressio_LZ77 {
             ventanaDeslizante = defaultDeslizante;
         }
     }
+    
 }
