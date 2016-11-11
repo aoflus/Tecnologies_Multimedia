@@ -16,8 +16,8 @@ import java.util.Scanner;
  * @author vikos
  */
 public class Interfaz {
-    
-    
+    public String comprimido;
+    Compress comprime = new Compress();
     public Interfaz(){
         this.run();
     }
@@ -29,6 +29,7 @@ public class Interfaz {
     public void run(){
         //Al comprimir se le pasa un valor de bits igual al tamaño de la ventana deslizante.
         this.recorreComprime();
+        comprime.descomprimir(comprimido);
     }
     
     /**
@@ -36,8 +37,8 @@ public class Interfaz {
      * @return 
      */
     public void recorreComprime(){
-        Compress comprime = new Compress();
         
+        int acum = 0;
         String cadenaBits = Utils.generaRandoms(numBitsRandomGenerados);
         String inicioCadenaComprimida = cadenaBits.substring(0,ventanaDeslizante); //El inicio de la cadena van a ser los primeros ventanaDeslizante bits
         System.out.println("Tamaño cadena: " + cadenaBits);
@@ -68,9 +69,11 @@ public class Interfaz {
             //    fin = true;
             //}
             System.out.println(inicio);
+            acum = acum + Integer.parseInt(coinc);
         }
 
-        inicioCadenaComprimida = inicioCadenaComprimida + " " + cadenaBits.substring(inicio, cadenaBits.length() - 1 );
+        inicioCadenaComprimida = inicioCadenaComprimida + " " + cadenaBits.substring(acum + ventanaDeslizante);
+        comprimido = inicioCadenaComprimida;
         System.out.println("Cadena comprimida: " + inicioCadenaComprimida );
         
     }

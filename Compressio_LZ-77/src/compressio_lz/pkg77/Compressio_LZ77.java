@@ -31,7 +31,6 @@ public class Compressio_LZ77 {
         gestionParametros(args);
         Interfaz interfaz = new Interfaz();
     }
-    
     /**
      * Metodo para gestión de parametros, aceptamos "Ment" y "Mdes"
      * @param args 
@@ -82,6 +81,18 @@ public class Compressio_LZ77 {
                         error = true;
                     }
                 break;
+                    case "-Dcmp":
+                    try{
+                        bitsString = args[i+1];
+                        String descompres = Compress.descomprimir(bitsString);
+                        System.out.println(args[i]+" "+ bitsString);
+                        System.out.println("Cadena descompresa:" + descompres);
+                        i++;
+                    }catch(java.lang.NumberFormatException exc){
+                        System.out.println("No puedes parsear un string a un integer3");
+                        error = true;
+                    }
+                break;
                 default:
                     System.out.println("No se conoce ese parametro");
                 break;
@@ -96,7 +107,7 @@ public class Compressio_LZ77 {
         //Comprobamos si son potencias de dos
         if(Math.log(ventanaEntrada) / Math.log(2) == (int)Math.log(ventanaEntrada) / Math.log(2) && Math.log(ventanaDeslizante) / Math.log(2) == (int)Math.log(ventanaDeslizante) / Math.log(2)) {
             if(ventanaEntrada <= ventanaDeslizante){
-                error = false;
+                error = true;
             }
         }
         if(numBitsRandomGenerados<ventanaEntrada+ventanaDeslizante){

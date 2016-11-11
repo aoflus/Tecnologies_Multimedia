@@ -5,6 +5,8 @@
  */
 package compressio_lz.pkg77;
 
+import static compressio_lz.pkg77.Compressio_LZ77.ventanaDeslizante;
+import static compressio_lz.pkg77.Compressio_LZ77.ventanaEntrada;
 import java.util.HashMap;
 
 /**
@@ -93,5 +95,25 @@ public class Compress {
         
     }
     
+    /**
+     * Descomprime una secuencia generada LZ-77
+     * @return 
+     */
+    public static String descomprimir(String secuencia){
+        String resultado = "";
+        secuencia = secuencia.replaceAll(" ", ""); //Si hay espacios los eliminamos
+        System.out.println("secuencia:" + secuencia);
+        
+        
+        
+        return "";
+    }
+
     
+    public String seleccionarBits(String seccion){
+        int nBitsDes = (int) (Math.log(ventanaEntrada) / Math.log(2));
+        int nBitsEn = (int) (Math.log(ventanaDeslizante) / Math.log(2));
+        
+        return "";
+    }
 }

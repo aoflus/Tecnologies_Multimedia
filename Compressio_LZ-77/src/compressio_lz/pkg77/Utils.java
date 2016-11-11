@@ -24,13 +24,13 @@ public class Utils {
     public static String castIntsToString(int firstVal, int secondVal){
         String firstValBin = Integer.toBinaryString(firstVal);
         String secondValBin = Integer.toBinaryString(secondVal);
-        int count1 = 1, count2=0;
-        while(firstValBin.length() + count1 < Math.log(ventanaDeslizante) / Math.log(2)){
+        int count1 = 0, count2=0;
+        while(secondValBin.length() + count1 < Math.log(ventanaDeslizante) / Math.log(2)){
             secondValBin = "0" + secondValBin;
             count1++;
         }
         System.out.println("Math.log(ventanaDeslizante) / Math.log(2) " + Math.log(ventanaDeslizante) / Math.log(2) + " secondValBin: " + secondValBin);
-        while(secondValBin.length() + count2 < Math.log(ventanaEntrada) / Math.log(2)){
+        while(firstValBin.length() + count2 < Math.log(ventanaEntrada) / Math.log(2)){
             firstValBin = "0" + firstValBin;
             count2++;
         }
