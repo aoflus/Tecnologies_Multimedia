@@ -22,16 +22,14 @@ public class Compressio_LZ77 {
     public static int ventanaDeslizante;
     public static int numBitsRandomGenerados;
     public static boolean error=true;
+    public static boolean noRandom = true;
+    public static String bitsString;
     
     public static void main(String[] args) {
         // TODO code application logic here
         //Gestionamos los params
         gestionParametros(args);
-        
         Interfaz interfaz = new Interfaz();
-        
-
-
     }
     
     /**
@@ -73,6 +71,17 @@ public class Compressio_LZ77 {
                         error = true;
                     }
                 break;
+                case "-Norndm":
+                    try{
+                        bitsString = args[i+1];
+                        noRandom = true;
+                        System.out.println(args[i]+" "+ bitsString);
+                        i++;
+                    }catch(java.lang.NumberFormatException exc){
+                        System.out.println("No puedes parsear un string a un integer3");
+                        error = true;
+                    }
+                break;
                 default:
                     System.out.println("No se conoce ese parametro");
                 break;
@@ -90,12 +99,20 @@ public class Compressio_LZ77 {
                 error = false;
             }
         }
+        if(numBitsRandomGenerados<ventanaEntrada+ventanaDeslizante){
+            error = true;
+        }
         
         if(error){
             int defaultEntrada = 4;
             int defaultDeslizante = 8;
             ventanaEntrada = defaultEntrada;
             ventanaDeslizante = defaultDeslizante;
+            System.out.println("Los parametros introducidos no son correctos, se ejecutaran por defecto");
+            System.out.println("Recuerda:");
+            System.out.println("Ment y Mdest deben ser potencias de 2");
+            System.out.println("Ment <= Mdest");
+            System.out.println("Mdes+Ment<= longitud datos a comprimir");
         }
     }
     

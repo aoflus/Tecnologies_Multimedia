@@ -27,7 +27,6 @@ public class Interfaz {
      */
            
     public void run(){
-
         //Al comprimir se le pasa un valor de bits igual al tamaño de la ventana deslizante.
         this.recorreComprime();
     }
@@ -70,7 +69,9 @@ public class Interfaz {
             //}
             System.out.println(inicio);
         }
-        System.out.println("Cadena comprimida: " + inicioCadenaComprimida);
+
+        inicioCadenaComprimida = inicioCadenaComprimida + " " + cadenaBits.substring(inicio, cadenaBits.length() - 1 );
+        System.out.println("Cadena comprimida: " + inicioCadenaComprimida );
         
     }
     /**
