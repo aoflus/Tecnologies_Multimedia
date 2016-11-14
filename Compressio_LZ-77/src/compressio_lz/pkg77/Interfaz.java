@@ -4,6 +4,8 @@
  * and open the template in the editor.
  */
 package compressio_lz.pkg77;
+import static compressio_lz.pkg77.Compressio_LZ77.bitsString;
+import static compressio_lz.pkg77.Compressio_LZ77.noRandom;
 import static compressio_lz.pkg77.Compressio_LZ77.numBitsRandomGenerados;
 import static compressio_lz.pkg77.Compressio_LZ77.ventanaDeslizante;
 import static compressio_lz.pkg77.Compressio_LZ77.ventanaEntrada;
@@ -18,8 +20,19 @@ import java.util.Scanner;
 public class Interfaz {
     public String comprimido;
     Compress comprime = new Compress();
+
+    public String cadena1 = "11011100101001111010100010001";
     public Interfaz(){
-        this.run();
+        if(noRandom){ // Si no es random passem com parametre la cadena 
+            cadena1 = bitsString;
+            System.out.println("Cadena: " + cadena1);
+            this.run();
+        }else{ //Si es random hacemos una cadena de randoms
+            cadena1 = Utils.generaRandoms(numBitsRandomGenerados);
+            System.out.println("Cadena: " + cadena1);
+            this.run();
+        }
+        
     }
     
     /**
@@ -37,38 +50,39 @@ public class Interfaz {
      * @return 
      */
     public void recorreComprime(){
-        
+        String cadenaBits;
         int acum = 0;
-        String cadenaBits = Utils.generaRandoms(numBitsRandomGenerados);
+        cadenaBits = cadena1;
+        
         String inicioCadenaComprimida = cadenaBits.substring(0,ventanaDeslizante); //El inicio de la cadena van a ser los primeros ventanaDeslizante bits
-        System.out.println("Tamaño cadena: " + cadenaBits);
+        //System.out.println("Tamaño cadena: " + cadenaBits);
         boolean fin = false;
         int inicio = 0;
         while(!fin && (inicio + ventanaEntrada + ventanaDeslizante) < cadenaBits.length()){
-            System.out.println("Cadena:" + cadenaBits);
+            //System.out.println("Cadena:" + cadenaBits);
             String paraSplit = troceaCadena(cadenaBits,inicio);
             //Separamos la cadena en dos partes
             String[] parts = paraSplit.split(" ");
             String deslizante = parts[0];
             String entrada = parts[1];
-            System.out.println("deslizante: " + deslizante + " entrada: " + entrada);
+            //System.out.println("deslizante: " + deslizante + " entrada: " + entrada);
             HashMap<Integer, String> resultados = comprime.comprimir(deslizante,entrada,ventanaEntrada, ventanaDeslizante);
-            System.out.println("Imprimimos los resultados");
+            //System.out.println("Imprimimos los resultados");
             String valuePair = imprimeCoincidencias(resultados);
             String[] partsPair = valuePair.split(" ");
             String coinc = partsPair[0];
             String distancia = partsPair[1]; 
-            System.out.println("coinc: " + coinc + " distancia: " + distancia);
+            //System.out.println("coinc: " + coinc + " distancia: " + distancia);
             String binary1 = Utils.castIntsToString(Integer.parseInt(coinc),Integer.parseInt( distancia));
-            System.out.println("binary: " + binary1);
+            //System.out.println("binary: " + binary1);
             inicio = inicio + Integer.parseInt(coinc);
             inicioCadenaComprimida = inicioCadenaComprimida + " " + binary1;
-            System.out.println(inicio + ventanaEntrada + ventanaDeslizante - cadenaBits.length());
-            System.out.println(ventanaEntrada + ventanaDeslizante);
+            //System.out.println(inicio + ventanaEntrada + ventanaDeslizante - cadenaBits.length());
+            //System.out.println(ventanaEntrada + ventanaDeslizante);
             //if(inicio + ventanaEntrada + ventanaDeslizante - cadenaBits.length() < ventanaEntrada + ventanaDeslizante ){
             //    fin = true;
             //}
-            System.out.println(inicio);
+            //System.out.println(inicio);
             acum = acum + Integer.parseInt(coinc);
         }
 
@@ -99,7 +113,7 @@ public class Interfaz {
         while (it.hasNext()) {
         Map.Entry pair = (Map.Entry)it.next();
         valuePair = pair.getKey() + " " + pair.getValue();
-        System.out.println(pair.getKey() + " = " + pair.getValue());
+        //System.out.println(pair.getKey() + " = " + pair.getValue());
         it.remove(); // avoids a ConcurrentModificationException    
     }
     return valuePair;

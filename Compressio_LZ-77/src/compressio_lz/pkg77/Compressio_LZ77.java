@@ -21,15 +21,22 @@ public class Compressio_LZ77 {
     public static int ventanaEntrada;
     public static int ventanaDeslizante;
     public static int numBitsRandomGenerados;
-    public static boolean error=true;
-    public static boolean noRandom = true;
+    public static boolean error=false, dcmp1=false;
+    public static boolean noRandom = false;
     public static String bitsString;
+    public static boolean decompila = false;
     
     public static void main(String[] args) {
         // TODO code application logic here
         //Gestionamos los params
+        
         gestionParametros(args);
+        validateValues();
+        if(!error){
+        if (!dcmp1){ // Si es per descomprimri no utilitzem la interficie
         Interfaz interfaz = new Interfaz();
+        }
+        }else{System.out.println("Algun error se ha cometido.");}
     }
     /**
      * Metodo para gestión de parametros, aceptamos "Ment" y "Mdes"
@@ -65,9 +72,11 @@ public class Compressio_LZ77 {
                         numBitsRandomGenerados = Integer.valueOf(args[i+1]);
                         System.out.println(args[i]+" "+numBitsRandomGenerados);
                         i++;
+                        if(numBitsRandomGenerados<ventanaEntrada+ventanaDeslizante){
+                            error = true;
+                        }
                     }catch(java.lang.NumberFormatException exc){
-                        System.out.println("No puedes parsear un string a un integer3");
-                        error = true;
+                        //System.out.println("No puedes parsear un string a un integer3");
                     }
                 break;
                 case "-Norndm":
@@ -76,6 +85,9 @@ public class Compressio_LZ77 {
                         noRandom = true;
                         System.out.println(args[i]+" "+ bitsString);
                         i++;
+                        if(bitsString.length()<ventanaEntrada+ventanaDeslizante){
+                            error = true;
+                        }
                     }catch(java.lang.NumberFormatException exc){
                         System.out.println("No puedes parsear un string a un integer3");
                         error = true;
@@ -83,6 +95,7 @@ public class Compressio_LZ77 {
                 break;
                     case "-Dcmp":
                     try{
+                        dcmp1 = true;
                         bitsString = args[i+1];
                         String descompres = Compress.descomprimir(bitsString);
                         System.out.println(args[i]+" "+ bitsString);
@@ -110,21 +123,5 @@ public class Compressio_LZ77 {
                 error = true;
             }
         }
-        if(numBitsRandomGenerados<ventanaEntrada+ventanaDeslizante){
-            error = true;
-        }
-        
-        if(error){
-            int defaultEntrada = 4;
-            int defaultDeslizante = 8;
-            ventanaEntrada = defaultEntrada;
-            ventanaDeslizante = defaultDeslizante;
-            System.out.println("Los parametros introducidos no son correctos, se ejecutaran por defecto");
-            System.out.println("Recuerda:");
-            System.out.println("Ment y Mdest deben ser potencias de 2");
-            System.out.println("Ment <= Mdest");
-            System.out.println("Mdes+Ment<= longitud datos a comprimir");
-        }
     }
-    
 }
