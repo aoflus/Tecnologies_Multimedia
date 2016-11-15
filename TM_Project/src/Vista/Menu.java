@@ -20,7 +20,7 @@ public class Menu {
     */
     public boolean acaba = false;
     
-    public Menu() throws Exception{
+    public Menu() {
         while (!acaba){
             this.mainMenu();
         }
@@ -30,7 +30,7 @@ public class Menu {
      * Metode public que es cridara desde el main per a realitzar tota la llogica.
      * 
      */
-    public void mainMenu() throws Exception{
+    public void mainMenu() {
         this.mostraMenu();
         int choice = 10;
         try{
@@ -40,7 +40,7 @@ public class Menu {
         }
         switch (choice) {
             case 1:
-                System.out.println("Has seleccionat llegir des de un fitxer ZIP arxius.");
+                System.out.println("Has seleccionat llegir des d'un fitxer ZIP arxius.");
                 Controlador.opcio1();
                 break;
             case 2:
@@ -99,7 +99,7 @@ public class Menu {
     /**
      * Submenu, opcions extres.
      */
-    public void obreSubMenu5() throws Exception {
+    public void obreSubMenu5() {
         this.mostraSubMenu5();
         int choice = 10;
         try{

@@ -75,7 +75,7 @@ public class Utils {
      * Descomprimim un zip passada una ruta com a parametre i mostrem les imatges de dins.
      * @param zipFile 
      */
-    public static ArrayList<Image> unZipping(String zipFile, boolean ordena) throws Exception{
+    public static ArrayList<Image> unZipping(String zipFile, boolean ordena) {
         ArrayList<Image> ordre = new ArrayList<Image>();
         try{
             //get the zip file content

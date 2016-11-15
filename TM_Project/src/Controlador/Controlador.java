@@ -5,11 +5,14 @@
  */
 package Controlador;
 import Model.Utils;
+import Model.TimerEx;
+import Vista.Reproductor;
 import Vista.Viewer;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
+import javax.swing.Timer;
 
 /**
  * Tota accio logica es cridara dins d'aquesta classe, farem una funcio per cada opcio del menu
@@ -19,16 +22,28 @@ import java.util.ArrayList;
 public class Controlador {
     public static String rutaProva = "material/Imagenes/Cubo00.png";
     public static String rutaZipProva = "material/Cubo.zip";
+    public int comptador = 0;
+    
+    public Controlador(){
+        
+    }
     /**
      * Opcio 1 del main menu que realitzara ...
      */
-    public static void opcio1() throws Exception{
-        System.out.println("Introdueix pel teclat la ruta on es troba l'arxiu");
+    public static void opcio1() {
+        System.out.println("Introdueix pel teclat la ruta on es troba l'arxiu zip amb les imatges.");
         String rutaDelZip = Utils.escanejaLinia();
         boolean ordena = volsOrdenar();
         ArrayList<Image> bufferWithUnzippedImg = Utils.unZipping(rutaZipProva,ordena);
-        Viewer.recorreBufferedImages(bufferWithUnzippedImg);
+        System.out.println("Introdueix pel teclat el temps de refresc entre imatges en ms.");
+        int ms = Utils.escanejaInt();
+        TimerEx tim = new TimerEx();
+        tim.TimerExMain(bufferWithUnzippedImg,ms);
+        
+
+        
     }
+    
     
     /**
      * Opcio 2 del main menu que realitzara ...
@@ -47,7 +62,7 @@ public class Controlador {
     /**
      * Obre una imatge qualsevol en un Jframe
      */
-    public static void opcioSubMenu1() throws Exception {
+    public static void opcioSubMenu1() {
         System.out.println("Introdueix la ruta de la imatge:");
         String rutaImatge=Utils.escanejaLinia();
         newViewerPassantRutaParametre(rutaProva);
@@ -58,8 +73,8 @@ public class Controlador {
      * @param ruta String amb la ruta per obrir el fitxer en questió.
      * @throws Exception 
      */
-    public static void newViewerPassantRutaParametre(String ruta) throws Exception{
-        Viewer viewer = new Viewer(ruta);
+    public static void newViewerPassantRutaParametre(String ruta) {
+        Viewer viewer = new Viewer();
     }
     
     public static boolean volsOrdenar() {
