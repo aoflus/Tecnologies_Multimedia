@@ -153,7 +153,22 @@ public class Utils {
         return bwImage;
     }
     
-    
+        public static BufferedImage negative(BufferedImage image){
+        int nr,ng,nb;
+        Color negative;
+        BufferedImage negativeImage = new BufferedImage(image.getWidth(), image.getHeight(), image.getType());
+        
+        for (int i = 0; i < image.getWidth(); i++){
+            for (int j = 0; j < image.getHeight(); j++){
+                nr = new Color(image.getRGB(i, j)).getRed();
+                ng = new Color(image.getRGB(i, j)).getGreen();
+                nb = new Color(image.getRGB(i, j)).getBlue();
+                negative = new Color(nr, ng, nb);
+                negativeImage.setRGB(j, j, negative.getRGB());
+            }
+        }
+        return negativeImage;
+    }
     
     
 }
