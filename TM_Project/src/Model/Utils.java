@@ -5,6 +5,7 @@
  */
 package Model;
 
+import java.awt.Color;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.BufferedInputStream;
@@ -129,6 +130,30 @@ public class Utils {
         }
         return null;
     }
+    
+    public static BufferedImage binarization(BufferedImage image){
+        int r,g,b, bw;
+        int threshold = 140;
+        BufferedImage bwImage = new BufferedImage(image.getWidth(), image.getHeight(), image.getType());
+        
+        for (int i = 0; i < image.getWidth(); i++){
+            for (int j = 0; j < image.getHeight(); j++){
+                r = new Color(image.getRGB(i, j)).getRed();
+                g = new Color(image.getRGB(i, j)).getGreen();
+                b = new Color(image.getRGB(i, j)).getBlue();
+                if ((r > threshold) && (b > threshold) && (g > threshold))
+                    bw = 255;
+                else
+                    bw = 0;
+                String bwColor = String.format("#%06X", (0xFFFFFF & bw));
+                bwImage.setRGB(j, j, Integer.parseInt(bwColor));
+            }
+        }
+        
+        return bwImage;
+    }
+    
+    
     
     
 }
