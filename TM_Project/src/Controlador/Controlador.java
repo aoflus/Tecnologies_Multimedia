@@ -79,5 +79,11 @@ public class Controlador {
         Viewer view = new Viewer();
         view.mostraImatgeParam(prova);
     }
+
+    public void inverteixNegatiuImatge() {
+        BufferedImage prova1 = Utils.negative((BufferedImage) bufferWithUnzippedImg.get(0));
+        Viewer view = new Viewer();
+        view.mostraImatgeParam(prova1);
+    }
     
 }

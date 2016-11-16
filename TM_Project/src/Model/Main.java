@@ -40,17 +40,17 @@ public class Main {
         new JCommander(settings, args); // simple one-liner
         Controlador controlador = new Controlador();
         
-        
+        //Si determina la ruta on hem de buscar el zip 
         String rutaZip = settings.getInput();
         if(rutaZip!=null){
             System.out.println(rutaZip);
             controlador.obreZip(rutaZip);
         }
-        
+        //Si determina el numero de frames el calculem
         String frames = settings.getFps();
         if (frames != null){
             int fps = Integer.valueOf(frames);
-            //controlador.reprodueixZip(fps);
+            controlador.reprodueixZip(fps);
         }
         
         /**
@@ -59,11 +59,19 @@ public class Main {
          */
         String binarization = settings.getBinarization(); //Recogemos de las settings el parametro ya procesado con su respectivo getter
         if(binarization != null){
+            System.out.println("Fa la binaritzacio");
             //Se comprueba que el parametro no sea null, en el caso que sea null querrá decir que no se ha puesto como argumento, es decir, la funcionalidad
             //no la tendremos que hacer, por tanto si está, llamaremos a la funcion que ejecute lo que el parametro especifica en el documento TM_ProjectePractiques
             int thresh = Integer.valueOf(binarization);
             controlador.binaritzantImatge(thresh);
         }
+        
+        //Si hi ha el parametre negatiu ho fem
+        if (settings.getNegative()){
+            System.out.println("Fa el negatiu");
+            controlador.inverteixNegatiuImatge();
+        }
+        
     }
     
     

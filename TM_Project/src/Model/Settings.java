@@ -28,11 +28,11 @@ public class Settings {
     @Parameter(names = "--fps", description = "--fps  ", required = false)
     private String fps;
     
-    @Parameter(names = "--binarization", description = "--fps  ", required = false)
-    private String binarization;
+    @Parameter(names = "--binarization", description = "binarization", required = false)
+    public String binarization;
     
     @Parameter(names = "--negative", description = "negative filter", required = false)
-    private String negative;
+    private boolean negative = true;
     
     @Parameter(names = "--averaging", description = "averaging  filter", required = false)
     private String averaging;
@@ -100,11 +100,11 @@ public class Settings {
         this.binarization = binarization;
     }
 
-    public String getNegative() {
+    public boolean getNegative() {
         return negative;
     }
 
-    public void setNegative(String negative) {
+    public void setNegative(boolean negative) {
         this.negative = negative;
     }
 
