@@ -60,6 +60,10 @@ public class Utils {
         return retorna;
     }
 
+    public static BufferedImage average(BufferedImage bufferedImage, int avr) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
     /**
      * Metode definit que permet obrir un zip,
      *
@@ -116,8 +120,8 @@ public class Utils {
             int pos;
             int cont = 0;
             while (ze != null) {
-                System.out.println("Por cada imagen imprime el nombre:" + ze.getName());
-                BufferedImage image = negative(ImageIO.read(zis));
+                //System.out.println("Por cada imagen imprime el nombre:" + ze.getName());
+                BufferedImage image = Utils.negative(ImageIO.read(zis));
                 try {
                     pos = Integer.valueOf(ze.getName().substring(4, 6));
                     hmap.put(pos, image);

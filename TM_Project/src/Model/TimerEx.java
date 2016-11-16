@@ -50,7 +50,7 @@ public class TimerEx {
                     reprod.mostraImatgeAlFrame(llistaImatges.get(0));
                     x++;
                 }else if (x < tamanyLlista){
-                    System.out.println("Actualitza: " + x);
+                    //System.out.println("Actualitza: " + x);
                     reprod.mostraImatgeAlFrame(llistaImatges.get(x));
                 } else {
                     System.out.println("finish");

@@ -2,6 +2,8 @@ package Vista;
     /*
     * A modificar.
     */
+import Model.Utils;
+import static Model.Utils.negative;
 import java.awt.*;
 import java.awt.image.*;
 import java.io.*;
@@ -99,10 +101,24 @@ public class Viewer {
      * Mostrem una imatge passada per parametre, aquesta funcio l'executarà quasi unicament el tiemr.
      * @param image 
      */
-    public void mostraImatgeParam(Image image){
-        BufferedImage imageBuffered = null;
+    public void mostraImatgeParam(Image image, String filtre){
+        BufferedImage imageBuffered = (BufferedImage) image;
+         System.out.println("mostraImatgeParam: filtre: " + filtre);
         try{
-            imageBuffered = (BufferedImage) image;
+            switch (filtre) {
+            case "bin":
+                System.out.println("binarization switch");
+                imageBuffered = Utils.binarization((BufferedImage) image, 30);  
+            break;
+            case "neg":
+                System.out.println("negative switch");
+                imageBuffered =  negative((BufferedImage) image);  
+            break;
+            case "ave":
+                System.out.println("average switch");
+            break;
+        }
+            
         }catch (Exception e){
             System.out.println("Te lloc l'excepcio.");
             e.printStackTrace();

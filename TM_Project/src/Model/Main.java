@@ -72,6 +72,12 @@ public class Main {
             controlador.inverteixNegatiuImatge();
         }
         
+        //Si hi ha el parametre average ho fem:
+        String aver = settings.getAveraging();
+        if (aver != null){
+            int averNumb = Integer.valueOf(settings.getAveraging());
+            controlador.averagingFilterImatge(averNumb);
+        }
     }
     
     

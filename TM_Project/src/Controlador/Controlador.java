@@ -21,6 +21,9 @@ import javax.swing.Timer;
  * @author vikos
  */
 public class Controlador {
+    public static final String AVE = "ave";
+    public static final String NEG = "neg";
+    public static final String BIN = "bin";
     public int comptador = 0;
     public HashMap<Integer, Image> bufferWithUnzippedImg = null;
     public Controlador(){}
@@ -75,15 +78,24 @@ public class Controlador {
      * Funcion que binariza una imagen
      */
     public void binaritzantImatge(int threshold){
-        BufferedImage prova = Utils.binarization((BufferedImage) bufferWithUnzippedImg.get(0), threshold);
+        System.out.println("Entra a binaritzantImatge");
+        BufferedImage prova = (BufferedImage) bufferWithUnzippedImg.get(0);
         Viewer view = new Viewer();
-        view.mostraImatgeParam(prova);
+        view.mostraImatgeParam(prova,BIN);
     }
 
     public void inverteixNegatiuImatge() {
-        BufferedImage prova1 = Utils.negative((BufferedImage) bufferWithUnzippedImg.get(0));
+        System.out.println("Entra a inverteixNegatiuImatge");
+        BufferedImage prova = (BufferedImage) bufferWithUnzippedImg.get(0);
         Viewer view = new Viewer();
-        view.mostraImatgeParam(prova1);
+        view.mostraImatgeParam(prova,NEG);
+    }
+    
+    public void averagingFilterImatge(int averaging) {
+        System.out.println("Entra a averagingFilterImatge");
+        BufferedImage prova = (BufferedImage) bufferWithUnzippedImg.get(0);
+        Viewer view = new Viewer();
+        view.mostraImatgeParam(prova,AVE);
     }
     
 }
