@@ -71,5 +71,11 @@ public class Controlador {
             return false;
         }
     }
+    /**
+     * Funcion que binariza una imagen
+     */
+    public void binaritzantImatge(){
+        //Aqui dentro por ejemplo cojes de la lista de imagenes una y le aplicas el filtro llamando a la utils o creando otra clase filtros
+    }
     
 }

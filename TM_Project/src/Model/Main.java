@@ -52,6 +52,17 @@ public class Main {
             int fps = Integer.valueOf(settings.getFps());
             controlador.reprodueixZip(fps);
         }
+        
+        /**
+         * Los parametros definidos en settings sirven para ordenar al programa que haga cosas.
+         * Es decir, si se llama al programa con el arg "binarization" tendremos que aplicarlo a alguna imagen.
+         */
+        String binarization = settings.getBinarization(); //Recogemos de las settings el parametro ya procesado con su respectivo getter
+        if(binarization != null){
+            //Se comprueba que el parametro no sea null, en el caso que sea null querrá decir que no se ha puesto como argumento, es decir, la funcionalidad
+            //no la tendremos que hacer, por tanto si está, llamaremos a la funcion que ejecute lo que el parametro especifica en el documento TM_ProjectePractiques
+            controlador.binaritzantImatge();
+        }
     }
     
     
