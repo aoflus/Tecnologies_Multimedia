@@ -9,6 +9,7 @@ import Vista.Reproductor;
 import Vista.Viewer;
 import java.awt.Image;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.logging.Level;
@@ -27,7 +28,12 @@ public class TimerEx {
     int x = -1;
     Reproductor reprod;
     TimerTask task;
-    public void TimerExMain(ArrayList<Image> llistaImatgesParam, int ms){
+    public void TimerExMain(HashMap<Integer, Image> hashImatgesParam, int ms){
+        int limit = hashImatgesParam.size();
+        ArrayList<Image> llistaImatgesParam = new ArrayList<Image>();
+        for (int x=0 ; x<limit; x++){
+            llistaImatgesParam.add(hashImatgesParam.get(x));
+        }
         this.tamanyLlista = llistaImatgesParam.size();
         this.llistaImatges = llistaImatgesParam;
         Timer timer;
@@ -41,10 +47,11 @@ public class TimerEx {
                     reprod = new Reproductor();
                     reprod.setVisible(true);
                     reprod.passaParams(timer,task);
+                    reprod.mostraImatgeAlFrame(llistaImatges.get(0));
+                    x++;
                 }else if (x < tamanyLlista){
                     System.out.println("Actualitza: " + x);
                     reprod.mostraImatgeAlFrame(llistaImatges.get(x));
-                    //view.mostraImatgeParam(llistaImatges.get(x));
                 } else {
                     System.out.println("finish");
                     timer.cancel();
@@ -55,6 +62,7 @@ public class TimerEx {
             };
             // Empezamos dentro de 10ms y luego lanzamos la tarea cada 1000ms
         if(x < this.tamanyLlista){
+            System.out.println("ms:" + ms);
             timer.schedule(task, 10, ms);
         }else{
             timer.cancel();

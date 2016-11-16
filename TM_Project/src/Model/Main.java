@@ -1,7 +1,8 @@
 package Model;
 
+import Controlador.Controlador;
 import Vista.Viewer;
-import Vista.Menu;
+import com.beust.jcommander.JCommander;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -34,7 +35,23 @@ public class Main {
      * @param args 
      */
     public static void main(String[] args) {
-        Menu menu = new Menu();
+        
+        Settings settings = new Settings();
+        new JCommander(settings, args); // simple one-liner
+        Controlador controlador = new Controlador();
+        
+        
+        String rutaZip = settings.getInput();
+        if(rutaZip!=null){
+            System.out.println(rutaZip);
+            controlador.obreZip(rutaZip);
+        }
+        
+        String frames = settings.getFps();
+        if (frames != null){
+            int fps = Integer.valueOf(settings.getFps());
+            controlador.reprodueixZip(fps);
+        }
     }
     
     

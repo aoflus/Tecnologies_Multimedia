@@ -12,6 +12,7 @@ import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import javax.swing.Timer;
 
 /**
@@ -20,44 +21,25 @@ import javax.swing.Timer;
  * @author vikos
  */
 public class Controlador {
-    public static String rutaProva = "material/Imagenes/Cubo00.png";
-    public static String rutaZipProva = "material/Cubo.zip";
     public int comptador = 0;
-    
-    public Controlador(){
-        
-    }
+    public HashMap<Integer, Image> bufferWithUnzippedImg = null;
+    public Controlador(){}
     /**
      * Opcio 1 del main menu que realitzara ...
      */
-    public static void opcio1() {
-        System.out.println("Introdueix pel teclat la ruta on es troba l'arxiu zip amb les imatges.");
-        String rutaDelZip = Utils.escanejaLinia();
-        boolean ordena = volsOrdenar();
-        ArrayList<Image> bufferWithUnzippedImg = Utils.unZipping(rutaZipProva,ordena);
-        System.out.println("Introdueix pel teclat el temps de refresc entre imatges en ms.");
-        int ms = Utils.escanejaInt();
+    public void obreZip(String rutaZipProva) {
+        this.bufferWithUnzippedImg = Utils.unZipping(rutaZipProva);
+    }
+    
+    
+    public void reprodueixZip(int frames){
+        int ms = 1000;
+        System.out.println("frmaes:" + frames);
+        int calculat = (int) Math.round(ms/frames);
         TimerEx tim = new TimerEx();
-        tim.TimerExMain(bufferWithUnzippedImg,ms);
-        
-
-        
+        tim.TimerExMain(this.bufferWithUnzippedImg,calculat);
     }
     
-    
-    /**
-     * Opcio 2 del main menu que realitzara ...
-     */
-    public static void opcio2(){
-        
-    }
-    
-    /**
-     * Opcio 3 del main menu que realitzara ...
-     */
-    public static void opcio3(){
-        
-    }
     
     /**
      * Obre una imatge qualsevol en un Jframe
@@ -65,7 +47,7 @@ public class Controlador {
     public static void opcioSubMenu1() {
         System.out.println("Introdueix la ruta de la imatge:");
         String rutaImatge=Utils.escanejaLinia();
-        newViewerPassantRutaParametre(rutaProva);
+        newViewerPassantRutaParametre(" ");
     }
     
     /**

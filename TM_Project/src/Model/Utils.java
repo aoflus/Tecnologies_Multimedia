@@ -7,17 +7,22 @@ package Model;
 
 import java.awt.Image;
 import java.awt.image.BufferedImage;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.Scanner;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
+import java.util.zip.ZipOutputStream;
 import javax.imageio.ImageIO;
 
 /**
@@ -75,31 +80,38 @@ public class Utils {
      * Descomprimim un zip passada una ruta com a parametre i mostrem les imatges de dins.
      * @param zipFile 
      */
-    public static ArrayList<Image> unZipping(String zipFile, boolean ordena) {
+    public static HashMap<Integer, Image>  unZipping(String zipFile) {
         ArrayList<Image> ordre = new ArrayList<Image>();
+        HashMap<Integer, Image> hmap = new HashMap<Integer, Image>();
+
         try{
             //get the zip file content
             ZipInputStream zis = new ZipInputStream(new FileInputStream(zipFile));
             //get the zipped file list entry
             ZipEntry ze = zis.getNextEntry();
-            
-            
+
+            int pos;
+            int cont = 0;
             while(ze!=null){
-                if(!ordena){
-                    System.out.println("Por cada imagen imprime el nombre:" + ze.getName());
-                    BufferedImage image = ImageIO.read(zis);
-                    ordre.add(image); 
-                    ze = zis.getNextEntry();
-                }else{
-                    //Aqui ordenarem.
+                System.out.println("Por cada imagen imprime el nombre:" + ze.getName());
+                BufferedImage image = ImageIO.read(zis);
+                try {
+                    pos = Integer.valueOf(ze.getName().substring(4,6));
+                    hmap.put(pos, image);
+                } catch (NumberFormatException nfe){
+                    hmap.put(cont, image);
                 }
+                ze = zis.getNextEntry();
+                cont++;
             }
             zis.closeEntry();
             zis.close();
-            return ordre;
+            return hmap;
     	}catch(IOException ex){
             ex.printStackTrace();
         }
         return null;
     }
+    
+    
 }
