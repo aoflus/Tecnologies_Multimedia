@@ -19,6 +19,8 @@ import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
@@ -73,6 +75,21 @@ public class Utils {
                 /*Create the image*/
                 
             }
+        }
+    }
+    
+    
+    public static void saveZip(HashMap<Integer, Image> hmap, String fileName, String ruta){
+        File f = new File(ruta + fileName+".zip");
+        try {
+            ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(f));
+            for(int key : hmap.keySet()){
+                Image im = hmap.get(key);
+                ImageIO.write((BufferedImage) im, key + "jpeg", zos);
+            }
+        } 
+        catch (IOException ex) {
+            ex.printStackTrace();
         }
     }
     
