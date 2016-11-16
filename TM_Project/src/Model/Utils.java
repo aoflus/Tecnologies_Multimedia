@@ -136,9 +136,8 @@ public class Utils {
         return null;
     }
 
-    public static BufferedImage binarization(BufferedImage image) {
+    public static BufferedImage binarization(BufferedImage image, int threshold) {
         int r, g, b, bw;
-        int threshold = 30;
         BufferedImage bwImage = new BufferedImage(image.getWidth(), image.getHeight(), image.getType());
 
         for (int i = 0; i < image.getWidth(); i++) {

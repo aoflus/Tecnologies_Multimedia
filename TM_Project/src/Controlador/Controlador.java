@@ -74,8 +74,10 @@ public class Controlador {
     /**
      * Funcion que binariza una imagen
      */
-    public void binaritzantImatge(){
-        //Aqui dentro por ejemplo cojes de la lista de imagenes una y le aplicas el filtro llamando a la utils o creando otra clase filtros
+    public void binaritzantImatge(int threshold){
+        BufferedImage prova = Utils.binarization((BufferedImage) bufferWithUnzippedImg.get(0), threshold);
+        Viewer view = new Viewer();
+        view.mostraImatgeParam(prova);
     }
     
 }

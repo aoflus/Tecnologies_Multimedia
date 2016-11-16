@@ -49,8 +49,8 @@ public class Main {
         
         String frames = settings.getFps();
         if (frames != null){
-            int fps = Integer.valueOf(settings.getFps());
-            controlador.reprodueixZip(fps);
+            int fps = Integer.valueOf(frames);
+            //controlador.reprodueixZip(fps);
         }
         
         /**
@@ -61,7 +61,8 @@ public class Main {
         if(binarization != null){
             //Se comprueba que el parametro no sea null, en el caso que sea null querrá decir que no se ha puesto como argumento, es decir, la funcionalidad
             //no la tendremos que hacer, por tanto si está, llamaremos a la funcion que ejecute lo que el parametro especifica en el documento TM_ProjectePractiques
-            controlador.binaritzantImatge();
+            int thresh = Integer.valueOf(binarization);
+            controlador.binaritzantImatge(thresh);
         }
     }
     
