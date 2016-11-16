@@ -29,80 +29,85 @@ import java.util.zip.ZipOutputStream;
 import javax.imageio.ImageIO;
 
 /**
- * A la classe Utils generarem totes les funcionalitats "externes" per a realitzar
- * les especificacions descrites a la rubrica.
+ * A la classe Utils generarem totes les funcionalitats "externes" per a
+ * realitzar les especificacions descrites a la rubrica.
+ *
  * @author vikos
  */
 public class Utils {
+
     private static int MAX_IMG_COUNT = 100;
+
     /**
      * Metode que retorna la seguen linia escrita pel teclat
-     * @return 
+     *
+     * @return
      */
-    public static String escanejaLinia(){
+    public static String escanejaLinia() {
         Scanner sc = new Scanner(System.in);
         String retorna = sc.nextLine();
         return retorna;
     }
-    
+
     /**
      * Metode que retorna un int introduit pel teclat
-     * @return 
+     *
+     * @return
      */
-    public static int escanejaInt(){
+    public static int escanejaInt() {
         Scanner sc = new Scanner(System.in);
         int retorna = sc.nextInt();
         return retorna;
     }
-    
+
     /**
      * Metode definit que permet obrir un zip,
+     *
      * @param zip Accepta com a parametre un arxiu zip.
      * @throws IOException Per si no es troba l'arxiu.
      */
-    public void readZIP(ZipFile zip) throws IOException{
+    public void readZIP(ZipFile zip) throws IOException {
         Enumeration<? extends ZipEntry> entries = zip.entries();
-        
+
         /*While we have any entries left*/
-        while(entries.hasMoreElements()){
+        while (entries.hasMoreElements()) {
             ZipEntry entry = entries.nextElement();
-            
+
             /*Check that the entry is not a directory*/
-            if (!entry.isDirectory()){
+            if (!entry.isDirectory()) {
                 /*Create the stream*/
                 ZipInputStream zis = (ZipInputStream) zip.getInputStream(entry);
                 BufferedImage image = ImageIO.read(zis);
-                
+
                 /*Create the image*/
-                
             }
         }
     }
-    
-    
-    public static void saveZip(HashMap<Integer, Image> hmap, String fileName, String ruta){
-        File f = new File(ruta + fileName+".zip");
+
+    public static void saveZip(HashMap<Integer, Image> hmap, String fileName, String ruta) {
+        File f = new File(ruta + fileName + ".zip");
         try {
             ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(f));
-            for(int key : hmap.keySet()){
+            for (int key : hmap.keySet()) {
                 Image im = hmap.get(key);
                 ImageIO.write((BufferedImage) im, key + "jpeg", zos);
             }
-        } 
-        catch (IOException ex) {
+        } catch (IOException ex) {
             ex.printStackTrace();
         }
     }
-    
+
     /**
-     * Descomprimim un zip passada una ruta com a parametre i mostrem les imatges de dins.
-     * @param zipFile 
+     * Descomprimim un zip passada una ruta com a parametre i mostrem les
+     * imatges de dins.
+     *
+     * @param zipFile
      */
-    public static HashMap<Integer, Image>  unZipping(String zipFile) {
+    public static HashMap<Integer, Image> unZipping(String zipFile) {
         ArrayList<Image> ordre = new ArrayList<Image>();
         HashMap<Integer, Image> hmap = new HashMap<Integer, Image>();
 
-        try{
+        try {
             //get the zip file content
             ZipInputStream zis = new ZipInputStream(new FileInputStream(zipFile));
             //get the zipped file list entry
@@ -110,13 +115,13 @@ public class Utils {
 
             int pos;
             int cont = 0;
-            while(ze!=null){
+            while (ze != null) {
                 System.out.println("Por cada imagen imprime el nombre:" + ze.getName());
                 BufferedImage image = ImageIO.read(zis);
                 try {
-                    pos = Integer.valueOf(ze.getName().substring(4,6));
+                    pos = Integer.valueOf(ze.getName().substring(4, 6));
                     hmap.put(pos, image);
-                } catch (NumberFormatException nfe){
+                } catch (NumberFormatException nfe) {
                     hmap.put(cont, image);
                 }
                 ze = zis.getNextEntry();
@@ -125,41 +130,44 @@ public class Utils {
             zis.closeEntry();
             zis.close();
             return hmap;
-    	}catch(IOException ex){
+        } catch (IOException ex) {
             ex.printStackTrace();
         }
         return null;
     }
-    
-    public static BufferedImage binarization(BufferedImage image){
-        int r,g,b, bw;
-        int threshold = 140;
+
+    public static BufferedImage binarization(BufferedImage image) {
+        int r, g, b, bw;
+        int threshold = 0;
         BufferedImage bwImage = new BufferedImage(image.getWidth(), image.getHeight(), image.getType());
-        
-        for (int i = 0; i < image.getWidth(); i++){
-            for (int j = 0; j < image.getHeight(); j++){
+
+        for (int i = 0; i < image.getWidth(); i++) {
+            for (int j = 0; j < image.getHeight(); j++) {
                 r = new Color(image.getRGB(i, j)).getRed();
                 g = new Color(image.getRGB(i, j)).getGreen();
                 b = new Color(image.getRGB(i, j)).getBlue();
-                if ((r > threshold) && (b > threshold) && (g > threshold))
+                if ((r > threshold) && (b > threshold) && (g > threshold)) {
                     bw = 255;
-                else
+                } else {
                     bw = 0;
-                String bwColor = String.format("#%06X", (0xFFFFFF & bw));
-                bwImage.setRGB(j, j, Integer.parseInt(bwColor));
+                }
+                //String bwColor = String.format("#%06X", (0xFFFFFF & bw));
+                int bwColor = coloring(new Color(image.getRGB(i, j)).getAlpha(), bw, bw, bw);
+                //bwImage.setRGB(j, j, Integer.parseInt(bwColor));
+                bwImage.setRGB(j, j, bwColor);
             }
         }
-        
+
         return bwImage;
     }
-    
-        public static BufferedImage negative(BufferedImage image){
-        int nr,ng,nb;
+
+    public static BufferedImage negative(BufferedImage image) {
+        int nr, ng, nb;
         Color negative;
         BufferedImage negativeImage = new BufferedImage(image.getWidth(), image.getHeight(), image.getType());
-        
-        for (int i = 0; i < image.getWidth(); i++){
-            for (int j = 0; j < image.getHeight(); j++){
+
+        for (int i = 0; i < image.getWidth(); i++) {
+            for (int j = 0; j < image.getHeight(); j++) {
                 nr = new Color(image.getRGB(i, j)).getRed();
                 ng = new Color(image.getRGB(i, j)).getGreen();
                 nb = new Color(image.getRGB(i, j)).getBlue();
@@ -169,6 +177,19 @@ public class Utils {
         }
         return negativeImage;
     }
-    
-    
+
+    public static int coloring(int alpha, int red, int green, int blue) {
+
+        int newPixel = 0;
+        newPixel += alpha;
+        newPixel = newPixel << 8;
+        newPixel += red;
+        newPixel = newPixel << 8;
+        newPixel += green;
+        newPixel = newPixel << 8;
+        newPixel += blue;
+
+        return newPixel;
+    }
+
 }
