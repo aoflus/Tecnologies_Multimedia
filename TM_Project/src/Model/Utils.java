@@ -117,7 +117,7 @@ public class Utils {
             int cont = 0;
             while (ze != null) {
                 System.out.println("Por cada imagen imprime el nombre:" + ze.getName());
-                BufferedImage image = ImageIO.read(zis);
+                BufferedImage image = negative(ImageIO.read(zis));
                 try {
                     pos = Integer.valueOf(ze.getName().substring(4, 6));
                     hmap.put(pos, image);
@@ -138,7 +138,7 @@ public class Utils {
 
     public static BufferedImage binarization(BufferedImage image) {
         int r, g, b, bw;
-        int threshold = 0;
+        int threshold = 30;
         BufferedImage bwImage = new BufferedImage(image.getWidth(), image.getHeight(), image.getType());
 
         for (int i = 0; i < image.getWidth(); i++) {
@@ -154,7 +154,7 @@ public class Utils {
                 //String bwColor = String.format("#%06X", (0xFFFFFF & bw));
                 int bwColor = coloring(new Color(image.getRGB(i, j)).getAlpha(), bw, bw, bw);
                 //bwImage.setRGB(j, j, Integer.parseInt(bwColor));
-                bwImage.setRGB(j, j, bwColor);
+                bwImage.setRGB(i, j, bwColor);
             }
         }
 
@@ -168,11 +168,15 @@ public class Utils {
 
         for (int i = 0; i < image.getWidth(); i++) {
             for (int j = 0; j < image.getHeight(); j++) {
-                nr = new Color(image.getRGB(i, j)).getRed();
-                ng = new Color(image.getRGB(i, j)).getGreen();
-                nb = new Color(image.getRGB(i, j)).getBlue();
+                /*int rgba = image.getRGB(i, j);
+                Color col = new Color(rgba, true);
+                col = new Color(255 - col.getRed(), 255 - col.getGreen(), 255 - col.getBlue());
+                negativeImage.setRGB(i,, j, rgba);*/
+                nr = 255 - new Color(image.getRGB(i, j)).getRed();
+                ng = 255 - new Color(image.getRGB(i, j)).getGreen();
+                nb = 255 - new Color(image.getRGB(i, j)).getBlue();
                 negative = new Color(nr, ng, nb);
-                negativeImage.setRGB(j, j, negative.getRGB());
+                negativeImage.setRGB(i, j, negative.getRGB());
             }
         }
         return negativeImage;
