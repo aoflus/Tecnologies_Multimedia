@@ -98,13 +98,12 @@ public class Filtres {
         int[] avb = new int[value * value];
         int iter = 0;
         
-        for(int i = 0; i < image.getWidth()-1;i++){
-            for(int j = 0; j < image.getHeight()-1;j++){
-                
-                // Iterem sobre la matriu value x value i guardem els colors que hi ha a cada pixel.
-                for(int ki = 0; ki < value; ki++){
-                    for(int kj = 0; kj < value; kj++){
-                        Color col = new Color(avImage.getRGB(ki, kj));
+ 
+         for (int i=1; i<image.getWidth()-1; i++){
+            for (int j=1; j<image.getHeight()-1; j++)  {
+                for (int ki = 0; ki<3; ki++){
+                    for(int kj = 0; kj<3; kj++){
+                        Color col = new Color(image.getRGB(i+ki-1, j+kj-1));
                         avr[iter] = col.getRed();
                         avg[iter] = col.getGreen();
                         avb[iter] = col.getBlue();
@@ -117,7 +116,7 @@ public class Filtres {
                 Arrays.sort(avr);
                 Arrays.sort(avg);
                 Arrays.sort(avb);
-                Color avColor = new Color(avr[(int) value/2], avg[(int) value/2], avb[(int) value/2]);
+                Color avColor = new Color(avr[(value*value)/2], avg[(value*value)/2], avb[(value*value)/2]);
                 avImage.setRGB(i+1, j+1, avColor.getRGB());
             }
         }
