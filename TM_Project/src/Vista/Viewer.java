@@ -2,8 +2,8 @@ package Vista;
     /*
     * A modificar.
     */
+import Model.Filtres;
 import Model.Utils;
-import static Model.Utils.negative;
 import java.awt.*;
 import java.awt.image.*;
 import java.io.*;
@@ -108,14 +108,15 @@ public class Viewer {
             switch (filtre) {
             case "bin":
                 System.out.println("binarization switch");
-                imageBuffered = Utils.binarization((BufferedImage) image, 30);  
+                imageBuffered = Filtres.binarization((BufferedImage) image, 30);  
             break;
             case "neg":
                 System.out.println("negative switch");
-                imageBuffered =  negative((BufferedImage) image);  
+                imageBuffered =  Filtres.negative((BufferedImage) image);  
             break;
             case "ave":
                 System.out.println("average switch");
+                imageBuffered =  Filtres.average((BufferedImage) imageBuffered, 3); 
             break;
         }
             

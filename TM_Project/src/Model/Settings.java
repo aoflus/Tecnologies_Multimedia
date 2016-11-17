@@ -20,10 +20,10 @@ public class Settings {
     private String output;
 
     @Parameter(names = { "-e", "--encode" }, description = "--encode  ", required = false)
-    private String encode;
+    private boolean encode = true;
     
     @Parameter(names = { "-d", "--decode" }, description = "--decode  ", required = false)
-    private String decode;
+    private boolean decode = true;
     
     @Parameter(names = "--fps", description = "--fps  ", required = false)
     private String fps;
@@ -68,19 +68,19 @@ public class Settings {
         this.output = output;
     }
 
-    public String getEncode() {
+    public boolean getEncode() {
         return encode;
     }
 
-    public void setEncode(String encode) {
+    public void setEncode(boolean encode) {
         this.encode = encode;
     }
 
-    public String getDecode() {
+    public boolean getDecode() {
         return decode;
     }
 
-    public void setDecode(String decode) {
+    public void setDecode(boolean decode) {
         this.decode = decode;
     }
 

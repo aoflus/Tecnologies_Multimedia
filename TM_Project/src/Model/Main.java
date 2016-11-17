@@ -46,12 +46,19 @@ public class Main {
             System.out.println(rutaZip);
             controlador.obreZip(rutaZip);
         }
+        String output = settings.getOutput();
+        if(output!=null){
+            System.out.println("Guarda la sequencia de sortida: "+output);
+            controlador.sortidaPrograma(output);
+        }
+        
         //Si determina el numero de frames el calculem
         String frames = settings.getFps();
+        int fps;
         if (frames != null){
-            int fps = Integer.valueOf(frames);
-            controlador.reprodueixZip(fps);
-        }
+            fps = Integer.valueOf(frames);
+            controlador.reprodueixZip(fps,"");
+        }else{fps = 10;}
         
         /**
          * Los parametros definidos en settings sirven para ordenar al programa que haga cosas.
@@ -64,12 +71,14 @@ public class Main {
             //no la tendremos que hacer, por tanto si está, llamaremos a la funcion que ejecute lo que el parametro especifica en el documento TM_ProjectePractiques
             int thresh = Integer.valueOf(binarization);
             controlador.binaritzantImatge(thresh);
+            controlador.reprodueixZip(fps,"bin");
         }
         
         //Si hi ha el parametre negatiu ho fem
         if (settings.getNegative()){
             System.out.println("Fa el negatiu");
             controlador.inverteixNegatiuImatge();
+            controlador.reprodueixZip(fps,"neg");
         }
         
         //Si hi ha el parametre average ho fem:
@@ -77,7 +86,9 @@ public class Main {
         if (aver != null){
             int averNumb = Integer.valueOf(settings.getAveraging());
             controlador.averagingFilterImatge(averNumb);
+            controlador.reprodueixZip(fps,"ave");
         }
+
     }
     
     

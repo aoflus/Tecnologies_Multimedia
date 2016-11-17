@@ -8,6 +8,7 @@ package Model;
 import Vista.Reproductor;
 import Vista.Viewer;
 import java.awt.Image;
+import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Timer;
@@ -54,6 +55,7 @@ public class TimerEx {
                     reprod.mostraImatgeAlFrame(llistaImatges.get(x));
                 } else {
                     System.out.println("finish");
+                    reprod.dispose();
                     timer.cancel();
                     timer.purge();
                 }
