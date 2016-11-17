@@ -16,6 +16,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -60,9 +61,6 @@ public class Utils {
         return retorna;
     }
 
-    public static BufferedImage average(BufferedImage bufferedImage, int avr) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
 
     /**
      * Metode definit que permet obrir un zip,
@@ -121,7 +119,7 @@ public class Utils {
             int cont = 0;
             while (ze != null) {
                 //System.out.println("Por cada imagen imprime el nombre:" + ze.getName());
-                BufferedImage image = Utils.negative(ImageIO.read(zis));
+                BufferedImage image = ImageIO.read(zis);
                 try {
                     pos = Integer.valueOf(ze.getName().substring(4, 6));
                     hmap.put(pos, image);
@@ -171,10 +169,6 @@ public class Utils {
 
         for (int i = 0; i < image.getWidth(); i++) {
             for (int j = 0; j < image.getHeight(); j++) {
-                /*int rgba = image.getRGB(i, j);
-                Color col = new Color(rgba, true);
-                col = new Color(255 - col.getRed(), 255 - col.getGreen(), 255 - col.getBlue());
-                negativeImage.setRGB(i,, j, rgba);*/
                 nr = 255 - new Color(image.getRGB(i, j)).getRed();
                 ng = 255 - new Color(image.getRGB(i, j)).getGreen();
                 nb = 255 - new Color(image.getRGB(i, j)).getBlue();
@@ -186,7 +180,6 @@ public class Utils {
     }
 
     public static int coloring(int alpha, int red, int green, int blue) {
-
         int newPixel = 0;
         newPixel += alpha;
         newPixel = newPixel << 8;
@@ -195,8 +188,43 @@ public class Utils {
         newPixel += green;
         newPixel = newPixel << 8;
         newPixel += blue;
-
         return newPixel;
+    }
+    
+    public static BufferedImage average(BufferedImage image, int value){
+        BufferedImage avImage = new BufferedImage(image.getWidth(), image.getHeight(), image.getType());
+        
+        // Creem 3 "matriux" valor x valor per crear les mascares de convolució.
+        int[] avr = new int[value * value];
+        int[] avg = new int[value * value];
+        int[] avb = new int[value * value];
+        int iter = 0;
+        
+        for(int i = 0; i < image.getWidth()-1;i++){
+            for(int j = 0; j < image.getHeight()-1;j++){
+                
+                // Iterem sobre la matriu value x value i guardem els colors que hi ha a cada pixel.
+                for(int ki = 0; ki < value; ki++){
+                    for(int kj = 0; kj < value; kj++){
+                        Color col = new Color(avImage.getRGB(ki, kj));
+                        avr[iter] = col.getRed();
+                        avg[iter] = col.getGreen();
+                        avb[iter] = col.getBlue();
+                        iter++;
+                    }
+                }
+                
+                // amb els value x value espais de la matriu plens, ordenem la array i agafem el valor central.
+                iter = 0;
+                Arrays.sort(avr);
+                Arrays.sort(avg);
+                Arrays.sort(avb);
+                Color avColor = new Color(avr[(int) value/2], avg[(int) value/2], avb[(int) value/2]);
+                avImage.setRGB(i+1, j+1, avColor.getRGB());
+            }
+        }
+                
+        return avImage;
     }
 
 }
