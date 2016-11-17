@@ -20,11 +20,19 @@ import javax.imageio.ImageWriter;
 import javax.imageio.stream.ImageOutputStream;
 
 /**
- *
+ * Classe que comprimeix en JPEG donada una certa qualitat
  * @author vikos
  */
 
 public class JPEGCompress {
+    /**
+     * Funcio que comprimeix en JPEG i ho fica dins de la ruta "name".
+     * @param image
+     * @param name
+     * @param outputIName
+     * @throws FileNotFoundException
+     * @throws IOException 
+     */
     public static void compressInJPEG(BufferedImage image,String name,String outputIName) throws FileNotFoundException, IOException{
         
         //File imageFile = new File("Desert.jpg");

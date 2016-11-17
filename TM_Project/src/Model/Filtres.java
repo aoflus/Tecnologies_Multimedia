@@ -10,11 +10,17 @@ import java.awt.image.BufferedImage;
 import java.util.Arrays;
 
 /**
- *
+ * Classe amb els filtres implementats
  * @author vikos
  */
 public class Filtres {
-        public static BufferedImage binarization(BufferedImage image, int threshold) {
+    /**
+     * Filtre binaritza
+     * @param image
+     * @param threshold
+     * @return 
+     */
+    public static BufferedImage binarization(BufferedImage image, int threshold) {
         int r, g, b, bw;
         BufferedImage bwImage = new BufferedImage(image.getWidth(), image.getHeight(), image.getType());
 
@@ -37,7 +43,11 @@ public class Filtres {
 
         return bwImage;
     }
-
+    /**
+     * Filtre negatiu
+     * @param image
+     * @return 
+     */
     public static BufferedImage negative(BufferedImage image) {
         int nr, ng, nb;
         Color negative;
@@ -54,7 +64,14 @@ public class Filtres {
         }
         return negativeImage;
     }
-
+    /**
+     * Modifica colors de pixels
+     * @param alpha
+     * @param red
+     * @param green
+     * @param blue
+     * @return 
+     */
     public static int coloring(int alpha, int red, int green, int blue) {
         int newPixel = 0;
         newPixel += alpha;
@@ -66,7 +83,12 @@ public class Filtres {
         newPixel += blue;
         return newPixel;
     }
-    
+    /**
+     * filtre de la mitja.
+     * @param image
+     * @param value
+     * @return 
+     */
     public static BufferedImage average(BufferedImage image, int value){
         BufferedImage avImage = new BufferedImage(image.getWidth(), image.getHeight(), image.getType());
         

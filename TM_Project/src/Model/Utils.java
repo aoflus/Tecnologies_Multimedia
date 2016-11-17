@@ -37,8 +37,6 @@ import javax.imageio.ImageIO;
  */
 public class Utils {
 
-    private static int MAX_IMG_COUNT = 100;
-
     /**
      * Metode que retorna la seguen linia escrita pel teclat
      *
@@ -85,7 +83,12 @@ public class Utils {
             }
         }
     }
-
+    /**
+     * Metode que guarda en un zip.
+     * @param hmap
+     * @param fileName
+     * @param ruta 
+     */
     public static void saveZip(HashMap<Integer, Image> hmap, String fileName, String ruta) {
     	byte[] buffer = new byte[1024];
 

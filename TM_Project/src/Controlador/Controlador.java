@@ -6,10 +6,8 @@
 package Controlador;
 import Model.Utils;
 import Model.Filtres;
-import Model.JPEGCompress;
 import static Model.JPEGCompress.compressInJPEG;
 import Model.TimerEx;
-import Vista.Reproductor;
 import Vista.Viewer;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
@@ -19,7 +17,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.Timer;
 
 /**
  * Tota accio logica es cridara dins d'aquesta classe, farem una funcio per cada opcio del menu
@@ -37,12 +34,17 @@ public class Controlador {
     public HashMap<Integer, Image> bufferWithUnzippedImgAveraged = new HashMap<Integer, Image>();
     public Controlador(){}
     /**
-     * Opcio 1 del main menu que realitzara ...
+     * Obre zip, crida al utils per a parsejar les imatges.
      */
     public void obreZip(String rutaZipProva) {
         this.bufferWithUnzippedImg = Utils.unZipping(rutaZipProva);
     }
-
+    
+    /**
+     * Metode que passantli un string que identifiqui el tipus de filtre genera un hashmap amb les imatges amb el filtre.
+     * @param filtre
+     * @param param 
+     */
     public void carregaImFiltrades(String filtre, int param){
         int limit = bufferWithUnzippedImg.size();
         ArrayList<Image> llistaImatgesParam = new ArrayList<Image>();
@@ -57,7 +59,11 @@ public class Controlador {
         }
     }
     
-    
+    /**
+     * Crea una instancia del timer que controlará el flujo de reproducción
+     * @param frames
+     * @param filtre 
+     */
     public void reprodueixZip(int frames,String filtre){
         HashMap<Integer, Image> aux = null;
         int ms = 1000;
@@ -79,9 +85,9 @@ public class Controlador {
     
     
     /**
-     * Obre una imatge qualsevol en un Jframe
+     * Obre una imatge qualsevol en un Jframe.
      */
-    public static void opcioSubMenu1() {
+    public static void obreJFrameAmbImatge() {
         System.out.println("Introdueix la ruta de la imatge:");
         String rutaImatge=Utils.escanejaLinia();
         newViewerPassantRutaParametre(" ");
@@ -96,20 +102,9 @@ public class Controlador {
         Viewer viewer = new Viewer();
     }
     
-    public static boolean volsOrdenar() {
-        System.out.println("Si vols ordenar el resultat introdueix 1, en qualsevol altre cas no ordena pel nom.");
-        try{
-            int vols = Utils.escanejaInt();
-            if (vols == 1){
-                return true;
-            }else{return false;}
-        }catch(java.util.InputMismatchException ex){
-            System.out.println("No has introduit un número, no s'ordenarà.");
-            return false;
-        }
-    }
+    
     /**
-     * Funcion que binariza una imagen
+     * Funcion que llama a la funcion de binarizar una imagen.
      */
     public void binaritzantImatge(int threshold){
         System.out.println("Entra a binaritzantImatge");
@@ -118,7 +113,9 @@ public class Controlador {
 //        Viewer view = new Viewer();
 //        view.mostraImatgeParam(prova,BIN);
     }
-
+    /**
+     * Funcion que llama a la funcion de invertir una imagen.
+     */
     public void inverteixNegatiuImatge() {
         System.out.println("Entra a inverteixNegatiuImatge");
         //BufferedImage prova = (BufferedImage) bufferWithUnzippedImg.get(0);
@@ -126,7 +123,10 @@ public class Controlador {
 //        Viewer view = new Viewer();
 //        view.mostraImatgeParam(prova,NEG);
     }
-    
+
+    /**
+     * Funcion que llama a la funcion de aplicar el filtro de la media a una imagen.
+     */
     public void averagingFilterImatge(int averaging) {
         System.out.println("Entra a averagingFilterImatge");
         //BufferedImage prova = (BufferedImage) bufferWithUnzippedImg.get(0);
@@ -134,7 +134,11 @@ public class Controlador {
 //        Viewer view = new Viewer();
 //        view.mostraImatgeParam(prova,AVE);
     }
-
+    /** 
+     * Funció que realitza la sortida del programa, crea un directori amb nom fix prova i parseja totes les imatges a JPEG a dins de prova.
+     * 
+     * @param output 
+     */
     public void sortidaPrograma(String output) {
         System.out.println("guardarem a output:" + "prova");
         String name = "prova";

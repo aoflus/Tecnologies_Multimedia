@@ -31,11 +31,12 @@ public class Main {
     
     /**
      * Metode main que comença el programa creant un objecte menu, des d'on es llançara tota la lògica.
-     * A mes gestionarem els params.
+     * 
+     * A mes gestionarem els params. Es comprova si existeix, si existeix, llançarem la lògica que correspongui
      * @param args 
      */
     public static void main(String[] args) {
-        
+        //Creem un settings i el jcommander.
         Settings settings = new Settings();
         new JCommander(settings, args); // simple one-liner
         Controlador controlador = new Controlador();
@@ -46,6 +47,7 @@ public class Main {
             System.out.println(rutaZip);
             controlador.obreZip(rutaZip);
         }
+        //Sortida del arxiu
         String output = settings.getOutput();
         if(output!=null){
             System.out.println("Guarda la sequencia de sortida: "+output);
@@ -64,6 +66,7 @@ public class Main {
          * Los parametros definidos en settings sirven para ordenar al programa que haga cosas.
          * Es decir, si se llama al programa con el arg "binarization" tendremos que aplicarlo a alguna imagen.
          */
+        //Si hi ha el parametre binaritzacio ho fem
         String binarization = settings.getBinarization(); //Recogemos de las settings el parametro ya procesado con su respectivo getter
         if(binarization != null){
             System.out.println("Fa la binaritzacio");

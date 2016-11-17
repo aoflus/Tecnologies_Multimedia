@@ -12,10 +12,7 @@ import javax.imageio.*;
 import javax.swing.*;
 
 /**
- * A Java class to demonstrate how to load an image from disk with the
- * ImageIO class. Also shows how to display the image by creating an
- * ImageIcon, placing that icon an a JLabel, and placing that label on
- * a JFrame.
+ * Class JFrame viewer que permet obrir un jframe automàticament.
  * 
  * @author Victor
  */
@@ -69,7 +66,10 @@ public class Viewer {
         frame.setSize(800, 600);
         jLabel = new JLabel();
     }
-    
+    /**
+     * Metode que recorre imatges
+     * @param buffer 
+     */
     public static void recorreBufferedImages(ArrayList<Image> buffer){
         int xAxis = 1;
         int yAxis = 1;

@@ -15,7 +15,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 
 /**
- *
+ *  JFrame reproductor per defecte.
  * @author vikos
  */
 public class Reproductor extends javax.swing.JFrame {

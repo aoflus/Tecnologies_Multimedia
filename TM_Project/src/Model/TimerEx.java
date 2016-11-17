@@ -29,6 +29,11 @@ public class TimerEx {
     int x = -1;
     Reproductor reprod;
     TimerTask task;
+    /**
+     * Metode timerExMain que passada una llista ens crea el reproductor i gestiona les imatges cada X fps
+     * @param hashImatgesParam
+     * @param ms 
+     */
     public void TimerExMain(HashMap<Integer, Image> hashImatgesParam, int ms){
         int limit = hashImatgesParam.size();
         ArrayList<Image> llistaImatgesParam = new ArrayList<Image>();
