@@ -50,7 +50,7 @@ public class Controlador {
         ArrayList<Image> llistaImatgesParam = new ArrayList<Image>();
         for (int x=0 ; x<limit; x++){
             if(filtre == AVE){
-                bufferWithUnzippedImgAveraged.put(x, Filtres.average((BufferedImage)bufferWithUnzippedImg.get(x),param));
+                bufferWithUnzippedImgAveraged.put(x, Filtres.average1((BufferedImage)bufferWithUnzippedImg.get(x),param));
             }else if(filtre == NEG){
                 bufferWithUnzippedImgNegative.put(x, Filtres.negative((BufferedImage)bufferWithUnzippedImg.get(x)));
             }else if (filtre == BIN){
@@ -67,7 +67,6 @@ public class Controlador {
     public void reprodueixZip(int frames,String filtre){
         HashMap<Integer, Image> aux = null;
         int ms = 1000;
-        System.out.println("frames:" + frames);
         int calculat = (int) Math.round(ms/frames);
         if(filtre == AVE){
             aux = bufferWithUnzippedImgAveraged;
@@ -88,7 +87,6 @@ public class Controlador {
      * Obre una imatge qualsevol en un Jframe.
      */
     public static void obreJFrameAmbImatge() {
-        System.out.println("Introdueix la ruta de la imatge:");
         String rutaImatge=Utils.escanejaLinia();
         newViewerPassantRutaParametre(" ");
     }
@@ -107,7 +105,6 @@ public class Controlador {
      * Funcion que llama a la funcion de binarizar una imagen.
      */
     public void binaritzantImatge(int threshold){
-        System.out.println("Entra a binaritzantImatge");
         //BufferedImage prova = (BufferedImage) bufferWithUnzippedImg.get(0);
         this.carregaImFiltrades(BIN,threshold);
 //        Viewer view = new Viewer();
@@ -117,7 +114,6 @@ public class Controlador {
      * Funcion que llama a la funcion de invertir una imagen.
      */
     public void inverteixNegatiuImatge() {
-        System.out.println("Entra a inverteixNegatiuImatge");
         //BufferedImage prova = (BufferedImage) bufferWithUnzippedImg.get(0);
         this.carregaImFiltrades(NEG,0);
 //        Viewer view = new Viewer();
@@ -128,7 +124,6 @@ public class Controlador {
      * Funcion que llama a la funcion de aplicar el filtro de la media a una imagen.
      */
     public void averagingFilterImatge(int averaging) {
-        System.out.println("Entra a averagingFilterImatge");
         //BufferedImage prova = (BufferedImage) bufferWithUnzippedImg.get(0);
         this.carregaImFiltrades(AVE,averaging);
 //        Viewer view = new Viewer();
@@ -140,7 +135,6 @@ public class Controlador {
      * @param output 
      */
     public void sortidaPrograma(String output) {
-        System.out.println("guardarem a output:" + "prova");
         String name = "prova";
         try {
             File theDir = new File(name);

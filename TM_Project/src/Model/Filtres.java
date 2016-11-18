@@ -7,6 +7,9 @@ package Model;
 
 import java.awt.Color;
 import java.awt.image.BufferedImage;
+import java.awt.image.ConvolveOp;
+import java.awt.image.Kernel;
+import java.util.ArrayList;
 import java.util.Arrays;
 
 /**
@@ -20,6 +23,18 @@ public class Filtres {
      * @param threshold
      * @return 
      */
+    
+    public static BufferedImage average1(BufferedImage image, int filter){
+
+        int finalValue = filter*filter;
+        float[] filterValues = new float[finalValue];
+        Arrays.fill(filterValues, 1f/(float)finalValue);
+
+        Kernel average = new Kernel(filter,filter,filterValues);
+
+        return (new ConvolveOp(average).filter(image, null));
+    }
+
     public static BufferedImage binarization(BufferedImage image, int threshold) {
         int r, g, b, bw;
         BufferedImage bwImage = new BufferedImage(image.getWidth(), image.getHeight(), image.getType());
