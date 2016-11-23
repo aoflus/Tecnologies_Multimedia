@@ -34,7 +34,8 @@ public class Compressio_LZ77 {
         validateValues();
         if(!error){
         if (!dcmp1){ // Si es per descomprimri no utilitzem la interficie
-        Interfaz interfaz = new Interfaz();
+            LogicaText logica = new LogicaText();
+            //Interfaz interfaz = new Interfaz();
         }
         }else{System.out.println("Algun error se ha cometido.");}
     }

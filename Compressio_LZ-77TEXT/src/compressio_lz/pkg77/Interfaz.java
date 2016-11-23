@@ -19,20 +19,13 @@ import java.util.Scanner;
  */
 public class Interfaz {
     public String comprimido;
+    public StringBuffer descomprimidoBin;
     Compress comprime = new Compress();
-
+    public StringBuffer toCompress;
     public String cadena1 = "11011100101001111010100010001";
-    public Interfaz(){
-        if(noRandom){ // Si no es random passem com parametre la cadena 
-            cadena1 = bitsString;
-            System.out.println("Cadena: " + cadena1);
-            this.run();
-        }else{ //Si es random hacemos una cadena de randoms
-            cadena1 = Utils.generaRandoms(numBitsRandomGenerados);
-            System.out.println("Cadena: " + cadena1);
-            this.run();
-        }
-        
+    public Interfaz(StringBuffer toCompress){
+        this.toCompress = toCompress;
+        this.run();
     }
     
     /**
@@ -42,7 +35,12 @@ public class Interfaz {
     public void run(){
         //Al comprimir se le pasa un valor de bits igual al tamaño de la ventana deslizante.
         this.recorreComprime();
-        comprime.descomprimir(comprimido);
+        String resultado = comprime.descomprimir(comprimido);
+        descomprimidoBin = new StringBuffer(resultado);
+    }
+
+    public StringBuffer getDescomprimidoBin() {
+        return descomprimidoBin;
     }
     
     /**
@@ -51,44 +49,54 @@ public class Interfaz {
      */
     public void recorreComprime(){
         String cadenaBits;
-        int acum = 0;
-        cadenaBits = cadena1;
+        StringBuffer str = toCompress;
         
+        int acum = 0;
+        cadenaBits = str.toString();
+        System.out.println("cadenaBitsSize: "+ cadenaBits.length() +" CadenaBits:        "+cadenaBits);
         String inicioCadenaComprimida = cadenaBits.substring(0,ventanaDeslizante); //El inicio de la cadena van a ser los primeros ventanaDeslizante bits
-        //System.out.println("Tamaño cadena: " + cadenaBits);
+        System.out.println("Tamaño cadena: " + cadenaBits);
         boolean fin = false;
         int inicio = 0;
         while(!fin && (inicio + ventanaEntrada + ventanaDeslizante) < cadenaBits.length()){
-            //System.out.println("Cadena:" + cadenaBits);
+            System.out.println("Cadena:" + cadenaBits);
             String paraSplit = troceaCadena(cadenaBits,inicio);
             //Separamos la cadena en dos partes
             String[] parts = paraSplit.split(" ");
             String deslizante = parts[0];
             String entrada = parts[1];
-            //System.out.println("deslizante: " + deslizante + " entrada: " + entrada);
+            System.out.println("deslizante: " + deslizante + " entrada: " + entrada);
             HashMap<Integer, String> resultados = comprime.comprimir(deslizante,entrada,ventanaEntrada, ventanaDeslizante);
-            //System.out.println("Imprimimos los resultados");
+            System.out.println("Imprimimos los resultados");
             String valuePair = imprimeCoincidencias(resultados);
+            String coinc = "";
+            String distancia = ""; 
+            try{
             String[] partsPair = valuePair.split(" ");
-            String coinc = partsPair[0];
-            String distancia = partsPair[1]; 
-            //System.out.println("coinc: " + coinc + " distancia: " + distancia);
+            coinc = partsPair[0];
+            distancia = partsPair[1]; 
+            }catch(java.lang.ArrayIndexOutOfBoundsException ex){
+                ex.getStackTrace();
+                
+            }
+            
+            System.out.println("coinc: " + coinc + " distancia: " + distancia);
             String binary1 = Utils.castIntsToString(Integer.parseInt(coinc),Integer.parseInt( distancia));
-            //System.out.println("binary: " + binary1);
+            System.out.println("binary: " + binary1);
             inicio = inicio + Integer.parseInt(coinc);
             inicioCadenaComprimida = inicioCadenaComprimida + " " + binary1;
-            //System.out.println(inicio + ventanaEntrada + ventanaDeslizante - cadenaBits.length());
-            //System.out.println(ventanaEntrada + ventanaDeslizante);
+            System.out.println(inicio + ventanaEntrada + ventanaDeslizante - cadenaBits.length());
+            System.out.println(ventanaEntrada + ventanaDeslizante);
             //if(inicio + ventanaEntrada + ventanaDeslizante - cadenaBits.length() < ventanaEntrada + ventanaDeslizante ){
             //    fin = true;
             //}
-            //System.out.println(inicio);
+            System.out.println(inicio);
             acum = acum + Integer.parseInt(coinc);
         }
 
         inicioCadenaComprimida = inicioCadenaComprimida + " " + cadenaBits.substring(acum + ventanaDeslizante);
         comprimido = inicioCadenaComprimida;
-        System.out.println("Cadena comprimida: " + inicioCadenaComprimida );
+        System.out.println("Cadena comprimida length: " +inicioCadenaComprimida.length() + " Cadena: " + inicioCadenaComprimida );
         
     }
     /**
@@ -113,7 +121,7 @@ public class Interfaz {
         while (it.hasNext()) {
         Map.Entry pair = (Map.Entry)it.next();
         valuePair = pair.getKey() + " " + pair.getValue();
-        //System.out.println(pair.getKey() + " = " + pair.getValue());
+        System.out.println(pair.getKey() + " = " + pair.getValue());
         it.remove(); // avoids a ConcurrentModificationException    
     }
     return valuePair;

@@ -1,5 +1,4 @@
-package lz77;
-
+package compressio_lz.pkg77;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.Scanner;
@@ -64,8 +63,8 @@ public class txtReader {
         }
 
         //System.out.println("Text d'entrada: " + txt_data);
-
         return (string2ASCIIbin(txt_data));
+        //return (txt_data);
     }
 
     /**
