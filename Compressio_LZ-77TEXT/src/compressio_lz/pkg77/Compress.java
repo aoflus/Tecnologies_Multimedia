@@ -24,7 +24,6 @@ public class Compress {
      * @return 
      */
     public HashMap<Integer, String>  comprimir (String trozo, String entrada ,int ment, int mdes){
-        try{
         int maximcoinc=0;
         int contadorInvers = mdes - 1; //Si el tamaño de mdes es igual a 8, empezaremos a comprovar valores a partir del 7.
         int ventanaEntrada = ment - 1; //Duplicamos el valor del tamaño de la ventana de entrada para poder manejarnos.
@@ -66,7 +65,7 @@ public class Compress {
                             repeticionsPosicio.put(maximcoinc,String.valueOf(mdes - (contadorInvers)));
                         }
                     }else { // Si perdemos la racha reiniciamos
-                        System.out.println("Diferents!!!");
+                        System.out.println("Diferents1!!!");
                         System.out.println("--------------------------------------------------------------------------------------------------------------");
                         maximcoinc = 0;
                     }
@@ -78,21 +77,40 @@ public class Compress {
                     //maximcoinc++; //Sumamos uno a la variable que controla las coincidencias que hemos encontrado
                     //}
             }else{
-                System.out.println("Diferents!!!");
+                System.out.println("Diferents2!!!");
                 System.out.println("--------------------------------------------------------------------------------------------------------------");
+            }
+            if(contadorInvers==0){ //Si el contador invers va a ser mas pequeño que uno, comprobamos que todos los valores sean iguales y forzamos
+                System.out.println("fuera de los limites: " + trozo + " - " +entrada);
+                System.out.println("Insertamos en funcion: ");
+                 //Si todos los valores de trozo son 0, tendremos que forzar un cero después
+                int count1 = 0; //Como estamos seguros que el outofbounds solo saltará cuando sea este caso, comprovamos q todo sea ceros, sino salimos
+                int count2 = 0;
+                while(count1 < trozo.length() && Character.getNumericValue(trozo.charAt(count1)) == 0 ){ // comparamos todos los caracteres del tamaño del trozo y si todos son 0 deberiamos forzar un 0
+                    
+                    count1++;
+                    System.out.println("count1: " + count1);
                 }
+                while(count2 < trozo.length() && Character.getNumericValue(trozo.charAt(count2)) == 1 ){ // comparamos todos los caracteres del tamaño del trozo y si todos son 0 deberiamos forzar un 0
+                    count2++;
+                    System.out.println("count2: " + count2);
+                }
+                if(count1 == trozo.length()){
+                    //Todo ceros forzamos un 0
+                    System.out.println("todo 0");
+                    repeticionsPosicio.put(3,"1");
+                }else if (count2 == trozo.length()){
+                    //algun uno
+                    System.out.println("todo 1");
+                    repeticionsPosicio.put(3,"2");
+                }
+            }
             contadorInvers--; //Avanzamos una posicion hacia la izquierda de la cadena al final del bucle
             iteracion++;
-        }
-        
-        return repeticionsPosicio;
-        }
-        catch(java.lang.StringIndexOutOfBoundsException ex){ //Controlamos la excepcion por si a caso
-            ex.printStackTrace();
-            HashMap<Integer, String> repeticionsPosicio1 = new HashMap<Integer, String>();
-            return repeticionsPosicio1;
-        }
-        
+
+    }
+
+    return repeticionsPosicio;
     }
     
     /**
@@ -131,14 +149,23 @@ public class Compress {
             System.out.println("desplazaValor:" + desplazaValor);
             String guardaCopia = "";
             int desplazaCadena = copiaValor;
-            while (copiaValor > 0 && bin2.length() >= nBitsRep + nBitsPos){
+            boolean entraAlWhile=true;
+            if(copiaValor == 3 && desplazaValor == 2 || desplazaValor == 1){
+                if (desplazaValor == 2){
+                    
+                }else{
+                    
+                }
+                entraAlWhile = false;
+            }
+            while (copiaValor > 0 && bin2.length() >= nBitsRep + nBitsPos && entraAlWhile){
                 int usa = ventanaDeslizante - desplazaValor;
                 guardaCopia = guardaCopia + bin1.charAt(usa);
                 System.out.println("guardacopia: " + guardaCopia + " usa: " + usa);
-                copiaValor --;
-                desplazaValor --;
+                copiaValor--;
+                desplazaValor--;
             }
-            
+
             resultado = resultado + guardaCopia;
             inicio = inicio +  desplazaCadena;
             System.out.println("inicio: " + inicio + " ventanaDeslizante+inicio " +ventanaDeslizante+inicio);

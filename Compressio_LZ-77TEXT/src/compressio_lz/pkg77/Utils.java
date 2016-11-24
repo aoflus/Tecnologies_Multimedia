@@ -26,15 +26,13 @@ public class Utils {
         String secondValBin = Integer.toBinaryString(secondVal);
         int count1 = 0, count2 = 0;
         System.out.println("Longitud secondValBin: " + secondValBin.length() + " que hay aqui : " +secondValBin);
-        while(secondValBin.length() + count1 <= Math.log(ventanaDeslizante) / Math.log(2)){
+        while(secondValBin.length()< Math.log(ventanaDeslizante) / Math.log(2)){
             secondValBin = "0" + secondValBin;
-            count1++;
             System.out.println(" Entra y le suma un cero vmaos " +secondValBin);
         }
         System.out.println("Math.log(ventanaDeslizante) / Math.log(2) " + Math.log(ventanaDeslizante) / Math.log(2) + " secondValBin: " + secondValBin);
-        while(firstValBin.length() + count2 <= Math.log(ventanaEntrada) / Math.log(2)){
+        while(firstValBin.length() < Math.log(ventanaEntrada) / Math.log(2)){
             firstValBin = "0" + firstValBin;
-            count2++;
         }
         System.out.println("Math.log(ventanaEntrada) / Math.log(2) " + Math.log(ventanaEntrada) / Math.log(2) + " firstValBin: " + firstValBin);
         

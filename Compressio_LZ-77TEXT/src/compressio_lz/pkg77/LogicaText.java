@@ -37,7 +37,7 @@ public class LogicaText {
            
     public void run(){
         //System.out.println("AVER: " + this.read.ASCIIbin2string(prueba));
-        this.abrirTxt(rutap1);
+        this.abrirTxt(rutap);
         textASCII = read.ASCIIbin2string(textBin);
         System.out.println("textASCII: " + textASCII);
     }

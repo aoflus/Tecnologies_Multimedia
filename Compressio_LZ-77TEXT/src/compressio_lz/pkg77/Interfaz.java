@@ -71,15 +71,9 @@ public class Interfaz {
             String valuePair = imprimeCoincidencias(resultados);
             String coinc = "";
             String distancia = ""; 
-            try{
             String[] partsPair = valuePair.split(" ");
             coinc = partsPair[0];
             distancia = partsPair[1]; 
-            }catch(java.lang.ArrayIndexOutOfBoundsException ex){
-                ex.getStackTrace();
-                
-            }
-            
             System.out.println("coinc: " + coinc + " distancia: " + distancia);
             String binary1 = Utils.castIntsToString(Integer.parseInt(coinc),Integer.parseInt( distancia));
             System.out.println("binary: " + binary1);
@@ -118,6 +112,9 @@ public class Interfaz {
     public String imprimeCoincidencias(HashMap<Integer,String> resultados){
         Iterator it = resultados.entrySet().iterator();
         String valuePair = "";
+        if(!it.hasNext()){
+            System.out.println(resultados.entrySet().isEmpty());
+        }
         while (it.hasNext()) {
         Map.Entry pair = (Map.Entry)it.next();
         valuePair = pair.getKey() + " " + pair.getValue();
