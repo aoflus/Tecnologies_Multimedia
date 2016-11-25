@@ -53,7 +53,7 @@ public class Interfaz {
         
         int acum = 0;
         cadenaBits = str.toString();
-        //System.out.println("cadenaBitsSize: "+ cadenaBits.length() +" CadenaBits:        "+cadenaBits);
+        System.out.println("cadenaBitsSize: "+ cadenaBits.length() +" CadenaBits:        "+cadenaBits);
         String inicioCadenaComprimida = cadenaBits.substring(0,ventanaDeslizante); //El inicio de la cadena van a ser los primeros ventanaDeslizante bits
         //System.out.println("Tamaño cadena: " + cadenaBits);
         boolean fin = false;
@@ -78,7 +78,7 @@ public class Interfaz {
             String binary1 = Utils.castIntsToString(Integer.parseInt(coinc),Integer.parseInt( distancia));
             //System.out.println("binary: " + binary1);
             if(Integer.parseInt(coinc) == 3 && Integer.parseInt(distancia) == 2 || Integer.parseInt( distancia) == 1 && Integer.parseInt(coinc) == 3 ){
-                System.out.println("Eh, chanchullos");
+                //System.out.println("Eh, chanchullos");
                 if (Integer.parseInt(coinc) == 3){
                     coinc = "1";
                 }
@@ -99,7 +99,7 @@ public class Interfaz {
 
         inicioCadenaComprimida = inicioCadenaComprimida + " " + cadenaBits.substring(acum + ventanaDeslizante);
         comprimido = inicioCadenaComprimida;
-        /System.out.println("Cadena comprimida length: " +inicioCadenaComprimida.length() + " Cadena: " + inicioCadenaComprimida );
+        System.out.println("Cadena comprimida length: " +inicioCadenaComprimida.length()+" Cadena: " + inicioCadenaComprimida);
         
     }
     /**

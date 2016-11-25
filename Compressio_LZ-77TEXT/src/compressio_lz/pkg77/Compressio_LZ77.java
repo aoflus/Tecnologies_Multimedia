@@ -9,6 +9,7 @@ import java.lang.Math;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.lang.*;
 /**
  *
  * @author vikos
@@ -25,7 +26,6 @@ public class Compressio_LZ77 {
     public static boolean noRandom = false;
     public static String bitsString;
     public static boolean decompila = false;
-    
     public static void main(String[] args) {
         // TODO code application logic here
         //Gestionamos los params
@@ -34,8 +34,41 @@ public class Compressio_LZ77 {
         validateValues();
         if(!error){
         if (!dcmp1){ // Si es per descomprimri no utilitzem la interficie
-            LogicaText logica = new LogicaText();
-            //Interfaz interfaz = new Interfaz();
+            System.out.println("Empieza Hamlet:");
+            for(int x=4;x<=4096;x=x*2){
+                ventanaEntrada=x;
+                for(int xy=x;xy<=4096;xy=xy*2){
+                    ventanaDeslizante=xy;
+                    System.out.println("Mdes: " + ventanaDeslizante + " Ment: " + ventanaEntrada);
+                    long startTime = System.nanoTime();
+                    try{
+                        LogicaText logica = new LogicaText("hamlet_short.txt");
+                    }catch(java.lang.StringIndexOutOfBoundsException ex){
+                        System.out.println("Petó");
+                        ex.printStackTrace();
+                    }
+                    System.out.println("Total Time: " + (System.nanoTime() - startTime) / 1000000);
+        
+                }
+            }
+            System.out.println("Empieza Quijote:");
+            for(int x=4;x<=4096;x=x*2){
+                ventanaEntrada=x;
+                for(int xy=x;xy<=4096;xy=xy*2){
+                    ventanaDeslizante=xy;
+                    System.out.println("Mdes: " + ventanaDeslizante + " Ment: " + ventanaEntrada);
+                    long startTime = System.nanoTime();
+                    try{
+                        LogicaText logica = new LogicaText("quijote_short.txt");
+                    }catch(java.lang.StringIndexOutOfBoundsException ex){
+                        System.out.println("Petó");
+                        ex.printStackTrace();
+                    }
+                    System.out.println("Total Time: " + (System.nanoTime() - startTime) / 1000000);
+        
+                }
+            }
+            
         }
         }else{System.out.println("Algun error se ha cometido.");}
     }
