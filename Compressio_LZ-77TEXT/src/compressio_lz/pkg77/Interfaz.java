@@ -53,44 +53,53 @@ public class Interfaz {
         
         int acum = 0;
         cadenaBits = str.toString();
-        System.out.println("cadenaBitsSize: "+ cadenaBits.length() +" CadenaBits:        "+cadenaBits);
+        //System.out.println("cadenaBitsSize: "+ cadenaBits.length() +" CadenaBits:        "+cadenaBits);
         String inicioCadenaComprimida = cadenaBits.substring(0,ventanaDeslizante); //El inicio de la cadena van a ser los primeros ventanaDeslizante bits
-        System.out.println("Tamaño cadena: " + cadenaBits);
+        //System.out.println("Tamaño cadena: " + cadenaBits);
         boolean fin = false;
         int inicio = 0;
         while(!fin && (inicio + ventanaEntrada + ventanaDeslizante) < cadenaBits.length()){
-            System.out.println("Cadena:" + cadenaBits);
+            //System.out.println("Cadena:" + cadenaBits);
             String paraSplit = troceaCadena(cadenaBits,inicio);
             //Separamos la cadena en dos partes
             String[] parts = paraSplit.split(" ");
             String deslizante = parts[0];
             String entrada = parts[1];
-            System.out.println("deslizante: " + deslizante + " entrada: " + entrada);
+            //System.out.println("deslizante: " + deslizante + " entrada: " + entrada);
             HashMap<Integer, String> resultados = comprime.comprimir(deslizante,entrada,ventanaEntrada, ventanaDeslizante);
-            System.out.println("Imprimimos los resultados");
+            //System.out.println("Imprimimos los resultados");
             String valuePair = imprimeCoincidencias(resultados);
             String coinc = "";
             String distancia = ""; 
             String[] partsPair = valuePair.split(" ");
             coinc = partsPair[0];
             distancia = partsPair[1]; 
-            System.out.println("coinc: " + coinc + " distancia: " + distancia);
+            //System.out.println("coinc: " + coinc + " distancia: " + distancia);
             String binary1 = Utils.castIntsToString(Integer.parseInt(coinc),Integer.parseInt( distancia));
-            System.out.println("binary: " + binary1);
+            //System.out.println("binary: " + binary1);
+            if(Integer.parseInt(coinc) == 3 && Integer.parseInt(distancia) == 2 || Integer.parseInt( distancia) == 1 && Integer.parseInt(coinc) == 3 ){
+                System.out.println("Eh, chanchullos");
+                if (Integer.parseInt(coinc) == 3){
+                    coinc = "1";
+                }
+            }
             inicio = inicio + Integer.parseInt(coinc);
             inicioCadenaComprimida = inicioCadenaComprimida + " " + binary1;
-            System.out.println(inicio + ventanaEntrada + ventanaDeslizante - cadenaBits.length());
-            System.out.println(ventanaEntrada + ventanaDeslizante);
+            
+            //System.out.println("Comprimiendo: " + inicioCadenaComprimida);
+            //System.out.println("Acum: " + acum);
+            //System.out.println(inicio + ventanaEntrada + ventanaDeslizante - cadenaBits.length());
+            //System.out.println(ventanaEntrada + ventanaDeslizante);
             //if(inicio + ventanaEntrada + ventanaDeslizante - cadenaBits.length() < ventanaEntrada + ventanaDeslizante ){
             //    fin = true;
             //}
-            System.out.println(inicio);
+            //System.out.println(inicio);
             acum = acum + Integer.parseInt(coinc);
         }
 
         inicioCadenaComprimida = inicioCadenaComprimida + " " + cadenaBits.substring(acum + ventanaDeslizante);
         comprimido = inicioCadenaComprimida;
-        System.out.println("Cadena comprimida length: " +inicioCadenaComprimida.length() + " Cadena: " + inicioCadenaComprimida );
+        /System.out.println("Cadena comprimida length: " +inicioCadenaComprimida.length() + " Cadena: " + inicioCadenaComprimida );
         
     }
     /**
@@ -112,13 +121,11 @@ public class Interfaz {
     public String imprimeCoincidencias(HashMap<Integer,String> resultados){
         Iterator it = resultados.entrySet().iterator();
         String valuePair = "";
-        if(!it.hasNext()){
-            System.out.println(resultados.entrySet().isEmpty());
-        }
+        //System.out.println(resultados.isEmpty());
         while (it.hasNext()) {
         Map.Entry pair = (Map.Entry)it.next();
         valuePair = pair.getKey() + " " + pair.getValue();
-        System.out.println(pair.getKey() + " = " + pair.getValue());
+        //System.out.println(pair.getKey() + " = " + pair.getValue());
         it.remove(); // avoids a ConcurrentModificationException    
     }
     return valuePair;
