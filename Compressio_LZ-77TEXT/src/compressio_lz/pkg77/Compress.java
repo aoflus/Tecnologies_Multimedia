@@ -29,44 +29,30 @@ public class Compress {
         int ventanaEntrada = ment - 1; //Duplicamos el valor del tamaño de la ventana de entrada para poder manejarnos.
         HashMap<Integer, String> repeticionsPosicio = new HashMap<Integer, String>();
         //hmap.put(3, "Anuj");
-        //System.out.println("trozo:" + trozo);
-        //System.out.println("entrada:" + entrada);
         int iteracion = 0;
+        //System.out.println("Del trozo: "+ trozo);
+        //System.out.println("De la ent: "+ entrada);         
         while ( maximcoinc!=ment && contadorInvers >= 0){//Si encontramos el maximo de coincidencias posibles paramos, asi como si hemos llegado al final de la cadena.
-            //System.out.println("contadorInvers:" + contadorInvers);
             char bitActualDes = trozo.charAt(contadorInvers);
             char bitActualEntrada = entrada.charAt(0);
-            //System.out.println("-------------------------------------------------------------------------------------------------------------- it = " + iteracion);
-            //System.out.println("Del trozo "+ trozo + " cogemos la posicion " +"contadorInvers!!! " + contadorInvers +" que es el bit "+bitActualDes);
-            //System.out.println("De la  entrada "+ entrada + " cogemos la posicion " +"0!!!" + " que es el bit "+bitActualEntrada);         
             //Comprarmos el ultimo bit de la secuencia trozo con el primer bit de entrada, si coincide
             if (bitActualDes == bitActualEntrada){
                 maximcoinc++;
-                //System.out.println("Iguals!!!");
-                //System.out.println("--------------------------------------------------------------------------------------------------------------");
                 //Comprovamos que no hayamos guardado antes una coincidencia igual, solo nos interesará superior.
                 if(!repeticionsPosicio.containsKey(maximcoinc)){ // Si no contiene esta key guardamos
-                    //System.out.println("No tenemos esta key " + maximcoinc + " la guardamos con la posicion:" + (mdes - contadorInvers));
                     repeticionsPosicio.put(maximcoinc,String.valueOf(mdes - contadorInvers));
                 }
                 int pent = 1, xdes = contadorInvers + 1; // Comenzamos a contar a partir de la posicion actual
                 //Cuando encontramos la primera coincidencia provamos de seguir las dos secuencias a ver si hay mas coincidencias
                 while(xdes < mdes && pent < ment && maximcoinc < ment && maximcoinc != 0){ //Mientras las nuevas variables no sobrepasen el valor maximo
-                    //System.out.println("Entramos a comparar los siguientes!!!");
                     char bitComparadoDes = trozo.charAt(xdes);
                     char bitComparadoEn = entrada.charAt(pent);
-                    //System.out.println("Del trozo "+ trozo + " cogemos la posicion " +" xdes!!! " + xdes +" que es el bit "+bitComparadoDes);
-                    //System.out.println("De la  entrada "+ entrada + " cogemos la posicion " +" pent!!! " + pent +" que es el bit "+bitComparadoEn);
                     if (bitComparadoDes == bitComparadoEn) {
-                        //System.out.println("Iguals2!!!");
                         maximcoinc++; //Otra coincidencia sumamos uno a la variable
                         if(!repeticionsPosicio.containsKey(maximcoinc)){ // Si no contiene esta key guardamos 2 coincidencias o las q sean y la posicion inicial
-                            //System.out.println("No tenemos esta key " + maximcoinc + " la guardamos con la posicion:" + (mdes - (contadorInvers)));
                             repeticionsPosicio.put(maximcoinc,String.valueOf(mdes - (contadorInvers)));
                         }
                     }else { // Si perdemos la racha reiniciamos
-                        //System.out.println("Diferents1!!!");
-                        //System.out.println("--------------------------------------------------------------------------------------------------------------");
                         maximcoinc = 0;
                     }
                     xdes++; //Sumamos 1 a las variables que controlan la posicion
@@ -77,11 +63,9 @@ public class Compress {
                     //maximcoinc++; //Sumamos uno a la variable que controla las coincidencias que hemos encontrado
                     //}
             }else{
-                //System.out.println("Diferents2!!!");
-                //System.out.println("--------------------------------------------------------------------------------------------------------------");
+                
             }
-            //System.out.println(contadorInvers + ": Contador invers");
-            if(contadorInvers==0){ //Si el contador invers va a ser mas pequeño que uno, comprobamos que todos los valores sean iguales y forzamos
+            if(contadorInvers==0 && repeticionsPosicio.isEmpty()){ //Si el contador invers va a ser mas pequeño que uno, comprobamos que todos los valores sean iguales y forzamos
                 //System.out.println("fuera de los limites: " + trozo + " - " +entrada);
                 //System.out.println("Insertamos en funcion: ");
                  //Si todos los valores de trozo son 0, tendremos que forzar un cero después
@@ -166,6 +150,7 @@ public class Compress {
                 entraAlWhile = false;
             }
             while (copiaValor > 0 && bin2.length() >= nBitsRep + nBitsPos && entraAlWhile){
+                //System.out.println("Ventana Deslizante: " + ventanaDeslizante + " desplazaValor: " + desplazaValor);
                 int usa = ventanaDeslizante - desplazaValor;
                 guardaCopia = guardaCopia + bin1.charAt(usa);
                 //System.out.println("guardacopia: " + guardaCopia + " usa: " + usa);

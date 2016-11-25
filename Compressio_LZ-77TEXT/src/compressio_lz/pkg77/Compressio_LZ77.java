@@ -33,7 +33,9 @@ public class Compressio_LZ77 {
         gestionParametros(args);
         validateValues();
         if(!error){
-        if (!dcmp1){ // Si es per descomprimri no utilitzem la interficie
+            
+            LogicaText logica = new LogicaText("quijote_short.txt");
+            if (false){ // Si es per descomprimri no utilitzem la interficie
             System.out.println("Empieza Hamlet:");
             for(int x=4;x<=4096;x=x*2){
                 ventanaEntrada=x;
@@ -42,7 +44,7 @@ public class Compressio_LZ77 {
                     System.out.println("Mdes: " + ventanaDeslizante + " Ment: " + ventanaEntrada);
                     long startTime = System.nanoTime();
                     try{
-                        LogicaText logica = new LogicaText("hamlet_short.txt");
+                        //LogicaText logica = new LogicaText("hamlet_short.txt");
                     }catch(java.lang.StringIndexOutOfBoundsException ex){
                         System.out.println("Petó");
                         ex.printStackTrace();
@@ -59,7 +61,7 @@ public class Compressio_LZ77 {
                     System.out.println("Mdes: " + ventanaDeslizante + " Ment: " + ventanaEntrada);
                     long startTime = System.nanoTime();
                     try{
-                        LogicaText logica = new LogicaText("quijote_short.txt");
+                        //LogicaText logica = new LogicaText("quijote_short.txt");
                     }catch(java.lang.StringIndexOutOfBoundsException ex){
                         System.out.println("Petó");
                         ex.printStackTrace();

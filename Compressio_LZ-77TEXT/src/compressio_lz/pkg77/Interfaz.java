@@ -53,7 +53,7 @@ public class Interfaz {
         
         int acum = 0;
         cadenaBits = str.toString();
-        System.out.println("cadenaBitsSize: "+ cadenaBits.length() +" CadenaBits:        "+cadenaBits);
+        System.out.println("cadenaBitsSize: "+ cadenaBits.length() +" CadenaBits: "+cadenaBits);
         String inicioCadenaComprimida = cadenaBits.substring(0,ventanaDeslizante); //El inicio de la cadena van a ser los primeros ventanaDeslizante bits
         //System.out.println("Tamaño cadena: " + cadenaBits);
         boolean fin = false;

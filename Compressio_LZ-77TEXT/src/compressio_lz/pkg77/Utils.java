@@ -41,8 +41,8 @@ public class Utils {
         }//else{System.out.println("Noentraenelprimerif");}
         if(secondValBin.length()>Math.log(ventanaDeslizante) / Math.log(2)){
             //System.out.println("o entro aqui y le hago un substring y me quedo tan ancho");
-            secondValBin = secondValBin.substring(1);
-        }//else{System.out.println("Noentraenelsegundoif");}
+            secondValBin = secondValBin.substring(1);}
+        //else{System.out.println("Noentraenelsegundoif");}
 
         return firstValBin + " " + secondValBin;
     }
