@@ -18,13 +18,20 @@ import javax.imageio.ImageIO;
  * and open the template in the editor.
  * In progress: 
  * Recorra imagenes controlando frecuencia. (Victor)
- *
+ *​
+ *​    Compresion de los datos de compresion
+ *​    Oos
+ *​    Ascii
+ *​    Utf
+ *​    Int
+ *​    Shrt mejor este por buffered mas rapido ram que disco
+ *​    Zip file output stream a traves de zip es lo q mas comprime
  *
  *
  */
 
 /**
- *
+ * params: -i "material/Cubo.zip" -e -o "nombre.jpeg" --fps 10 --negative --binarization 30 --averaging 7
  * @author Álvaro
  */
 public class Main {
@@ -35,9 +42,10 @@ public class Main {
      * A mes gestionarem els params. Es comprova si existeix, si existeix, llançarem la lògica que correspongui
      * @param args 
      */
+    public static Settings settings;
     public static void main(String[] args) {
         //Creem un settings i el jcommander.
-        Settings settings = new Settings();
+        settings = new Settings();
         new JCommander(settings, args); // simple one-liner
         Controlador controlador = new Controlador();
         
@@ -47,6 +55,14 @@ public class Main {
             System.out.println(rutaZip);
             controlador.obreZip(rutaZip);
         }
+        boolean encode = settings.getEncode();
+        if(encode){
+            System.out.printf("Entramos en encode.");
+            int fps1 = filtresToApply(controlador);
+            controlador.encode(fps1);
+            
+        }
+        
         //Sortida del arxiu
         String output = settings.getOutput();
         if(output!=null){
@@ -57,9 +73,9 @@ public class Main {
         //Si determina el numero de frames el calculem
         String frames = settings.getFps();
         int fps;
-        if (frames != null){
+        if (frames != null && !encode){
             fps = Integer.valueOf(frames);
-            controlador.reprodueixZip(fps,"");
+            //controlador.reprodueixZip(fps,"");
         }else{fps = 10;}
         
         /**
@@ -93,6 +109,37 @@ public class Main {
         }
 
     }
-    
-    
+    /**
+     * Si realizamos encode, tenemos que preguntar antes si hay que aplicar algun filtro.
+     */
+    public static int filtresToApply(Controlador controlador){
+        String frames = settings.getFps();
+        int fps;
+        if (frames != null){
+            fps = Integer.valueOf(frames);
+        }else{fps = 10;}
+        String binarization = settings.getBinarization(); //Recogemos de las settings el parametro ya procesado con su respectivo getter
+        if(binarization != null){
+            System.out.println("Fa la binaritzacio amb encode");
+            //Se comprueba que el parametro no sea null, en el caso que sea null querrá decir que no se ha puesto como argumento, es decir, la funcionalidad
+            //no la tendremos que hacer, por tanto si está, llamaremos a la funcion que ejecute lo que el parametro especifica en el documento TM_ProjectePractiques
+            int thresh = Integer.valueOf(binarization);
+            controlador.binaritzantImatge(thresh);
+        }
+        
+        //Si hi ha el parametre negatiu ho fem
+        if (settings.getNegative()){
+            System.out.println("Fa el negatiu amb encode");
+            controlador.inverteixNegatiuImatge();
+        }
+        
+        //Si hi ha el parametre average ho fem:
+        String aver = settings.getAveraging();
+        if (aver != null){
+            System.out.println("Fa la averaging amb encode");
+            int averNumb = Integer.valueOf(settings.getAveraging());
+            controlador.averagingFilterImatge(averNumb);
+        }
+        return fps;
+    }
 }

@@ -4,6 +4,7 @@
  * and open the template in the editor.
  */
 package Controlador;
+import Model.Encoder;
 import Model.Utils;
 import Model.Filtres;
 import static Model.JPEGCompress.compressInJPEG;
@@ -151,6 +152,14 @@ public class Controlador {
         } catch (IOException ex) {
             Logger.getLogger(Controlador.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+    /**
+     * Metode que realitza el encoding en cas de que s'hagi seleccionat per parametre.
+     */
+    public void encode(int fps) {
+        this.reprodueixZip(fps, "");
+        Encoder encode = new Encoder(bufferWithUnzippedImg);
+        
     }
     
 }
