@@ -86,7 +86,7 @@ public class Codificador {
                 BufferedImage image = img.getImage();
                 System.out.println("real width:" + image.getWidth());
                 System.out.println("real height:" + image.getHeight());
-                this.width = (float)image.getWidth()/this.ntilesw;
+                this.width = (float)image.getWidth()/this.ntilesh;
                 this.height = (float)image.getHeight()/this.ntilesh;
                 System.out.println("this.width" + this.width);
                 System.out.println("this.height " + this.height );
@@ -94,6 +94,13 @@ public class Codificador {
             }  
         }
     }
+    
+    /**
+     * Para dividir en bloques una imagen, hay que definir cuantas particiones en el eje x
+     * y cuantas en el eje y se hacen, usando los valores this.ntilesh this.ntilesw
+     * @param image
+     * @return 
+     */
     public ArrayList<Tesseles> subdividirImgTesseles(BufferedImage image){
         ArrayList<Tesseles> teseles = new ArrayList<>();
         Tesseles tesela;
@@ -101,12 +108,8 @@ public class Codificador {
 
         for(float y=0; y<Math.round(image.getHeight()); y+=this.height){
             for(float x=0; x<Math.round(image.getWidth()); x+=this.width){
-                System.out.println("y:" + y);
-                System.out.println("x:" + x);
                 x=Math.round(x);
                 y=Math.round(y);
-                System.out.println("roundy:" + y);
-                System.out.println("roundx:" + x);
                 tesela = new Tesseles(image.getSubimage((int)x, (int) y, (int)this.width, (int)this.height), comptador);
                 teseles.add(tesela);
                 comptador++;
