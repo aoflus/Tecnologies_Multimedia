@@ -57,6 +57,8 @@ public class Main {
         boolean encode = settings.getEncode();
         String output = settings.getOutput();
         String frames = settings.getFps();
+        String ntiles = settings.getnTiles();
+        String ntilesh="", ntilesw = "";
         int fps;
         //Asignamos fps
         if (frames != null && !encode){
@@ -71,16 +73,20 @@ public class Main {
         //Codificamos
         if(encode){
             System.out.printf("Entramos en encode.");
-            int gop, ntiles = 0;
+            int gop;
             if (settings.getGOP()!=null){
                 gop = Integer.valueOf(settings.getGOP());
             }else{gop = 5;}
             // De momento cogemos el tamaño de las teselas en pixeles.
             // A implementar coger valores diferentes eje x e y.
+            System.out.println("ntiles?" + settings.getnTiles());
             if (settings.getnTiles()!=null){
-                ntiles = Integer.valueOf(settings.getnTiles());
+                String[] parts = ntiles.split(",");
+                ntilesw = parts[0];
+                ntilesh = parts[1];
+                System.out.println(ntilesw + ntilesh);
             }
-            controlador.encode(fps,gop, ntiles);
+            controlador.encode(fps,gop, ntilesw, ntilesh);
         }
         
         //Sortida del arxiu

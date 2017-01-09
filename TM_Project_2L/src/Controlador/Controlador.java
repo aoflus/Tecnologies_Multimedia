@@ -177,9 +177,9 @@ public class Controlador {
     /**
      * Metode que realitza el encoding en cas de que s'hagi seleccionat per parametre.
      */
-    public void encode(int fps, int gop, int ntiles) {
+    public void encode(int fps, int gop, String ntilesw, String ntilesh) {
         this.reprodueixZip(fps, "");
-        Codificador encode = new Codificador(bufferWithUnzippedImg, gop, ntiles);
+        Codificador encode = new Codificador(bufferWithUnzippedImg, gop, ntilesw, ntilesh);
         
     }
     

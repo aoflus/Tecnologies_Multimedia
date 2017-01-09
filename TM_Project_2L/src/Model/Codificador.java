@@ -24,23 +24,28 @@ import java.util.logging.Logger;
 public class Codificador {
 
     HashMap<Integer, Image> unzippedImg = new HashMap<Integer, Image>();
-    int gop = 5, ntilesw = 3, ntilesh = 3;
+    int gop = 5, ntilesw=1, ntilesh = 1;
     ArrayList <ArrayList> listaListasGOP = new ArrayList <ArrayList>();
     ArrayList <Marc> listaGOP = new ArrayList <Marc>();
     float height, width;
     ArrayList<Marc> comprimides;
     
     
-    public Codificador(HashMap<Integer, Image> bufferWithUnzippedImg, int gop, int ntiles) {
+    public Codificador(HashMap<Integer, Image> bufferWithUnzippedImg, int gop, String ntilesw, String ntilesh) {
         System.out.println("Imagenes leidas");
         this.gop = gop;
         //this.ntiles= (int) Math.sqrt(ntiles);
         //this.ntiles=ntiles;
         System.out.println("GOP: " + this.gop);
+        this.ntilesh = Integer.valueOf(ntilesh);
+        this.ntilesw = Integer.valueOf(ntilesw);
+        System.out.println("ntilesh: " + this.ntilesh);
+        System.out.println("ntilesw: " + this.ntilesw);
         this.unzippedImg = bufferWithUnzippedImg;
         this.aplicaFiltres();
         this.ompleGOP();
         this.recorreGOP();
+
     }
 
     /**
