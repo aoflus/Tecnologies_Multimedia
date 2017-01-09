@@ -32,7 +32,9 @@ import javax.imageio.ImageIO;
 
 /**
  * params: -i "material/Cubo.zip" -e -o "nombre.jpeg" --fps 10 --negative --binarization 30 --averaging 7
- * @author Álvaro
+ * 
+ * Clase Main que arranca tot el programa.
+ * @author Victor i Alvaro
  */
 public class Main {
     
@@ -59,7 +61,18 @@ public class Main {
         if(encode){
             System.out.printf("Entramos en encode.");
             int fps1 = filtresToApply(controlador);
-            controlador.encode(fps1);
+            int gop, ntiles = 0;
+            if (settings.getGOP()!=null){
+                gop = Integer.valueOf(settings.getGOP());
+            }else{gop = 5;}
+            // De momento cogemos el tamaño de las teselas en pixeles.
+            // A implementar coger valores diferentes eje x e y.
+            if (settings.getnTiles()!=null){
+                ntiles = Integer.valueOf(settings.getnTiles());
+            }
+            
+            
+            controlador.encode(fps1,gop, ntiles);
             
         }
         

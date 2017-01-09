@@ -19,10 +19,10 @@ import javax.imageio.ImageWriteParam;
 import javax.imageio.ImageWriter;
 import javax.imageio.stream.ImageOutputStream;
 
-/**
- * Classe que comprimeix en JPEG donada una certa qualitat
- * @author vikos
- */
+    /**
+     * Classe que comprimeix en JPEG donada una certa qualitat com a parametre.
+     * @author Victor i Alvaro
+     */
 
 public class JPEGCompress {
     /**

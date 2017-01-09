@@ -16,7 +16,7 @@ import javax.swing.JLabel;
 
 /**
  *  JFrame reproductor per defecte.
- * @author vikos
+ * @author Victor i Alvaro
  */
 public class Reproductor extends javax.swing.JFrame {
 

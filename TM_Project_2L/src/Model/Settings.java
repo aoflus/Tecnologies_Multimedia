@@ -8,8 +8,8 @@ package Model;
 import com.beust.jcommander.Parameter;
 
 /**
- * Classe settings amb els parametres
- * @author vikos
+ * Classe settings amb els parametres definits.
+ * @author Victor i Alvaro
  */
 public class Settings {
 

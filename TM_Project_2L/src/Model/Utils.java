@@ -33,7 +33,7 @@ import javax.imageio.ImageIO;
  * A la classe Utils generarem totes les funcionalitats "externes" per a
  * realitzar les especificacions descrites a la rubrica.
  *
- * @author vikos
+ * @author Victor i Alvaro
  */
 public class Utils {
 

@@ -12,17 +12,12 @@ import java.awt.image.Kernel;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-/**
- * Classe amb els filtres implementats
- * @author vikos
- */
-public class Filtres {
     /**
-     * Filtre binaritza
-     * @param image
-     * @param threshold
-     * @return 
+     * Clase que implementa els filtres descrits pels requisits.
+     * @author Victor i Alvaro
      */
+public class Filtres {
+
     
     public static BufferedImage average1(BufferedImage image, int filter){
 

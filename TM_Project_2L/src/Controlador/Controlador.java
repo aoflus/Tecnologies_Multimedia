@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 package Controlador;
-import Model.Encoder;
+import Model.Codificador;
 import Model.Utils;
 import Model.Filtres;
 import static Model.JPEGCompress.compressInJPEG;
@@ -20,9 +20,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Tota accio logica es cridara dins d'aquesta classe, farem una funcio per cada opcio del menu
- * i picarem tot el necessari per a que es pugui realitzar.
- * @author vikos
+ * Tota accio logica es realitzara utilitzant el controlador com a intermediari
+ * @author Victor i Alvaro
  */
 public class Controlador {
     public static final String AVE = "ave";
@@ -156,9 +155,9 @@ public class Controlador {
     /**
      * Metode que realitza el encoding en cas de que s'hagi seleccionat per parametre.
      */
-    public void encode(int fps) {
+    public void encode(int fps, int gop, int ntiles) {
         this.reprodueixZip(fps, "");
-        Encoder encode = new Encoder(bufferWithUnzippedImg);
+        Codificador encode = new Codificador(bufferWithUnzippedImg, gop, ntiles);
         
     }
     

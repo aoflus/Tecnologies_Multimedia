@@ -19,7 +19,7 @@ import java.util.logging.Logger;
 /**
  * Classe timer, l'utilitzem per a controlar el fluxe de reproduccio de les imatges
  * ens crearem una classe viewer y assignarem un temps d'espera entre imatges.
- * @author vikos
+ * @author Victor y Alvaro
  */
 
 public class TimerEx {

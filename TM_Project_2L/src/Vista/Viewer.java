@@ -1,7 +1,10 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package Vista;
-    /*
-    * A modificar.
-    */
+
 import Model.Filtres;
 import Model.Utils;
 import java.awt.*;
@@ -14,7 +17,7 @@ import javax.swing.*;
 /**
  * Class JFrame viewer que permet obrir un jframe automàticament.
  * 
- * @author Victor
+ * @author Victor i Alvaro
  */
 
 public class Viewer {

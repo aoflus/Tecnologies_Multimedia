@@ -6,9 +6,10 @@
 package Model;
 
 /**
- *
- * @author Victor
+ * Clase Decodificador que realitzarà la tasca de descodificar el nostre codec.
+ * @author Victor i Alvaro
  */
-public class Decoder {
+
+public class Decodificador {
     
 }
