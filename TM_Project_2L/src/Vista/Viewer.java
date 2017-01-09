@@ -121,6 +121,10 @@ public class Viewer {
                 System.out.println("average switch");
                 imageBuffered =  Filtres.average((BufferedImage) imageBuffered, 3); 
             break;
+            case "":
+                System.out.println("Normal switch");
+                imageBuffered =  (BufferedImage) image; 
+            break;
         }
             
         }catch (Exception e){

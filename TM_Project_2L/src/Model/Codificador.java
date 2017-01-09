@@ -5,7 +5,10 @@
  */
 package Model;
 
+import Model.GestioImatge.Marc;
+import Model.GestioImatge.Tesseles;
 import static Model.JPEGCompress.compressInJPEG;
+import Vista.Viewer;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
@@ -20,7 +23,10 @@ public class Codificador {
     HashMap<Integer, Image> unzippedImg = new HashMap<Integer, Image>();
     int gop = 5, ntiles = 0;
     ArrayList <ArrayList> listaListasGOP = new ArrayList <ArrayList>();
-    ArrayList <BufferedImage> listaGOP = new ArrayList <BufferedImage>();
+    ArrayList <Marc> listaGOP = new ArrayList <Marc>();
+    int height, width;
+    ArrayList<Marc> comprimides;
+    
     
     public Codificador(HashMap<Integer, Image> bufferWithUnzippedImg, int gop, int ntiles) {
         System.out.println("Imagenes leidas");
@@ -30,16 +36,10 @@ public class Codificador {
         System.out.println("ntiles: " + this.ntiles);
         this.unzippedImg = bufferWithUnzippedImg;
         this.aplicaFiltres();
-        this.compruebaExt();
         this.ompleGOP();
         this.recorreGOP();
     }
-    /**
-     * Metodo que comprueba extension de las imagenes.
-     */
-    private void compruebaExt() {
-        System.out.println("Comprobamos si estan todas en el formato deseado. No implementado aun"); //To change body of generated methods, choose Tools | Templates.
-    }
+
     /**
      * Metodo que aplica los filtros seleccionados por el user.
      */
@@ -59,38 +59,48 @@ public class Codificador {
                 //Si gop es 5, entra en el if en el 0, en el 5, en el 10...
                 if(!listaGOP.isEmpty()){
                     if(x + 1 >= unzippedImg.size()){
-                        this.listaGOP.add((BufferedImage) unzippedImg.get(x));
+                        
+                        this.listaGOP.add(new Marc((BufferedImage) unzippedImg.get(x), x));
                     };
                     listaListasGOP.add(listaGOP);
                 }
-                listaGOP = new ArrayList <BufferedImage>();
+                listaGOP = new ArrayList <Marc>();
             }
             //Añadimos imagen a la lista GOP.
-            this.listaGOP.add((BufferedImage) unzippedImg.get(x));
+            this.listaGOP.add(new Marc((BufferedImage) unzippedImg.get(x), x));
         }
     }
     /**
      * Metode per comprovar que s'hagi generat ve el vector de imatges
-     * Cridem a subdividir en teseles
+     * Cridem a subdividir en teseles i ens les guardem
      */
     private void recorreGOP(){
         System.out.println("recorreGOP");
         int x = 0;
-        for (ArrayList e:listaListasGOP){
+        for (ArrayList<Marc> e:listaListasGOP){
             System.out.println((x++) + " tamany: "+ e.size());
-            this.subdividirImgTesseles(e);
+            for (Marc img:e){
+                BufferedImage image = img.getImage();
+                this.width = image.getWidth()/this.ntiles;
+                this.height = image.getHeight()/this.ntiles;
+                img.setTeseles(this.subdividirImgTesseles(image));
+        }
             
         }
     }
-    
-    /**
-     * Subdividim en tesseles les imatges.
-     * @param listaGOPs 
-     */
-    private void subdividirImgTesseles(ArrayList <BufferedImage> listaGOPs){
-        System.out.println("subdividirImgTesseles");
-        
-        
+    public ArrayList<Tesseles> subdividirImgTesseles(BufferedImage image){
+        ArrayList<Tesseles> teseles = new ArrayList<>();
+        Tesseles tesela;
+        int comptador = 0;
+        Viewer view = new Viewer();
+        for(int y=0; y<image.getHeight(); y+=this.height){
+            for(int x=0; x<image.getWidth(); x+=this.width){
+                tesela = new Tesseles(image.getSubimage(x, y, this.width, this.height), comptador);
+                teseles.add(tesela);
+                comptador++;
+                //view.mostraImatgeParam(tesela.getTesela(), "");
+            }
+        }
+        return teseles;
     }
-    
 }

@@ -138,6 +138,11 @@ public class Utils {
             int cont = 0;
             while (ze != null) {
                 //System.out.println("Por cada imagen imprime el nombre:" + ze.getName());
+                if(!compruebaExt(ze.getName())) {
+                    System.err.println("El fichero no tiene la extensión correcta");
+                    System.exit(0);
+                }
+                
                 BufferedImage image = ImageIO.read(zis);
                 try {
                     pos = Integer.valueOf(ze.getName().substring(4, 6));
@@ -156,4 +161,12 @@ public class Utils {
         }
         return null;
     }
+    
+    /**
+     * Metodo que comprueba extension de las imagenes.
+     */
+    private static boolean compruebaExt(String name) {
+        String substring = name.substring(name.lastIndexOf(".")+1,name.length());
+        return (substring.equalsIgnoreCase("png") || substring.equalsIgnoreCase("jpeg") || substring.equalsIgnoreCase("jpg") || substring.equalsIgnoreCase("gif") || substring.equalsIgnoreCase("bmp"));
+        }
 }

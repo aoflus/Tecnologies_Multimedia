@@ -32,6 +32,7 @@ public class Controlador {
     public HashMap<Integer, Image> bufferWithUnzippedImgNegative = new HashMap<Integer, Image>(); //Guardarem les sortides
     public HashMap<Integer, Image> bufferWithUnzippedImgBinarized = new HashMap<Integer, Image>();
     public HashMap<Integer, Image> bufferWithUnzippedImgAveraged = new HashMap<Integer, Image>();
+    public HashMap<Integer, Image> unzippedImg = new HashMap<Integer, Image>();
     public Controlador(){}
     /**
      * Obre zip, crida al utils per a parsejar les imatges.
@@ -56,8 +57,29 @@ public class Controlador {
             }else if (filtre == BIN){
                 bufferWithUnzippedImgBinarized.put(x, Filtres.binarization((BufferedImage)bufferWithUnzippedImg.get(x),param));
             }
+        }// Quan acabem de guardar a la llista auxiliar, remplacem amb la que utilitzarem sempre i aixi s'acumularan els filtres.
+        if(filtre == AVE){
+            bufferWithUnzippedImg = bufferWithUnzippedImgAveraged;
+        }else if(filtre == NEG){
+            bufferWithUnzippedImg = bufferWithUnzippedImgNegative;
+        }else if (filtre == BIN){
+            bufferWithUnzippedImg = bufferWithUnzippedImgBinarized;
         }
     }
+    
+//    public void carregaImFiltrades(String filtre, int param){
+//        int limit = bufferWithUnzippedImg.size();
+//        ArrayList<Image> llistaImatgesParam = new ArrayList<Image>();
+//        for (int x=0 ; x<limit; x++){
+//            if(filtre == AVE){
+//                bufferWithUnzippedImgAveraged.put(x, Filtres.average1((BufferedImage)bufferWithUnzippedImg.get(x),param));
+//            }else if(filtre == NEG){
+//                bufferWithUnzippedImgNegative.put(x, Filtres.negative((BufferedImage)bufferWithUnzippedImg.get(x)));
+//            }else if (filtre == BIN){
+//                bufferWithUnzippedImgBinarized.put(x, Filtres.binarization((BufferedImage)bufferWithUnzippedImg.get(x),param));
+//            }
+//        }
+//    }
     
     /**
      * Crea una instancia del timer que controlará el flujo de reproducción

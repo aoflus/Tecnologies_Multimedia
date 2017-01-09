@@ -12,7 +12,7 @@ import java.util.ArrayList;
  *  Classe Marc que implementara certs atributs per a la gestió de frames.
  *  @Author Victor i Alvaro
  */
-public class Marc implements Comparable<Marc>{
+public class Marc{
     private BufferedImage image;
     private int id;
     private ArrayList<Tesseles> teseles;
@@ -60,20 +60,5 @@ public class Marc implements Comparable<Marc>{
     public BufferedImage getImage() {
         return image;
     }
-
-    @Override
-    public int compareTo(Marc o) {
-        //return Comparators.ID.compare(this, o);
-        return 1;
-    }
-/*
-    public static class Comparators {
-        public static Comparator<Frame> ID = new Comparator<Frame>() {
-            @Override
-            public int compare(Frame o1, Frame o2) {
-                return o1.getId().compareTo(o2.getId());
-            }
-        };
-    }*/
     
 }
