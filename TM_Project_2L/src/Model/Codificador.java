@@ -11,8 +11,11 @@ import static Model.JPEGCompress.compressInJPEG;
 import Vista.Viewer;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Clase codificador que contindra metodes que permetran realitzar la codificacio entre frames.
@@ -21,19 +24,19 @@ import java.util.HashMap;
 public class Codificador {
 
     HashMap<Integer, Image> unzippedImg = new HashMap<Integer, Image>();
-    int gop = 5, ntiles = 0;
+    int gop = 5, ntilesw = 3, ntilesh = 3;
     ArrayList <ArrayList> listaListasGOP = new ArrayList <ArrayList>();
     ArrayList <Marc> listaGOP = new ArrayList <Marc>();
-    int height, width;
+    float height, width;
     ArrayList<Marc> comprimides;
     
     
     public Codificador(HashMap<Integer, Image> bufferWithUnzippedImg, int gop, int ntiles) {
         System.out.println("Imagenes leidas");
         this.gop = gop;
-        this.ntiles=ntiles;
+        //this.ntiles= (int) Math.sqrt(ntiles);
+        //this.ntiles=ntiles;
         System.out.println("GOP: " + this.gop);
-        System.out.println("ntiles: " + this.ntiles);
         this.unzippedImg = bufferWithUnzippedImg;
         this.aplicaFiltres();
         this.ompleGOP();
@@ -81,26 +84,39 @@ public class Codificador {
             System.out.println((x++) + " tamany: "+ e.size());
             for (Marc img:e){
                 BufferedImage image = img.getImage();
-                this.width = image.getWidth()/this.ntiles;
-                this.height = image.getHeight()/this.ntiles;
+                System.out.println("real width:" + image.getWidth());
+                System.out.println("real height:" + image.getHeight());
+                this.width = (float)image.getWidth()/this.ntilesw;
+                this.height = (float)image.getHeight()/this.ntilesh;
+                System.out.println("this.width" + this.width);
+                System.out.println("this.height " + this.height );
                 img.setTeseles(this.subdividirImgTesseles(image));
-        }
-            
+            }  
         }
     }
     public ArrayList<Tesseles> subdividirImgTesseles(BufferedImage image){
         ArrayList<Tesseles> teseles = new ArrayList<>();
         Tesseles tesela;
         int comptador = 0;
-        Viewer view = new Viewer();
-        for(int y=0; y<image.getHeight(); y+=this.height){
-            for(int x=0; x<image.getWidth(); x+=this.width){
-                tesela = new Tesseles(image.getSubimage(x, y, this.width, this.height), comptador);
+
+        for(float y=0; y<Math.round(image.getHeight()); y+=this.height){
+            for(float x=0; x<Math.round(image.getWidth()); x+=this.width){
+                System.out.println("y:" + y);
+                System.out.println("x:" + x);
+                x=Math.round(x);
+                y=Math.round(y);
+                System.out.println("roundy:" + y);
+                System.out.println("roundx:" + x);
+                tesela = new Tesseles(image.getSubimage((int)x, (int) y, (int)this.width, (int)this.height), comptador);
                 teseles.add(tesela);
                 comptador++;
-                //view.mostraImatgeParam(tesela.getTesela(), "");
+                //compressInJPEG(tesela.getTesela(),"teseles",String.valueOf(comptador)+".jpeg");
+
             }
         }
+        System.out.println("-------------------------------------------------------");
+        System.out.println("teseles:" + teseles.size());
+        System.out.println("-------------------------------------------------------");
         return teseles;
     }
 }
