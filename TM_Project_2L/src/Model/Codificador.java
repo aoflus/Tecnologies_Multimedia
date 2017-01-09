@@ -65,6 +65,8 @@ public class Codificador {
                         
                         this.listaGOP.add(new Marc((BufferedImage) unzippedImg.get(x), x));
                     };
+                    Utils zipp= new Utils();
+                    zipp.saveZip(listaGOP,"nouZip.zip");
                     listaListasGOP.add(listaGOP);
                 }
                 listaGOP = new ArrayList <Marc>();
@@ -114,7 +116,6 @@ public class Codificador {
                 teseles.add(tesela);
                 comptador++;
                 //compressInJPEG(tesela.getTesela(),"teseles",String.valueOf(comptador)+".jpeg");
-
             }
         }
         System.out.println("-------------------------------------------------------");

@@ -5,6 +5,7 @@
  */
 package Model;
 
+import Model.GestioImatge.Marc;
 import java.awt.Color;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
@@ -168,5 +169,55 @@ public class Utils {
     private static boolean compruebaExt(String name) {
         String substring = name.substring(name.lastIndexOf(".")+1,name.length());
         return (substring.equalsIgnoreCase("png") || substring.equalsIgnoreCase("jpeg") || substring.equalsIgnoreCase("jpg") || substring.equalsIgnoreCase("gif") || substring.equalsIgnoreCase("bmp"));
+    }
+    
+    public int count;
+    /**
+     * Metodo que pasada una lista de imagenes, y un nombre de archivo, genera un zip con las imagenes.
+     * @param imgList
+     * @param outName 
+     */
+    public void saveZip(ArrayList<Marc> imgList, String outName){
+        ZipOutputStream outputStreamZip = null;
+        BufferedOutputStream outputStreamBuffered; 
+        FileOutputStream outputStreamFile;
+        try {
+            outputStreamFile = new FileOutputStream(outName, true);
+            outputStreamBuffered = new BufferedOutputStream (outputStreamFile);
+            outputStreamZip = new ZipOutputStream(outputStreamBuffered);
+            
+            for (Marc image : imgList) {
+               ZipEntry entry = new ZipEntry("outImage"+image.getId()+".jpg");
+               try {
+                   outputStreamZip.putNextEntry(entry);
+                   ImageIO.write(image.getImage(), "jpg", outputStreamZip);
+               } catch (IOException ex) {
+                   System.out.println("ERROR: There has been a problem while writing the image to the output file");
+                               try{
+                outputStreamZip.flush();
+                outputStreamZip.close();
+            } catch (Exception e) {
+                System.out.println("S'ha produit un error tancant la connexio");
+            }
+               }
+               this.count++;
+            }           
+            try{
+                outputStreamZip.flush();
+                outputStreamZip.close();
+            } catch (Exception e) {
+                System.out.println("S'ha produit un error tancant la connexio");
+            }
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(Utils.class.getName()).log(Level.SEVERE, null, ex);
+            try{
+                outputStreamZip.flush();
+                outputStreamZip.close();
+            } catch (Exception e) {
+                System.out.println("S'ha produit un error tancant la connexio");
+            }
         }
+    }
+    
+    
 }
