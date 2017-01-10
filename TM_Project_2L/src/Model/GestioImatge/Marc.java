@@ -15,14 +15,22 @@ import java.util.ArrayList;
 public class Marc{
     private BufferedImage image;
     private int id;
-    private ArrayList<Tesseles> teseles;
+    private ArrayList<Tesseles> tesseles;
     private ArrayList<BufferedImage> pFrames;
 
     public Marc(BufferedImage image, int id) {
         this.image = image;
         this.id = id;
-        this.teseles = new ArrayList<>();
+        this.tesseles = new ArrayList<>();
         this.pFrames = new ArrayList<>();
+    }
+
+    public BufferedImage getImage() {
+        return image;
+    }
+
+    public void setImage(BufferedImage image) {
+        this.image = image;
     }
 
     public int getId() {
@@ -33,16 +41,12 @@ public class Marc{
         this.id = id;
     }
 
-    public void setImage(BufferedImage image) {
-        this.image = image;
+    public ArrayList<Tesseles> getTesseles() {
+        return tesseles;
     }
 
-    public ArrayList<Tesseles> getTeseles() {
-        return teseles;
-    }
-
-    public void setTeseles(ArrayList<Tesseles> teseles) {
-        this.teseles = teseles;
+    public void setTesseles(ArrayList<Tesseles> tesseles) {
+        this.tesseles = tesseles;
     }
 
     public ArrayList<BufferedImage> getpFrames() {
@@ -56,9 +60,4 @@ public class Marc{
     public void addpFrame(BufferedImage image){
         this.pFrames.add(image);
     }
-
-    public BufferedImage getImage() {
-        return image;
-    }
-    
 }
