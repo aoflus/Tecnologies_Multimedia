@@ -128,4 +128,6 @@ public class Codificador {
         System.out.println("-------------------------------------------------------");
         return teseles;
     }
+    
+    
 }

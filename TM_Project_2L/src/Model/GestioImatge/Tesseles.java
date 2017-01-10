@@ -12,61 +12,60 @@ import java.awt.image.BufferedImage;
  * Author Victor i Alvaro
  */
 public class Tesseles {
-    private int idOriginal;
-    private int xCoordDest;
-    private int yCoordDest;
-    private BufferedImage tesela;
-    private int x;
-    private int y;
+    private int id, coordDestiX, coordDestiY, x, y;
+    private BufferedImage tessela;
     
-    public Tesseles(BufferedImage tesela, int idOriginal) {
-        this.idOriginal = idOriginal;
-        this.tesela = tesela;
+    public Tesseles(BufferedImage tessela, int id) {
+        this.id = id;
+        this.tessela = tessela;
     }
 
-    public int getIdOriginal() {
-        return idOriginal;
+    public int getId() {
+        return id;
     }
 
-
-    public int getxCoordDest() {
-        return xCoordDest;
+    public void setId(int id) {
+        this.id = id;
     }
 
-
-    public int getyCoordDest() {
-        return yCoordDest;
+    public int getCoordDestiX() {
+        return coordDestiX;
     }
 
-    public void setIdOriginal(int idOriginal) {
-        this.idOriginal = idOriginal;
-    }
-    
-    public BufferedImage getTesela() {
-        return tesela;
+    public void setCoordDestiX(int coordDestiX) {
+        this.coordDestiX = coordDestiX;
     }
 
-    public void setxCoordDest(int xCoordDest) {
-        this.xCoordDest = xCoordDest;
+    public int getCoordDestiY() {
+        return coordDestiY;
     }
 
-    public void setyCoordDest(int yCoordDest) {
-        this.yCoordDest = yCoordDest;
+    public void setCoordDestiY(int coordDestiY) {
+        this.coordDestiY = coordDestiY;
     }
 
     public int getX() {
         return x;
     }
 
-    public int getY() {
-        return y;
-    }
-
     public void setX(int x) {
         this.x = x;
+    }
+
+    public int getY() {
+        return y;
     }
 
     public void setY(int y) {
         this.y = y;
     }
+
+    public BufferedImage getTessela() {
+        return tessela;
+    }
+
+    public void setTessela(BufferedImage tessela) {
+        this.tessela = tessela;
+    }
+    
 }
