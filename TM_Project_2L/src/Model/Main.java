@@ -59,7 +59,9 @@ public class Main {
         String frames = settings.getFps();
         String ntiles = settings.getnTiles();
         String ntilesh="", ntilesw = "";
-        int fps;
+        String seekRange=settings.getSeekRange();
+        String quality = settings.getQuality();
+        int fps, seek = 10, q = 2;
         //Asignamos fps
         if (frames != null && !encode){
             fps = Integer.valueOf(frames);
@@ -86,7 +88,13 @@ public class Main {
                 ntilesh = parts[1];
                 System.out.println(ntilesw + ntilesh);
             }
-            controlador.encode(fps,gop, ntilesw, ntilesh);
+            if(seekRange!=""){
+                seek = Integer.valueOf(seekRange);
+            }
+            if(quality!=""){
+                q = Integer.valueOf(quality);
+            }
+            controlador.encode(fps,gop, ntilesw, ntilesh,seek,q);
         }
         
         //Sortida del arxiu

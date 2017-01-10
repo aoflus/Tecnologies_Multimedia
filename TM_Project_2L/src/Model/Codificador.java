@@ -9,13 +9,23 @@ import Model.GestioImatge.Marc;
 import Model.GestioImatge.Tesseles;
 import static Model.JPEGCompress.compressInJPEG;
 import Vista.Viewer;
+import java.awt.Color;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
+import javax.imageio.ImageIO;
 
 /**
  * Clase codificador que contindra metodes que permetran realitzar la codificacio entre frames.
@@ -24,14 +34,14 @@ import java.util.logging.Logger;
 public class Codificador {
 
     HashMap<Integer, Image> unzippedImg = new HashMap<Integer, Image>();
-    int gop = 5, ntilesw=1, ntilesh = 1;
+    int gop = 5, ntilesw=1, ntilesh = 1, seek, ntiles, quality;
     ArrayList <ArrayList> listaListasGOP = new ArrayList <ArrayList>();
     ArrayList <Marc> listaGOP = new ArrayList <Marc>();
-    float height, width;
-    ArrayList<Marc> comprimides;
+    int height, width;
+    ArrayList<Marc> comprimides = new ArrayList<Marc>();
+    ArrayList<Tesseles> tesselesAcum = new ArrayList<Tesseles>();
     
-    
-    public Codificador(HashMap<Integer, Image> bufferWithUnzippedImg, int gop, String ntilesw, String ntilesh) {
+    public Codificador(HashMap<Integer, Image> bufferWithUnzippedImg, int gop, String ntilesw, String ntilesh, int seek, int quality) {
         System.out.println("Imagenes leidas");
         this.gop = gop;
         //this.ntiles= (int) Math.sqrt(ntiles);
@@ -39,12 +49,14 @@ public class Codificador {
         System.out.println("GOP: " + this.gop);
         this.ntilesh = Integer.valueOf(ntilesh);
         this.ntilesw = Integer.valueOf(ntilesw);
+        this.seek = seek;
+        this.quality = quality;
         System.out.println("ntilesh: " + this.ntilesh);
         System.out.println("ntilesw: " + this.ntilesw);
         this.unzippedImg = bufferWithUnzippedImg;
         this.aplicaFiltres();
         this.ompleGOP();
-        this.recorreGOP();
+        this.listaListasGOP=this.recorreGOP();
 
     }
 
@@ -84,22 +96,31 @@ public class Codificador {
      * Metode per comprovar que s'hagi generat ve el vector de imatges
      * Cridem a subdividir en teseles i ens les guardem
      */
-    private void recorreGOP(){
+    public ArrayList<ArrayList> recorreGOP(){
         System.out.println("recorreGOP");
         int x = 0;
         for (ArrayList<Marc> e:listaListasGOP){
             System.out.println((x++) + " tamany: "+ e.size());
+            int comptador = 1;
             for (Marc img:e){
                 BufferedImage image = img.getImage();
-                System.out.println("real width:" + image.getWidth());
-                System.out.println("real height:" + image.getHeight());
-                this.width = (float)image.getWidth()/this.ntilesh;
-                this.height = (float)image.getHeight()/this.ntilesh;
-                System.out.println("this.width" + this.width);
-                System.out.println("this.height " + this.height );
-                img.setTeseles(this.subdividirImgTesseles(image));
-            }  
+                this.width = image.getWidth()/this.ntilesh;
+                this.height = image.getHeight()/this.ntilesh;
+                new File("teseles"+comptador).mkdirs();
+                img.setTesseles(this.subdividirImgTesseles(image));
+                if(comptador < e.size()){
+                    //img.setTesseles(findCompatibleBlock(e,img,e.get(comptador).getImage()));
+                    //Marc resultant = new Marc(setPFramesColor(img.getTeseles(), e.get(comptador).getImage()),5);
+                    //comprimides.add(resultant);
+                    comptador ++;
+                }else{
+                    comprimides.add(img);
+                }
+                for(Tesseles t : img.getTesseles()) this.tesselesAcum.add(t);
+            }
+            
         }
+        return listaListasGOP;
     }
     
     /**
@@ -110,24 +131,23 @@ public class Codificador {
      */
     public ArrayList<Tesseles> subdividirImgTesseles(BufferedImage image){
         ArrayList<Tesseles> teseles = new ArrayList<>();
-        Tesseles tesela;
-        int comptador = 0;
-
-        for(float y=0; y<Math.round(image.getHeight()); y+=this.height){
-            for(float x=0; x<Math.round(image.getWidth()); x+=this.width){
-                x=Math.round(x);
-                y=Math.round(y);
-                tesela = new Tesseles(image.getSubimage((int)x, (int) y, (int)this.width, (int)this.height), comptador);
-                teseles.add(tesela);
-                comptador++;
-                //compressInJPEG(tesela.getTesela(),"teseles",String.valueOf(comptador)+".jpeg");
+        Tesseles t;
+        int count = 0;
+        for(int y=0; y<image.getHeight(); y+=this.height){
+            for(int x=0; x<image.getWidth(); x+=this.width){
+                t = new Tesseles(image.getSubimage(x, y, this.width, this.height), count);
+                teseles.add(t);
+                count++;
             }
         }
-        System.out.println("-------------------------------------------------------");
-        System.out.println("teseles:" + teseles.size());
-        System.out.println("-------------------------------------------------------");
         return teseles;
     }
     
     
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    
+    
+    //ntiles = numero de veces que parte la longitud y altura = 10
+    //ntiles width = 
+   
 }
