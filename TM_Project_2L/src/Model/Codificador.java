@@ -56,7 +56,7 @@ public class Codificador {
         this.unzippedImg = bufferWithUnzippedImg;
         this.aplicaFiltres();
         this.ompleGOP();
-        this.listaListasGOP=this.recorreGOP();
+//        this.listaListasGOP=this.recorreGOP();
 
     }
 
@@ -92,36 +92,80 @@ public class Codificador {
             this.listaGOP.add(new Marc((BufferedImage) unzippedImg.get(x), x));
         }
     }
-    /**
-     * Metode per comprovar que s'hagi generat ve el vector de imatges
-     * Cridem a subdividir en teseles i ens les guardem
-     */
-    public ArrayList<ArrayList> recorreGOP(){
+    
+    private void recorreGOP(){
         System.out.println("recorreGOP");
         int x = 0;
         for (ArrayList<Marc> e:listaListasGOP){
             System.out.println((x++) + " tamany: "+ e.size());
-            int comptador = 1;
             for (Marc img:e){
                 BufferedImage image = img.getImage();
+                System.out.println("real width:" + image.getWidth());
+                System.out.println("real height:" + image.getHeight());
                 this.width = image.getWidth()/this.ntilesh;
                 this.height = image.getHeight()/this.ntilesh;
-                new File("teseles"+comptador).mkdirs();
+                System.out.println("this.width" + this.width);
+                System.out.println("this.height " + this.height );
                 img.setTesseles(this.subdividirImgTesseles(image));
-                if(comptador < e.size()){
-                    //img.setTesseles(findCompatibleBlock(e,img,e.get(comptador).getImage()));
-                    //Marc resultant = new Marc(setPFramesColor(img.getTeseles(), e.get(comptador).getImage()),5);
-                    //comprimides.add(resultant);
-                    comptador ++;
-                }else{
-                    comprimides.add(img);
-                }
-                for(Tesseles t : img.getTesseles()) this.tesselesAcum.add(t);
-            }
-            
+            }  
         }
-        return listaListasGOP;
     }
+ public ArrayList<Tesseles> subdividirImgTesseles(BufferedImage image){
+        ArrayList<Tesseles> teseles = new ArrayList<>();
+        Tesseles tesela;
+        int comptador = 0;
+
+        for(float y=0; y<Math.round(image.getHeight()); y+=this.height){
+            for(float x=0; x<Math.round(image.getWidth()); x+=this.width){
+                x=Math.round(x);
+                y=Math.round(y);
+                tesela = new Tesseles(image.getSubimage((int)x, (int) y, (int)this.width, (int)this.height), comptador);
+                teseles.add(tesela);
+                comptador++;
+                try {
+                    compressInJPEG(tesela.getTessela(),"teseles",String.valueOf(comptador)+".jpeg");
+                } catch (IOException ex) {
+                    Logger.getLogger(Codificador.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
+        System.out.println("-------------------------------------------------------");
+        System.out.println("teseles:" + teseles.size());
+        System.out.println("-------------------------------------------------------");
+        return teseles;
+    }
+    
+    
+    /**
+     * Metode per comprovar que s'hagi generat ve el vector de imatges
+     * Cridem a subdividir en teseles i ens les guardem
+     */
+//    public ArrayList<ArrayList> recorreGOP(){
+//        System.out.println("recorreGOP");
+//        int x = 0;
+//        for (ArrayList<Marc> e:listaListasGOP){
+//            System.out.println((x++) + " tamany: "+ e.size());
+//            int comptador = 1;
+//            for (Marc img:e){
+//                BufferedImage image = img.getImage();
+//                this.width = image.getWidth()/this.ntilesh;
+//                this.height = image.getHeight()/this.ntilesh;
+//                new File("teseles"+comptador).mkdirs();
+//                img.setTesseles(this.subdividirImgTesseles(image));
+//                if(comptador < e.size()){
+//                    //img.setTesseles(findCompatibleBlock(e,img,e.get(comptador).getImage()));
+//                    //Marc resultant = new Marc(setPFramesColor(img.getTeseles(), e.get(comptador).getImage()),5);
+//                    //comprimides.add(resultant);
+//                    comptador ++;
+//                }else{
+//                    comprimides.add(img);
+//                }
+//                for(Tesseles t : img.getTesseles()) this.tesselesAcum.add(t);
+//            }
+//            
+//        }
+//        return listaListasGOP;
+//    }
     
     /**
      * Para dividir en bloques una imagen, hay que definir cuantas particiones en el eje x
@@ -129,19 +173,19 @@ public class Codificador {
      * @param image
      * @return 
      */
-    public ArrayList<Tesseles> subdividirImgTesseles(BufferedImage image){
-        ArrayList<Tesseles> teseles = new ArrayList<>();
-        Tesseles t;
-        int count = 0;
-        for(int y=0; y<image.getHeight(); y+=this.height){
-            for(int x=0; x<image.getWidth(); x+=this.width){
-                t = new Tesseles(image.getSubimage(x, y, this.width, this.height), count);
-                teseles.add(t);
-                count++;
-            }
-        }
-        return teseles;
-    }
+//    public ArrayList<Tesseles> subdividirImgTesseles(BufferedImage image){
+//        ArrayList<Tesseles> teseles = new ArrayList<>();
+//        Tesseles t;
+//        int count = 0;
+//        for(int y=0; y<image.getHeight(); y+=this.height){
+//            for(int x=0; x<image.getWidth(); x+=this.width){
+//                t = new Tesseles(image.getSubimage(x, y, this.width, this.height), count);
+//                teseles.add(t);
+//                count++;
+//            }
+//        }
+//        return teseles;
+//    }
     
     
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
