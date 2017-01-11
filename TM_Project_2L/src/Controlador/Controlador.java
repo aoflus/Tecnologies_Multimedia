@@ -5,6 +5,7 @@
  */
 package Controlador;
 import Model.Codificador;
+import Model.Decodificador;
 import Model.Utils;
 import Model.Filtres;
 import static Model.JPEGCompress.compressInJPEG;
@@ -182,7 +183,9 @@ public class Controlador {
         
         System.out.println("Entramos en encode");
         Codificador encode = new Codificador(bufferWithUnzippedImg, gop, ntiles, seek, quality);
-        
+        System.out.println("Empieza a decodificar");
+        Decodificador decode = new Decodificador(gop,ntiles);
+        decode.decode();
     }
     
 }

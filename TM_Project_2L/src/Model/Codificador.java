@@ -97,7 +97,7 @@ public class Codificador {
         Marc n = null;
         Marc n_1 = null;
         for (int p = 0;p<listaListasGOP.size();p++){
-            System.out.println("Generem sequencia");
+            //System.out.println("Generem sequencia");
             for (int z = 0;z<listaListasGOP.get(p).size()-1;z++){
                 n = (Marc) listaListasGOP.get(p).get(z);
                 if(z == 0){
@@ -115,8 +115,8 @@ public class Codificador {
             }
             
         }
-        System.out.println("FORAAAA: " + this.tesselesAcum.size());
-        System.out.println("IMAGES SIZE: " + this.comprimides.size());       
+        //System.out.println("FORAAAA: " + this.tesselesAcum.size());
+        //System.out.println("IMAGES SIZE: " + this.comprimides.size());       
         this.saveZIP();
         
     }    
@@ -137,7 +137,7 @@ public class Codificador {
 //        System.out.println("-------------------------------------------------------");
 //        System.out.println("teseles:" + teseles.size());
 //        System.out.println("-------------------------------------------------------");
-        System.out.println("Fin tesseles.");
+        //System.out.println("Fin tesseles.");
         return teseles;
     }
     
@@ -260,7 +260,7 @@ public class Codificador {
             String name = "src/resources/Compressed/coords.txt";
             bw = new BufferedWriter(new FileWriter(name));
             for (Tesseles t : this.tesselesAcum) {
-                System.out.println(t.getId()+" "+t.getCoordDestiX()+" "+t.getCoordDestiY());
+                //System.out.println(t.getId()+" "+t.getCoordDestiX()+" "+t.getCoordDestiY());
                 bw.write(t.getId()+" "+t.getCoordDestiX()+" "+t.getCoordDestiY()+"\n");  
             }
             bw.flush();
