@@ -34,29 +34,24 @@ import javax.imageio.ImageIO;
 public class Codificador {
 
     HashMap<Integer, Image> unzippedImg = new HashMap<Integer, Image>();
-    int gop = 5, ntilesw=1, ntilesh = 1, seek, ntiles, quality;
+    int gop = 5, seek, ntiles, quality;
     ArrayList <ArrayList> listaListasGOP = new ArrayList <ArrayList>();
     ArrayList <Marc> listaGOP = new ArrayList <Marc>();
     int height, width;
     ArrayList<Marc> comprimides = new ArrayList<Marc>();
-    ArrayList<Tesseles> tesselesAcum = new ArrayList<Tesseles>();
+    ArrayList<Tesseles> tesselesAcum = new ArrayList<>();
     
-    public Codificador(HashMap<Integer, Image> bufferWithUnzippedImg, int gop, String ntilesw, String ntilesh, int seek, int quality) {
+    public Codificador(HashMap<Integer, Image> bufferWithUnzippedImg, int gop, int ntiles, int seek, int quality) {
         System.out.println("Imagenes leidas");
         this.gop = gop;
-        //this.ntiles= (int) Math.sqrt(ntiles);
-        //this.ntiles=ntiles;
         System.out.println("GOP: " + this.gop);
-        this.ntilesh = Integer.valueOf(ntilesh);
-        this.ntilesw = Integer.valueOf(ntilesw);
+        this.ntiles = ntiles;
         this.seek = seek;
         this.quality = quality;
-        System.out.println("ntilesh: " + this.ntilesh);
-        System.out.println("ntilesw: " + this.ntilesw);
         this.unzippedImg = bufferWithUnzippedImg;
         this.aplicaFiltres();
         this.ompleGOP();
-//        this.listaListasGOP=this.recorreGOP();
+        this.recorreGOP();
 
     }
 
@@ -90,57 +85,12 @@ public class Codificador {
             }
             //Añadimos imagen a la lista GOP.
             this.listaGOP.add(new Marc((BufferedImage) unzippedImg.get(x), x));
+            System.out.println("Iteracions: " + x);
         }
+        System.out.println("Fin omple GOP");
     }
     
-    private void recorreGOP(){
-        System.out.println("recorreGOP");
-        int x = 0;
-        for (ArrayList<Marc> e:listaListasGOP){
-            System.out.println((x++) + " tamany: "+ e.size());
-            for (Marc img:e){
-                BufferedImage image = img.getImage();
-                System.out.println("real width:" + image.getWidth());
-                System.out.println("real height:" + image.getHeight());
-                this.width = image.getWidth()/this.ntilesh;
-                this.height = image.getHeight()/this.ntilesh;
-                System.out.println("this.width" + this.width);
-                System.out.println("this.height " + this.height );
-                img.setTesseles(this.subdividirImgTesseles(image));
-            }  
-        }
-    }
- public ArrayList<Tesseles> subdividirImgTesseles(BufferedImage image){
-        ArrayList<Tesseles> teseles = new ArrayList<>();
-        Tesseles tesela;
-        int comptador = 0;
-
-        for(float y=0; y<Math.round(image.getHeight()); y+=this.height){
-            for(float x=0; x<Math.round(image.getWidth()); x+=this.width){
-                x=Math.round(x);
-                y=Math.round(y);
-                tesela = new Tesseles(image.getSubimage((int)x, (int) y, (int)this.width, (int)this.height), comptador);
-                teseles.add(tesela);
-                comptador++;
-                try {
-                    compressInJPEG(tesela.getTessela(),"teseles",String.valueOf(comptador)+".jpeg");
-                } catch (IOException ex) {
-                    Logger.getLogger(Codificador.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
-        }
-        System.out.println("-------------------------------------------------------");
-        System.out.println("teseles:" + teseles.size());
-        System.out.println("-------------------------------------------------------");
-        return teseles;
-    }
-    
-    
-    /**
-     * Metode per comprovar que s'hagi generat ve el vector de imatges
-     * Cridem a subdividir en teseles i ens les guardem
-     */
-//    public ArrayList<ArrayList> recorreGOP(){
+//    private void recorreGOP(){
 //        System.out.println("recorreGOP");
 //        int x = 0;
 //        for (ArrayList<Marc> e:listaListasGOP){
@@ -148,50 +98,345 @@ public class Codificador {
 //            int comptador = 1;
 //            for (Marc img:e){
 //                BufferedImage image = img.getImage();
-//                this.width = image.getWidth()/this.ntilesh;
-//                this.height = image.getHeight()/this.ntilesh;
-//                new File("teseles"+comptador).mkdirs();
-//                img.setTesseles(this.subdividirImgTesseles(image));
+//                this.width = image.getWidth()/this.ntiles;
+//                this.height = image.getHeight()/this.ntiles;
+//                System.out.println(this.width +"Holi width height"+this.height );
 //                if(comptador < e.size()){
-//                    //img.setTesseles(findCompatibleBlock(e,img,e.get(comptador).getImage()));
-//                    //Marc resultant = new Marc(setPFramesColor(img.getTeseles(), e.get(comptador).getImage()),5);
-//                    //comprimides.add(resultant);
+//                    img.setTesseles(this.generateMacroblocks(image));
+//                    Marc resultant = new Marc(setPFramesColor(img.getTesseles(), e.get(comptador).getImage()),5);
+//                    comprimides.add(resultant);
 //                    comptador ++;
 //                }else{
 //                    comprimides.add(img);
 //                }
 //                for(Tesseles t : img.getTesseles()) this.tesselesAcum.add(t);
 //            }
-//            
 //        }
-//        return listaListasGOP;
+//        System.out.println("FORAAAA: " + this.tesselesAcum.size());
+//        System.out.println("IMAGES SIZE: " + this.comprimides.size());       
+//        this.saveZIP();
+//        
 //    }
+    
+    
+    private void recorreGOP(){
+        System.out.println("recorreGOP");
+        int x = 0;
+        Marc n = null;
+        Marc n_1 = null;
+        for (int p = 0;p<listaListasGOP.size();p++){
+            System.out.println("NEW IFRAME");
+            for (int z = 0;z<listaListasGOP.get(p).size()-1;z++){
+                n = (Marc) listaListasGOP.get(p).get(z);
+                if(z == 0){
+                    //Primera imagen
+                    comprimides.add(n);
+                }
+                n_1 = (Marc) listaListasGOP.get(p).get(z+1);
+                this.width = n_1.getImage().getWidth()/this.ntiles;
+                this.height = n_1.getImage().getHeight()/this.ntiles;
+                n.setTesseles(subdividirImgTesseles(n.getImage()));
+                n.setTesseles(findCompatibleBlock(n, n_1.getImage()));
+                Marc resultat = new Marc(setPFramesColor(n.getTesseles(), n_1.getImage()),5);
+                comprimides.add(resultat);
+                for(Tesseles t : n.getTesseles()) this.tesselesAcum.add(t);
+            }
+            
+        }
+        System.out.println("FORAAAA: " + this.tesselesAcum.size());
+        System.out.println("IMAGES SIZE: " + this.comprimides.size());       
+        this.saveZIP();
+        
+    }    
+    
+ public ArrayList<Tesseles> subdividirImgTesseles(BufferedImage image){
+        ArrayList<Tesseles> teseles = new ArrayList<>();
+        Tesseles tesela;
+        int comptador = 0;
+        for(float y=0; y<Math.round(image.getHeight()); y+=this.height){
+            for(float x=0; x<Math.round(image.getWidth()); x+=this.width){
+                x=Math.round(x);
+                y=Math.round(y);
+                tesela = new Tesseles(image.getSubimage((int)x, (int) y, (int)this.width, (int)this.height), comptador);
+                teseles.add(tesela);
+                comptador++;
+            }
+        }
+//        System.out.println("-------------------------------------------------------");
+//        System.out.println("teseles:" + teseles.size());
+//        System.out.println("-------------------------------------------------------");
+        System.out.println("Fin tesseles.");
+        return teseles;
+    }
+    
+   private ArrayList<Tesseles> findCompatibleBlock(Marc iFrame, BufferedImage pFrame) {
+        float maxPSNR = Float.MIN_VALUE;
+        int xMaxValue = 0, yMaxValue = 0, xMin, xMax, yMin, yMax, idTesela, idX, idY;
+        ArrayList<Tesseles> teselesResultants = new ArrayList<>();
+        for (Tesseles t : iFrame.getTesseles()) {
+            maxPSNR = Float.MIN_VALUE;
+            idTesela = t.getId();
+            idY = (idTesela%this.ntiles)*this.width;
+            idX = ((int)Math.ceil(idTesela/this.ntiles))*this.height;
+            xMin = ((idX - this.seek) < 0) ? 0 : (idX - this.seek);
+            yMin = ((idY - this.seek) < 0) ? 0 : (idY - this.seek);
+            xMax = (idX + this.seek + this.height) > (((BufferedImage) this.unzippedImg.get(0)).getHeight()) ? (((BufferedImage) this.unzippedImg.get(0)).getHeight())  : (idX + this.seek + this.height);
+            yMax = (idY + this.seek + this.width) > (((BufferedImage) this.unzippedImg.get(0)).getWidth())  ? (((BufferedImage) this.unzippedImg.get(0)).getWidth())  : (idY + this.seek + this.width);
+            for(int x=xMin; x<=xMax-this.height; x++){
+                for(int y=yMin; y<=yMax-this.width; y++){
+                    float psnr = calculatePSNR(t, pFrame.getSubimage(y, x, this.width, this.height));
+                    if(psnr > maxPSNR && psnr >= this.quality){
+                        maxPSNR = psnr;
+                        xMaxValue = x;
+                        yMaxValue = y;
+                    }
+                }
+            }
+            if(maxPSNR != Float.MIN_VALUE){
+                t.setCoordDestiX(xMaxValue);
+                t.setCoordDestiY(yMaxValue);
+            }else{
+                t.setCoordDestiX(-1);
+                t.setCoordDestiY(-1);
+            }
+            teselesResultants.add(t);
+        }
+        return(teselesResultants);
+    }
     
     /**
-     * Para dividir en bloques una imagen, hay que definir cuantas particiones en el eje x
-     * y cuantas en el eje y se hacen, usando los valores this.ntilesh this.ntilesw
-     * @param image
-     * @return 
+     * This method compare two tiles. The bigger is the psnr, the similar are 
+     * the tiles.
+     * @param tesela
+     * @param pframe
+     * @return psnr
      */
-//    public ArrayList<Tesseles> subdividirImgTesseles(BufferedImage image){
-//        ArrayList<Tesseles> teseles = new ArrayList<>();
-//        Tesseles t;
-//        int count = 0;
-//        for(int y=0; y<image.getHeight(); y+=this.height){
-//            for(int x=0; x<image.getWidth(); x+=this.width){
-//                t = new Tesseles(image.getSubimage(x, y, this.width, this.height), count);
-//                teseles.add(t);
-//                count++;
-//            }
-//        }
-//        return teseles;
-//    }
+    private float calculatePSNR(Tesseles tesela, BufferedImage pframe){
+        float noise = 0, mse = 0, psnr = 0;
+        BufferedImage iFrame = tesela.getTessela();
+        for (int i=0; i<iFrame.getHeight(); i++) {
+            for (int j=0; j<iFrame.getWidth(); j++) {
+                Color iframe_rgb = new Color(iFrame.getRGB(j, i));
+                Color pframe_rgb = new Color(pframe.getRGB(j, i));
+                noise += Math.pow(pframe_rgb.getRed() - iframe_rgb.getRed(), 2);
+                noise += Math.pow(pframe_rgb.getGreen()- iframe_rgb.getGreen(), 2);
+                noise += Math.pow(pframe_rgb.getBlue() - iframe_rgb.getBlue(), 2);
+            }
+          }
+        mse = noise/(iFrame.getHeight()*iFrame.getWidth()*3);
+        psnr = (float) (10 * Math.log10((255 * 255) / mse));
+        return psnr;
+    }
     
+    /**
+     * This method call the meanColorImage for every I-frame tile found in P-frame.
+     * @param framesId
+     * @param coordId
+     * @param teseles
+     * @param pFrame 
+     */
+    private BufferedImage setPFramesColor(ArrayList<Tesseles> teseles, BufferedImage pFrame){
+        BufferedImage result = pFrame;
+        for(Tesseles t : teseles){
+            int x = t.getCoordDestiX();
+            int y = t.getCoordDestiY();
+            if(x != -1 && y != -1){
+                Color c = meanColorImage(t.getTessela());
+                for(int xCoord=x; xCoord<(x+this.height); xCoord++){
+                    for(int yCoord=y; yCoord<(y+this.width); yCoord++){
+                        result.setRGB(yCoord, xCoord, c.getRGB());
+                    }
+                }
+            }
+        }
+        return result;
+    }
     
+    /**
+     * This method calculates the mean colour from a given tile
+     * @param im
+     * @return Color
+     */
+    private Color meanColorImage(BufferedImage im){
+        Color color;
+        int sumR=0, sumG=0, sumB=0, pixelCount=0;
+        for(int x=0; x<this.width; x++){
+            for(int y=0; y<this.height; y++){
+                color = new Color(im.getRGB(x, y));
+                pixelCount++;
+                sumR += color.getRed();
+                sumG += color.getGreen();
+                sumB += color.getBlue();
+            }
+        }
+        return new Color((sumR/pixelCount),(sumG/pixelCount),(sumB/pixelCount));
+    }
+ 
+     public ArrayList<Tesseles> generateMacroblocks(BufferedImage image){
+        ArrayList<Tesseles> teseles = new ArrayList<>();
+        Tesseles t;
+        int count = 0;
+        for(int y=0; y<image.getHeight(); y+=this.height){
+            for(int x=0; x<image.getWidth(); x+=this.width){
+                System.out.println("tileWidth" + this.width);
+                System.out.println("tileHeight" + this.height);
+                t = new Tesseles(image.getSubimage(x, y, this.width, this.height), count);
+
+                teseles.add(t);
+                count++;
+            }
+        }
+        return teseles;
+    }
+
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     
     
     //ntiles = numero de veces que parte la longitud y altura = 10
     //ntiles width = 
+       /**
+     * This method save every compressed image
+     */
+    private void saveCompressedImages(){
+        System.out.println("Entramos en saveCompressedImages");
+        for(ArrayList<Marc>  p: this.listaListasGOP){
+            for(Marc f : p){
+                try {
+                    ImageIO.write(f.getImage(), "jpeg", new File("src/resources/Compressed/frame"+String.format("%03d",f.getId())+".jpeg"));
+                    //System.out.println("TRY: 1sTIME"+ "src/resources/Compressed/frame" + String.format("%03d",f.getId())+".jpeg");
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        }
+    }
+    
+    /**
+     * This method creates a zip folder with the compressed images and a
+     * text file with the coordinates.
+     */
+    private void saveZIP(){
+        new File("src/resources/Compressed").mkdirs();
+        this.makeCoordsFile();
+        this.saveCompressedImages();
+        this.zipFolder("src/resources/Compressed","src/resources/Compressed.zip");
+        this.deleteDir(new File("src/resources/Compressed"));
+    }
+    
+    /**
+     * This method creates a text file with the tiles coordinates in P-frame
+     */
+    private void makeCoordsFile(){
+        BufferedWriter bw = null;  
+        try {
+            String name = "src/resources/Compressed/coords.txt";
+            bw = new BufferedWriter(new FileWriter(name));
+            for (Tesseles t : this.tesselesAcum) {
+                System.out.println(t.getId()+" "+t.getCoordDestiX()+" "+t.getCoordDestiY());
+                bw.write(t.getId()+" "+t.getCoordDestiX()+" "+t.getCoordDestiY()+"\n");  
+            }
+            bw.flush();
+            bw.close();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        } finally {
+            try {
+                bw.close();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        }
+    }
+    
+    /**
+     * This method creates the zip folder
+     * @param srcFolder
+     * @param destZipFile 
+     */
+    private void zipFolder(String srcFolder, String destZipFile){
+        try {
+            ZipOutputStream zip = null;
+            FileOutputStream fileWriter = null;
+            
+            fileWriter = new FileOutputStream(destZipFile);
+            zip = new ZipOutputStream(fileWriter);
+            
+            addFolderToZip("", srcFolder, zip);
+            zip.flush();
+            zip.close();
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(Codificador.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(Codificador.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
    
+    /**
+     * This is a support method
+     * @param path
+     * @param srcFile
+     * @param zip 
+     */
+    private void addFileToZip(String path, String srcFile, ZipOutputStream zip){
+        File folder = new File(srcFile);
+        if (folder.isDirectory()) {
+          addFolderToZip(path, srcFile, zip);
+        } else {
+            FileInputStream in = null;
+            try {
+                byte[] buf = new byte[1024];
+                int len;
+                in = new FileInputStream(srcFile);
+                zip.putNextEntry(new ZipEntry(path + "/" + folder.getName()));
+                while ((len = in.read(buf)) > 0) {
+                    zip.write(buf, 0, len);
+                } } catch (FileNotFoundException ex) {
+                Logger.getLogger(Codificador.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IOException ex) {
+                Logger.getLogger(Codificador.class.getName()).log(Level.SEVERE, null, ex);
+            } finally {
+                try {
+                    in.close();
+                } catch (IOException ex) {
+                    Logger.getLogger(Codificador.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
+  }
+   
+    /**
+     * This is a support method
+     * @param path
+     * @param srcFolder
+     * @param zip 
+     */
+    private void addFolderToZip(String path, String srcFolder, ZipOutputStream zip){
+        File folder = new File(srcFolder);
+        for (String fileName : folder.list()) {
+          if (path.equals("")) {
+            addFileToZip(folder.getName(), srcFolder + "/" + fileName, zip);
+          } else {
+            addFileToZip(path + "/" + folder.getName(), srcFolder + "/" + fileName, zip);
+          }
+        }
+    }
+   
+    /**
+     * This method deletes the directory
+     * @param dir
+     * @return 
+     */
+    private boolean deleteDir(File dir) {
+      if (dir.isDirectory()) {
+         String[] children = dir.list();
+         for (int i = 0; i < children.length; i++) {
+            boolean success = deleteDir
+            (new File(dir, children[i]));
+            if (!success) {
+               return false;
+            }
+         }
+      }
+      return dir.delete();
+  }
 }

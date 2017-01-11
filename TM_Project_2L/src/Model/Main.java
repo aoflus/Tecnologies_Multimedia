@@ -50,18 +50,19 @@ public class Main {
         //Creem un settings i el jcommander.
         settings = new Settings();
         new JCommander(settings, args); // simple one-liner
-        Controlador controlador = new Controlador();
         
-        //Si determina la ruta on hem de buscar el zip 
-        String rutaZip = settings.getInput();
+       
+        Controlador controlador = new Controlador(); //Instanciamos el controlador
+        
+
+        String rutaZip = settings.getInput(); 
         boolean encode = settings.getEncode();
         String output = settings.getOutput();
         String frames = settings.getFps();
         String ntiles = settings.getnTiles();
-        String ntilesh="", ntilesw = "";
         String seekRange=settings.getSeekRange();
         String quality = settings.getQuality();
-        int fps, seek = 10, q = 2;
+        int fps, seek = 10, q = 2, nTiles=10;
         //Asignamos fps
         if (frames != null && !encode){
             fps = Integer.valueOf(frames);
@@ -83,10 +84,7 @@ public class Main {
             // A implementar coger valores diferentes eje x e y.
             System.out.println("ntiles?" + settings.getnTiles());
             if (settings.getnTiles()!=null){
-                String[] parts = ntiles.split(",");
-                ntilesw = parts[0];
-                ntilesh = parts[1];
-                System.out.println(ntilesw + ntilesh);
+                nTiles = Integer.valueOf(settings.getnTiles());
             }
             if(seekRange!=""){
                 seek = Integer.valueOf(seekRange);
@@ -94,7 +92,7 @@ public class Main {
             if(quality!=""){
                 q = Integer.valueOf(quality);
             }
-            controlador.encode(fps,gop, ntilesw, ntilesh,seek,q);
+            controlador.encode(fps, gop, nTiles, seek,q);
         }
         
         //Sortida del arxiu

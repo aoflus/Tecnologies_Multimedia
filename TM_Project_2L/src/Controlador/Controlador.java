@@ -59,11 +59,11 @@ public class Controlador {
             }
         }// Quan acabem de guardar a la llista auxiliar, remplacem amb la que utilitzarem sempre i aixi s'acumularan els filtres.
         if(filtre == AVE){
-            bufferWithUnzippedImg = bufferWithUnzippedImgAveraged;
+            this.bufferWithUnzippedImg = bufferWithUnzippedImgAveraged;
         }else if(filtre == NEG){
-            bufferWithUnzippedImg = bufferWithUnzippedImgNegative;
+            this.bufferWithUnzippedImg = bufferWithUnzippedImgNegative;
         }else if (filtre == BIN){
-            bufferWithUnzippedImg = bufferWithUnzippedImgBinarized;
+            this.bufferWithUnzippedImg = bufferWithUnzippedImgBinarized;
         }
     }
     
@@ -177,9 +177,11 @@ public class Controlador {
     /**
      * Metode que realitza el encoding en cas de que s'hagi seleccionat per parametre.
      */
-    public void encode(int fps, int gop, String ntilesw, String ntilesh, int seek, int quality) {
+    public void encode(int fps, int gop, int ntiles, int seek, int quality) {
         this.reprodueixZip(fps, "");
-        Codificador encode = new Codificador(bufferWithUnzippedImg, gop, ntilesw, ntilesh, seek, quality);
+        
+        System.out.println("Entramos en encode");
+        Codificador encode = new Codificador(bufferWithUnzippedImg, gop, ntiles, seek, quality);
         
     }
     
