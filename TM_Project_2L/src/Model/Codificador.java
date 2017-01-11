@@ -89,35 +89,7 @@ public class Codificador {
         }
         System.out.println("Fin omple GOP");
     }
-    
-//    private void recorreGOP(){
-//        System.out.println("recorreGOP");
-//        int x = 0;
-//        for (ArrayList<Marc> e:listaListasGOP){
-//            System.out.println((x++) + " tamany: "+ e.size());
-//            int comptador = 1;
-//            for (Marc img:e){
-//                BufferedImage image = img.getImage();
-//                this.width = image.getWidth()/this.ntiles;
-//                this.height = image.getHeight()/this.ntiles;
-//                System.out.println(this.width +"Holi width height"+this.height );
-//                if(comptador < e.size()){
-//                    img.setTesseles(this.generateMacroblocks(image));
-//                    Marc resultant = new Marc(setPFramesColor(img.getTesseles(), e.get(comptador).getImage()),5);
-//                    comprimides.add(resultant);
-//                    comptador ++;
-//                }else{
-//                    comprimides.add(img);
-//                }
-//                for(Tesseles t : img.getTesseles()) this.tesselesAcum.add(t);
-//            }
-//        }
-//        System.out.println("FORAAAA: " + this.tesselesAcum.size());
-//        System.out.println("IMAGES SIZE: " + this.comprimides.size());       
-//        this.saveZIP();
-//        
-//    }
-    
+
     
     private void recorreGOP(){
         System.out.println("recorreGOP");
@@ -125,7 +97,7 @@ public class Codificador {
         Marc n = null;
         Marc n_1 = null;
         for (int p = 0;p<listaListasGOP.size();p++){
-            System.out.println("NEW IFRAME");
+            System.out.println("Generem sequencia");
             for (int z = 0;z<listaListasGOP.get(p).size()-1;z++){
                 n = (Marc) listaListasGOP.get(p).get(z);
                 if(z == 0){
@@ -169,6 +141,12 @@ public class Codificador {
         return teseles;
     }
     
+/*
+ * -----------------ENCODING FUNCTIONS -----------------
+ *
+ */
+ 
+ 
    private ArrayList<Tesseles> findCompatibleBlock(Marc iFrame, BufferedImage pFrame) {
         float maxPSNR = Float.MIN_VALUE;
         int xMaxValue = 0, yMaxValue = 0, xMin, xMax, yMin, yMax, idTesela, idX, idY;
@@ -204,13 +182,7 @@ public class Codificador {
         return(teselesResultants);
     }
     
-    /**
-     * This method compare two tiles. The bigger is the psnr, the similar are 
-     * the tiles.
-     * @param tesela
-     * @param pframe
-     * @return psnr
-     */
+
     private float calculatePSNR(Tesseles tesela, BufferedImage pframe){
         float noise = 0, mse = 0, psnr = 0;
         BufferedImage iFrame = tesela.getTessela();
@@ -228,13 +200,6 @@ public class Codificador {
         return psnr;
     }
     
-    /**
-     * This method call the meanColorImage for every I-frame tile found in P-frame.
-     * @param framesId
-     * @param coordId
-     * @param teseles
-     * @param pFrame 
-     */
     private BufferedImage setPFramesColor(ArrayList<Tesseles> teseles, BufferedImage pFrame){
         BufferedImage result = pFrame;
         for(Tesseles t : teseles){
@@ -252,11 +217,7 @@ public class Codificador {
         return result;
     }
     
-    /**
-     * This method calculates the mean colour from a given tile
-     * @param im
-     * @return Color
-     */
+
     private Color meanColorImage(BufferedImage im){
         Color color;
         int sumR=0, sumG=0, sumB=0, pixelCount=0;
@@ -272,49 +233,19 @@ public class Codificador {
         return new Color((sumR/pixelCount),(sumG/pixelCount),(sumB/pixelCount));
     }
  
-     public ArrayList<Tesseles> generateMacroblocks(BufferedImage image){
-        ArrayList<Tesseles> teseles = new ArrayList<>();
-        Tesseles t;
-        int count = 0;
-        for(int y=0; y<image.getHeight(); y+=this.height){
-            for(int x=0; x<image.getWidth(); x+=this.width){
-                System.out.println("tileWidth" + this.width);
-                System.out.println("tileHeight" + this.height);
-                t = new Tesseles(image.getSubimage(x, y, this.width, this.height), count);
 
-                teseles.add(t);
-                count++;
-            }
-        }
-        return teseles;
-    }
-
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    
-    
-    //ntiles = numero de veces que parte la longitud y altura = 10
-    //ntiles width = 
-       /**
-     * This method save every compressed image
-     */
     private void saveCompressedImages(){
-        System.out.println("Entramos en saveCompressedImages");
         for(ArrayList<Marc>  p: this.listaListasGOP){
             for(Marc f : p){
                 try {
                     ImageIO.write(f.getImage(), "jpeg", new File("src/resources/Compressed/frame"+String.format("%03d",f.getId())+".jpeg"));
-                    //System.out.println("TRY: 1sTIME"+ "src/resources/Compressed/frame" + String.format("%03d",f.getId())+".jpeg");
                 } catch (IOException ex) {
                     ex.printStackTrace();
                 }
             }
         }
     }
-    
-    /**
-     * This method creates a zip folder with the compressed images and a
-     * text file with the coordinates.
-     */
+
     private void saveZIP(){
         new File("src/resources/Compressed").mkdirs();
         this.makeCoordsFile();
@@ -323,9 +254,6 @@ public class Codificador {
         this.deleteDir(new File("src/resources/Compressed"));
     }
     
-    /**
-     * This method creates a text file with the tiles coordinates in P-frame
-     */
     private void makeCoordsFile(){
         BufferedWriter bw = null;  
         try {
@@ -348,11 +276,7 @@ public class Codificador {
         }
     }
     
-    /**
-     * This method creates the zip folder
-     * @param srcFolder
-     * @param destZipFile 
-     */
+
     private void zipFolder(String srcFolder, String destZipFile){
         try {
             ZipOutputStream zip = null;
@@ -370,13 +294,7 @@ public class Codificador {
             Logger.getLogger(Codificador.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-   
-    /**
-     * This is a support method
-     * @param path
-     * @param srcFile
-     * @param zip 
-     */
+
     private void addFileToZip(String path, String srcFile, ZipOutputStream zip){
         File folder = new File(srcFile);
         if (folder.isDirectory()) {
@@ -404,12 +322,6 @@ public class Codificador {
         }
   }
    
-    /**
-     * This is a support method
-     * @param path
-     * @param srcFolder
-     * @param zip 
-     */
     private void addFolderToZip(String path, String srcFolder, ZipOutputStream zip){
         File folder = new File(srcFolder);
         for (String fileName : folder.list()) {
@@ -421,11 +333,6 @@ public class Codificador {
         }
     }
    
-    /**
-     * This method deletes the directory
-     * @param dir
-     * @return 
-     */
     private boolean deleteDir(File dir) {
       if (dir.isDirectory()) {
          String[] children = dir.list();
