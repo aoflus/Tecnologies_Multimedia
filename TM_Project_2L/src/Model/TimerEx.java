@@ -59,7 +59,7 @@ public class TimerEx {
                     //System.out.println("Actualitza: " + x);
                     reprod.mostraImatgeAlFrame(llistaImatges.get(x));
                 } else {
-                    System.out.println("finish");
+                    //System.out.println("finish");
                     reprod.dispose();
                     timer.cancel();
                     timer.purge();
@@ -69,7 +69,7 @@ public class TimerEx {
             };
             // Empezamos dentro de 10ms y luego lanzamos la tarea cada 1000ms
         if(x < this.tamanyLlista){
-            System.out.println("ms:" + ms);
+            //System.out.println("ms:" + ms);
             timer.schedule(task, 10, ms);
         }else{
             timer.cancel();

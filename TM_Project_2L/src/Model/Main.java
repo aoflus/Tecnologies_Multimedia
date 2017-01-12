@@ -50,13 +50,12 @@ public class Main {
         //Creem un settings i el jcommander.
         settings = new Settings();
         new JCommander(settings, args); // simple one-liner
-        
        
         Controlador controlador = new Controlador(); //Instanciamos el controlador
-        
 
         String rutaZip = settings.getInput(); 
         boolean encode = settings.getEncode();
+        boolean decode = settings.getDecode();
         String output = settings.getOutput();
         String frames = settings.getFps();
         String ntiles = settings.getnTiles();
@@ -75,14 +74,12 @@ public class Main {
         }
         //Codificamos
         if(encode){
-            System.out.printf("Entramos en encode.");
             int gop;
             if (settings.getGOP()!=null){
                 gop = Integer.valueOf(settings.getGOP());
             }else{gop = 5;}
             // De momento cogemos el tamaño de las teselas en pixeles.
             // A implementar coger valores diferentes eje x e y.
-            System.out.println("ntiles?" + settings.getnTiles());
             if (settings.getnTiles()!=null){
                 nTiles = Integer.valueOf(settings.getnTiles());
             }
@@ -92,8 +89,14 @@ public class Main {
             if(quality!=""){
                 q = Integer.valueOf(quality);
             }
+            System.out.println("Parametros: " + " GOP: " + gop + " nTiles: " + nTiles + " quality: " + q+ " seekRange: " + seek);
             controlador.encode(fps, gop, nTiles, seek,q);
         }
+        
+        if(decode){
+            controlador.decode(fps, q, nTiles);
+        }
+        
         
         //Sortida del arxiu
         if(output!=null){

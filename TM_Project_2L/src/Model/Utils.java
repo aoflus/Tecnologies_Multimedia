@@ -6,15 +6,18 @@
 package Model;
 
 import Model.GestioImatge.Marc;
+import Model.GestioImatge.Tesseles;
 import java.awt.Color;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -43,6 +46,8 @@ public class Utils {
      *
      * @return
      */
+    public static int compressSize = 0;
+    public static int descompressSize = 0;
     public static String escanejaLinia() {
         Scanner sc = new Scanner(System.in);
         String retorna = sc.nextLine();
@@ -134,6 +139,7 @@ public class Utils {
             ZipInputStream zis = new ZipInputStream(new FileInputStream(zipFile));
             //get the zipped file list entry
             ZipEntry ze = zis.getNextEntry();
+            compressSize = (int) ze.getSize();
 
             int pos;
             int cont = 0;
@@ -192,10 +198,10 @@ public class Utils {
                    outputStreamZip.putNextEntry(entry);
                    ImageIO.write(image.getImage(), "jpg", outputStreamZip);
                } catch (IOException ex) {
-                   System.out.println("ERROR: There has been a problem while writing the image to the output file");
-                               try{
-                outputStreamZip.flush();
-                outputStreamZip.close();
+                    System.out.println("ERROR: There has been a problem while writing the image to the output file");
+                    try{
+                    outputStreamZip.flush();
+                    outputStreamZip.close();
             } catch (Exception e) {
                 System.out.println("S'ha produit un error tancant la connexio");
             }
@@ -218,6 +224,134 @@ public class Utils {
             }
         }
     }
+    
+    /**
+     * Creamos una carpeta zip con el contenido del src.
+     * @param srcFolder
+     * @param destZipFile 
+     */
+    public void crearCarpetaZIP(String srcFolder, String destZipFile) {
+        try {
+            ZipOutputStream zip = null;
+            FileOutputStream fileWriter = null;
+
+            fileWriter = new FileOutputStream(destZipFile);
+            
+            zip = new ZipOutputStream(fileWriter);
+            
+            anyadirDirectorio("", srcFolder, zip);
+            
+            zip.flush();
+            zip.close();
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(Codificador.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(Codificador.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    /**
+     * Metodo auxiliar para guardar un fichero en un zip.
+     * @param path
+     * @param srcFile
+     * @param zip 
+     */
+    public void anyadirFichero(String path, String srcFile, ZipOutputStream zip) {
+        File folder = new File(srcFile);
+        if (folder.isDirectory()) {
+            anyadirDirectorio(path, srcFile, zip);
+        } else {
+            FileInputStream in = null;
+            try {
+                byte[] buf = new byte[1024];
+                int len;
+                in = new FileInputStream(srcFile);
+                zip.putNextEntry(new ZipEntry(path + "/" + folder.getName()));
+                while ((len = in.read(buf)) > 0) {
+                    zip.write(buf, 0, len);
+                }
+            } catch (FileNotFoundException ex) {
+                Logger.getLogger(Codificador.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IOException ex) {
+                Logger.getLogger(Codificador.class.getName()).log(Level.SEVERE, null, ex);
+            } finally {
+                try {
+                    in.close();
+                } catch (IOException ex) {
+                    Logger.getLogger(Codificador.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
+    }
+
+    /**
+     * Metodo auxiliar para guardar un directorio en un zip.
+     * @param path
+     * @param srcFolder
+     * @param zip 
+     */
+    public void anyadirDirectorio(String path, String srcFolder, ZipOutputStream zip) {
+        File folder = new File(srcFolder);
+
+        for (String fileName : folder.list()) {
+            if (path.equals("")) {
+                anyadirFichero(folder.getName(), srcFolder + "/" + fileName, zip);
+            } else {
+                anyadirFichero(path + "/" + folder.getName(), srcFolder + "/" + fileName, zip);
+            }
+        }
+    }
+
+    /**
+     * Metodo auxiliar para borrar el directorio de muletilla que se crea en el proceso.
+     * @param dir
+     * @return 
+     */
+    public boolean borrarDirectorio(File dir) {
+        if (dir.isDirectory()) {
+            String[] children = dir.list();
+            for (String children1 : children) {
+                boolean success = borrarDirectorio(new File(dir, children1));
+                if (!success) {
+                    return false;
+                }
+            }
+        }
+        return dir.delete();
+    }
+    
+    /**
+     * Este metodo crea las coordenadas para poder decodificar las imagenes, por tanto guarda las relaciones
+     * entre los I frames y las teselas de los P frames.
+     */
+    public void crearTxTCoordenadas(ArrayList<Tesseles> tesselesAcum) {
+        BufferedWriter bw = null;
+        try {
+            String name = "src/resources/Compressed/coords.txt";
+            bw = new BufferedWriter(new FileWriter(name));
+            for (Tesseles t : tesselesAcum) {
+                bw.write(t.getId() + " " + t.getCoordDestiX() + " " + t.getCoordDestiY() + "\n");
+            }
+            bw.flush();
+            bw.close();
+        } catch (IOException ex) {
+            System.err.println("Excepcion IO" + ex);
+        }
+    }
+
+    void setCompressSize(long length) {
+        descompressSize = (int) length;
+        System.out.println("Zip inicial: "  +  descompressSize);
+        System.out.println("Comprimido: "  + compressSize);
+        float rate =  (float)  descompressSize / (float) compressSize;
+        System.out.println("El ratio de compresion es el siguiente: " + rate);
+        System.out.println("-------------------Falta poner algun ratio de calidad!----------------------");
+        
+    }
+    
+    
+    
+    
     
     
 }

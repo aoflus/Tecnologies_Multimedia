@@ -181,11 +181,25 @@ public class Controlador {
     public void encode(int fps, int gop, int ntiles, int seek, int quality) {
         this.reprodueixZip(fps, "");
         
-        System.out.println("Entramos en encode");
+        long time_start, time_end;
+        time_start = System.currentTimeMillis();
+        System.out.println("Entramos en encode y comenzamos a medir el tiempo.");
         Codificador encode = new Codificador(bufferWithUnzippedImg, gop, ntiles, seek, quality);
-        System.out.println("Empieza a decodificar");
+        time_end = System.currentTimeMillis();
+        System.out.println("La tarea ha costado "+ ( time_end - time_start ) +" milisegundos");
+    }
+    
+    public void decode(int fps, int gop, int ntiles) {
+        //this.reprodueixZip(fps, "");
+        long time_start, time_end;
+        time_start = System.currentTimeMillis();
+        System.out.println("Entramos en encode y comenzamos a medir el tiempo.");
         Decodificador decode = new Decodificador(gop,ntiles);
         decode.decode();
+        time_end = System.currentTimeMillis();
+        System.out.println("La tarea ha costado "+ ( time_end - time_start ) +" milisegundos");
+       
     }
+    
     
 }

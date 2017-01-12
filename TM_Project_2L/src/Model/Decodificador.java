@@ -65,7 +65,7 @@ public class Decodificador {
         }
     }
     
-    private void readZip(){
+    public void readZip(){
         try {
             File f = new File("src/resources/Compressed.zip");
             ZipFile z = new ZipFile(f);

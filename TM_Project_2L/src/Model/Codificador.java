@@ -28,23 +28,26 @@ import java.util.zip.ZipOutputStream;
 import javax.imageio.ImageIO;
 
 /**
- * Clase codificador que contindra metodes que permetran realitzar la codificacio entre frames.
+ * Clase codificador que contindra metodes que permetran realitzar la
+ * codificacio entre frames.
+ *
  * @author Victor i Alvaro
  */
 public class Codificador {
 
     HashMap<Integer, Image> unzippedImg = new HashMap<Integer, Image>();
     int gop = 5, seek, ntiles, quality;
-    ArrayList <ArrayList> listaListasGOP = new ArrayList <ArrayList>();
-    ArrayList <Marc> listaGOP = new ArrayList <Marc>();
+    ArrayList<ArrayList> listaListasGOP = new ArrayList<ArrayList>();
+    ArrayList<Marc> listaGOP = new ArrayList<Marc>();
     int height, width;
     ArrayList<Marc> comprimides = new ArrayList<Marc>();
     ArrayList<Tesseles> tesselesAcum = new ArrayList<>();
-    
+    Utils zipp;
     public Codificador(HashMap<Integer, Image> bufferWithUnzippedImg, int gop, int ntiles, int seek, int quality) {
-        System.out.println("Imagenes leidas");
+        this.zipp = new Utils();
+        //System.out.println("Imagenes leidas");
         this.gop = gop;
-        System.out.println("GOP: " + this.gop);
+        //System.out.println("GOP: " + this.gop);
         this.ntiles = ntiles;
         this.seek = seek;
         this.quality = quality;
@@ -61,75 +64,70 @@ public class Codificador {
     private void aplicaFiltres() {
         System.out.println("Aplicamos filtros seleccionados por el usuario. No implementado."); //To change body of generated methods, choose Tools | Templates.
     }
-    
+
     /**
-     * Recorremos un numero de imagenes definido por el parametro GOP,
-     * Y a partir de esta secuencia de imagenes comprimimos, la primera
-     * sera la de referencia.
+     * Recorremos un numero de imagenes definido por el parametro GOP, Y a
+     * partir de esta secuencia de imagenes comprimimos, la primera sera la de
+     * referencia.
      */
-    private void ompleGOP(){ // Hacemos una lista por cada tira de imagenes
-        System.out.println("ompleGOP");
-        for(int x = 0 ; x<unzippedImg.size();x++){
-            if(x % this.gop == 0 || x + 1 >= unzippedImg.size()){  //Empezamos lista
+    private void ompleGOP() { // Hacemos una lista por cada tira de imagenes
+        //System.out.println("ompleGOP");
+        for (int x = 0; x < unzippedImg.size(); x++) {
+            if (x % this.gop == 0 || x + 1 >= unzippedImg.size()) {  //Empezamos lista
                 //Si gop es 5, entra en el if en el 0, en el 5, en el 10...
-                if(!listaGOP.isEmpty()){
-                    if(x + 1 >= unzippedImg.size()){
-                        
+                if (!listaGOP.isEmpty()) {
+                    if (x + 1 >= unzippedImg.size()) {
+
                         this.listaGOP.add(new Marc((BufferedImage) unzippedImg.get(x), x));
                     };
-                    Utils zipp= new Utils();
-                    zipp.saveZip(listaGOP,"nouZip.zip");
+                    zipp.saveZip(listaGOP, "nouZip.zip");
                     listaListasGOP.add(listaGOP);
                 }
-                listaGOP = new ArrayList <Marc>();
+                listaGOP = new ArrayList<Marc>();
             }
             //Añadimos imagen a la lista GOP.
             this.listaGOP.add(new Marc((BufferedImage) unzippedImg.get(x), x));
-            System.out.println("Iteracions: " + x);
         }
-        System.out.println("Fin omple GOP");
     }
 
-    
-    private void recorreGOP(){
-        System.out.println("recorreGOP");
+    private void recorreGOP() {
+        //System.out.println("recorreGOP");
         int x = 0;
         Marc n = null;
         Marc n_1 = null;
-        for (int p = 0;p<listaListasGOP.size();p++){
-            //System.out.println("Generem sequencia");
-            for (int z = 0;z<listaListasGOP.get(p).size()-1;z++){
+        for (int p = 0; p < listaListasGOP.size(); p++) {
+            for (int z = 0; z < listaListasGOP.get(p).size() - 1; z++) {
                 n = (Marc) listaListasGOP.get(p).get(z);
-                if(z == 0){
+                if (z == 0) {
                     //Primera imagen
                     comprimides.add(n);
                 }
-                n_1 = (Marc) listaListasGOP.get(p).get(z+1);
-                this.width = n_1.getImage().getWidth()/this.ntiles;
-                this.height = n_1.getImage().getHeight()/this.ntiles;
+                n_1 = (Marc) listaListasGOP.get(p).get(z + 1);
+                this.width = n_1.getImage().getWidth() / this.ntiles;
+                this.height = n_1.getImage().getHeight() / this.ntiles;
                 n.setTesseles(subdividirImgTesseles(n.getImage()));
-                n.setTesseles(findCompatibleBlock(n, n_1.getImage()));
-                Marc resultat = new Marc(setPFramesColor(n.getTesseles(), n_1.getImage()),5);
+                n.setTesseles(buscarTesselesIguals(n, n_1.getImage()));
+                Marc resultat = new Marc(setColorPFrames(n.getTesseles(), n_1.getImage()), 5);
                 comprimides.add(resultat);
-                for(Tesseles t : n.getTesseles()) this.tesselesAcum.add(t);
+                for (Tesseles t : n.getTesseles()) {
+                    this.tesselesAcum.add(t);
+                }
             }
-            
+
         }
-        //System.out.println("FORAAAA: " + this.tesselesAcum.size());
-        //System.out.println("IMAGES SIZE: " + this.comprimides.size());       
-        this.saveZIP();
-        
-    }    
-    
- public ArrayList<Tesseles> subdividirImgTesseles(BufferedImage image){
+        this.guardarZIP();
+
+    }
+
+    public ArrayList<Tesseles> subdividirImgTesseles(BufferedImage image) {
         ArrayList<Tesseles> teseles = new ArrayList<>();
         Tesseles tesela;
         int comptador = 0;
-        for(float y=0; y<Math.round(image.getHeight()); y+=this.height){
-            for(float x=0; x<Math.round(image.getWidth()); x+=this.width){
-                x=Math.round(x);
-                y=Math.round(y);
-                tesela = new Tesseles(image.getSubimage((int)x, (int) y, (int)this.width, (int)this.height), comptador);
+        for (float y = 0; y < Math.round(image.getHeight()); y += this.height) {
+            for (float x = 0; x < Math.round(image.getWidth()); x += this.width) {
+                x = Math.round(x);
+                y = Math.round(y);
+                tesela = new Tesseles(image.getSubimage((int) x, (int) y, (int) this.width, (int) this.height), comptador);
                 teseles.add(tesela);
                 comptador++;
             }
@@ -137,213 +135,177 @@ public class Codificador {
 //        System.out.println("-------------------------------------------------------");
 //        System.out.println("teseles:" + teseles.size());
 //        System.out.println("-------------------------------------------------------");
-        //System.out.println("Fin tesseles.");
         return teseles;
     }
-    
-/*
+
+    /*
  * -----------------ENCODING FUNCTIONS -----------------
  *
- */
- 
- 
-   private ArrayList<Tesseles> findCompatibleBlock(Marc iFrame, BufferedImage pFrame) {
-        float maxPSNR = Float.MIN_VALUE;
-        int xMaxValue = 0, yMaxValue = 0, xMin, xMax, yMin, yMax, idTesela, idX, idY;
+     */
+    /**
+     * La funció buscarTesselesIguals, donat un marc I i una imatge P, compara
+     * les similituds en les tesseles generades a la imatge P amb el marc I, i
+     * en cas de trobar similituds, guarda les tesseles resultats en una
+     * variable de retorn.
+     *
+     * @param iFrame
+     * @param pFrame
+     * @return
+     */
+    private ArrayList<Tesseles> buscarTesselesIguals(Marc iFrame, BufferedImage pFrame) {
+        float maxPSNR;
+        int xMaxValue = 0;
+        int yMaxValue = 0;
+        int x, y, minX, maxX, minY, maxY, id;
         ArrayList<Tesseles> teselesResultants = new ArrayList<>();
+
         for (Tesseles t : iFrame.getTesseles()) {
             maxPSNR = Float.MIN_VALUE;
-            idTesela = t.getId();
-            idY = (idTesela%this.ntiles)*this.width;
-            idX = ((int)Math.ceil(idTesela/this.ntiles))*this.height;
-            xMin = ((idX - this.seek) < 0) ? 0 : (idX - this.seek);
-            yMin = ((idY - this.seek) < 0) ? 0 : (idY - this.seek);
-            xMax = (idX + this.seek + this.height) > (((BufferedImage) this.unzippedImg.get(0)).getHeight()) ? (((BufferedImage) this.unzippedImg.get(0)).getHeight())  : (idX + this.seek + this.height);
-            yMax = (idY + this.seek + this.width) > (((BufferedImage) this.unzippedImg.get(0)).getWidth())  ? (((BufferedImage) this.unzippedImg.get(0)).getWidth())  : (idY + this.seek + this.width);
-            for(int x=xMin; x<=xMax-this.height; x++){
-                for(int y=yMin; y<=yMax-this.width; y++){
-                    float psnr = calculatePSNR(t, pFrame.getSubimage(y, x, this.width, this.height));
-                    if(psnr > maxPSNR && psnr >= this.quality){
+            id = t.getId();
+            // Mida de les tesseles
+            x = ((int) Math.ceil(id / ntiles)) * height;
+            y = (id % ntiles) * width;
+            // Valor minim un cop afegida exploracio
+            minX = ((x - seek) < 0) ? 0 : (x - seek);
+            minY = ((y - seek) < 0) ? 0 : (y - seek);
+            // Valor maxim un cop afegida exploracio
+            maxX = (x + height + seek) > (((BufferedImage) unzippedImg.get(0)).getHeight()) ? 
+                    (((BufferedImage) unzippedImg.get(0)).getHeight()) : (x + height + seek);
+            maxY = (y + width + seek) > (((BufferedImage) unzippedImg.get(0)).getWidth()) ? 
+                    (((BufferedImage) unzippedImg.get(0)).getWidth()) : (y + width + seek);
+
+            //Iterem sobre les teseles i busquem coincidencies PSNR
+            for (int i = minX; i <= maxX - height; i++) {
+                for (int j = minY; j <= maxY - width; j++) {
+                    float psnr = calcularRatioPSNR(t, pFrame.getSubimage(j, i, width, height));
+                    if (psnr > maxPSNR && psnr >= quality) {
                         maxPSNR = psnr;
-                        xMaxValue = x;
-                        yMaxValue = y;
+                        xMaxValue = i;
+                        yMaxValue = j;
                     }
                 }
             }
-            if(maxPSNR != Float.MIN_VALUE){
+            //Si no trobem mes equivalencies, busquem a la seguent tesela.
+            if (maxPSNR != Float.MIN_VALUE) {
                 t.setCoordDestiX(xMaxValue);
                 t.setCoordDestiY(yMaxValue);
-            }else{
+            } 
+            else {
                 t.setCoordDestiX(-1);
                 t.setCoordDestiY(-1);
             }
             teselesResultants.add(t);
         }
-        return(teselesResultants);
+        return (teselesResultants);
     }
-    
 
-    private float calculatePSNR(Tesseles tesela, BufferedImage pframe){
-        float noise = 0, mse = 0, psnr = 0;
+    /**
+     * La funcio calcularRatioPSNR calcula donat un marc I i una imatge J, la relació
+     * Peak signal-to-noise ratio entre el marc I i les tesseles de la imatge J.
+     * @param tesela
+     * @param pframe
+     * @return 
+     */
+    private float calcularRatioPSNR(Tesseles tesela, BufferedImage pframe) {
+        float soroll = 0, mse = 0, psnr = 0;
         BufferedImage iFrame = tesela.getTessela();
-        for (int i=0; i<iFrame.getHeight(); i++) {
-            for (int j=0; j<iFrame.getWidth(); j++) {
+        for (int i = 0; i < iFrame.getHeight(); i++) {
+            for (int j = 0; j < iFrame.getWidth(); j++) {
                 Color iframe_rgb = new Color(iFrame.getRGB(j, i));
                 Color pframe_rgb = new Color(pframe.getRGB(j, i));
-                noise += Math.pow(pframe_rgb.getRed() - iframe_rgb.getRed(), 2);
-                noise += Math.pow(pframe_rgb.getGreen()- iframe_rgb.getGreen(), 2);
-                noise += Math.pow(pframe_rgb.getBlue() - iframe_rgb.getBlue(), 2);
+                soroll = (float) (soroll + Math.pow(pframe_rgb.getRed() - iframe_rgb.getRed(), 2));
+                soroll = (float) (soroll + Math.pow(pframe_rgb.getGreen() - iframe_rgb.getGreen(), 2));
+                soroll = (float) (soroll + Math.pow(pframe_rgb.getBlue() - iframe_rgb.getBlue(), 2));
             }
-          }
-        mse = noise/(iFrame.getHeight()*iFrame.getWidth()*3);
+        }
+        mse = soroll / (iFrame.getHeight() * iFrame.getWidth() * 3);
         psnr = (float) (10 * Math.log10((255 * 255) / mse));
         return psnr;
     }
-    
-    private BufferedImage setPFramesColor(ArrayList<Tesseles> teseles, BufferedImage pFrame){
+
+    /**
+     * La funció medianaColor retorna la mediana del color dels pixels de una imatge.
+     * @param im
+     * @return 
+     */
+    private Color medianaColor(BufferedImage im) {
+        Color color;
+        int sumR = 0; 
+        int sumG = 0; 
+        int sumB = 0; 
+        int pixelCount = 0;
+        int red, green, blue;
+        for (int x = 0; x < width; x++) {
+            for (int y = 0; y < height; y++) {
+                color = new Color(im.getRGB(x, y));
+                pixelCount++;
+                sumR = sumR + color.getRed();
+                sumG = sumG + color.getGreen();
+                sumB = sumB + color.getBlue();
+            }
+        }
+        red = sumR / pixelCount;
+        green = sumG / pixelCount;
+        blue = sumB / pixelCount;
+        return new Color(red, green, blue);
+    }
+
+    /**
+     * La funcio setColorPFrames aplica el color encontrado por la mediana de color del pFrame a 
+     * las teselas que dieron coincidencia.
+     * pFrame a las tesselas seleccionada
+     * @param teseles
+     * @param pFrame
+     * @return 
+     */
+    private BufferedImage setColorPFrames(ArrayList<Tesseles> teseles, BufferedImage pFrame) {
         BufferedImage result = pFrame;
-        for(Tesseles t : teseles){
+        teseles.forEach((t) -> {
             int x = t.getCoordDestiX();
             int y = t.getCoordDestiY();
-            if(x != -1 && y != -1){
-                Color c = meanColorImage(t.getTessela());
-                for(int xCoord=x; xCoord<(x+this.height); xCoord++){
-                    for(int yCoord=y; yCoord<(y+this.width); yCoord++){
+            if (x != -1 && y != -1) {
+                Color c = medianaColor(t.getTessela());
+                for (int xCoord = x; xCoord < (x + height); xCoord++) {
+                    for (int yCoord = y; yCoord < (y + width); yCoord++) {
                         result.setRGB(yCoord, xCoord, c.getRGB());
                     }
                 }
             }
-        }
+        });
         return result;
     }
-    
 
-    private Color meanColorImage(BufferedImage im){
-        Color color;
-        int sumR=0, sumG=0, sumB=0, pixelCount=0;
-        for(int x=0; x<this.width; x++){
-            for(int y=0; y<this.height; y++){
-                color = new Color(im.getRGB(x, y));
-                pixelCount++;
-                sumR += color.getRed();
-                sumG += color.getGreen();
-                sumB += color.getBlue();
-            }
-        }
-        return new Color((sumR/pixelCount),(sumG/pixelCount),(sumB/pixelCount));
-    }
- 
-
-    private void saveCompressedImages(){
-        for(ArrayList<Marc>  p: this.listaListasGOP){
-            for(Marc f : p){
+    /**
+     * La funcion guardarImagenes garda las imagenes una vez codificadas.
+     */
+    private void guardarImagenes() {
+        for (ArrayList<Marc> p : listaListasGOP) {
+            p.forEach((f) -> {
                 try {
-                    ImageIO.write(f.getImage(), "jpeg", new File("src/resources/Compressed/frame"+String.format("%03d",f.getId())+".jpeg"));
+                    ImageIO.write(f.getImage(), "jpeg", new File("src/resources/Compressed/frame" + String.format("%03d", f.getId()) + ".jpeg"));
                 } catch (IOException ex) {
-                    ex.printStackTrace();
+                    System.err.println("Excepcion IO detectada" + ex);
                 }
-            }
+            });
         }
     }
 
-    private void saveZIP(){
+    // ---------------------- METODOS GUARDADO EN ZIP UTILS ----------------------------------
+    
+    /**
+     * la función guardarZIP se encarga de crear un zip con las imagenes y las coordenadas para
+     * poder realizar la decodificacion.
+     */
+    private void guardarZIP() {
         new File("src/resources/Compressed").mkdirs();
-        this.makeCoordsFile();
-        this.saveCompressedImages();
-        this.zipFolder("src/resources/Compressed","src/resources/Compressed.zip");
-        this.deleteDir(new File("src/resources/Compressed"));
-    }
-    
-    private void makeCoordsFile(){
-        BufferedWriter bw = null;  
-        try {
-            String name = "src/resources/Compressed/coords.txt";
-            bw = new BufferedWriter(new FileWriter(name));
-            for (Tesseles t : this.tesselesAcum) {
-                //System.out.println(t.getId()+" "+t.getCoordDestiX()+" "+t.getCoordDestiY());
-                bw.write(t.getId()+" "+t.getCoordDestiX()+" "+t.getCoordDestiY()+"\n");  
-            }
-            bw.flush();
-            bw.close();
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        } finally {
-            try {
-                bw.close();
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
-        }
-    }
-    
+        this.zipp.crearTxTCoordenadas(this.tesselesAcum);
+        this.guardarImagenes();
+        this.zipp.crearCarpetaZIP("src/resources/Compressed", "src/resources/Compressed.zip");
+        File outptFile = new File("src/resources/Compressed.zip");
+        this.zipp.setCompressSize(outptFile.length());
 
-    private void zipFolder(String srcFolder, String destZipFile){
-        try {
-            ZipOutputStream zip = null;
-            FileOutputStream fileWriter = null;
-            
-            fileWriter = new FileOutputStream(destZipFile);
-            zip = new ZipOutputStream(fileWriter);
-            
-            addFolderToZip("", srcFolder, zip);
-            zip.flush();
-            zip.close();
-        } catch (FileNotFoundException ex) {
-            Logger.getLogger(Codificador.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(Codificador.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        this.zipp.borrarDirectorio(new File("src/resources/Compressed"));
     }
 
-    private void addFileToZip(String path, String srcFile, ZipOutputStream zip){
-        File folder = new File(srcFile);
-        if (folder.isDirectory()) {
-          addFolderToZip(path, srcFile, zip);
-        } else {
-            FileInputStream in = null;
-            try {
-                byte[] buf = new byte[1024];
-                int len;
-                in = new FileInputStream(srcFile);
-                zip.putNextEntry(new ZipEntry(path + "/" + folder.getName()));
-                while ((len = in.read(buf)) > 0) {
-                    zip.write(buf, 0, len);
-                } } catch (FileNotFoundException ex) {
-                Logger.getLogger(Codificador.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (IOException ex) {
-                Logger.getLogger(Codificador.class.getName()).log(Level.SEVERE, null, ex);
-            } finally {
-                try {
-                    in.close();
-                } catch (IOException ex) {
-                    Logger.getLogger(Codificador.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
-        }
-  }
-   
-    private void addFolderToZip(String path, String srcFolder, ZipOutputStream zip){
-        File folder = new File(srcFolder);
-        for (String fileName : folder.list()) {
-          if (path.equals("")) {
-            addFileToZip(folder.getName(), srcFolder + "/" + fileName, zip);
-          } else {
-            addFileToZip(path + "/" + folder.getName(), srcFolder + "/" + fileName, zip);
-          }
-        }
-    }
-   
-    private boolean deleteDir(File dir) {
-      if (dir.isDirectory()) {
-         String[] children = dir.list();
-         for (int i = 0; i < children.length; i++) {
-            boolean success = deleteDir
-            (new File(dir, children[i]));
-            if (!success) {
-               return false;
-            }
-         }
-      }
-      return dir.delete();
-  }
+
 }
