@@ -7,10 +7,8 @@ package Model;
 
 import Model.GestioImatge.Marc;
 import Model.GestioImatge.Tesseles;
-import java.awt.Color;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
-import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -20,8 +18,6 @@ import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Scanner;
@@ -32,6 +28,7 @@ import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 import javax.imageio.ImageIO;
+import static Model.JPEGCompress.convertToJPG;
 
 /**
  * A la classe Utils generarem totes les funcionalitats "externes" per a
@@ -41,13 +38,15 @@ import javax.imageio.ImageIO;
  */
 public class Utils {
 
-    /**
-     * Metode que retorna la seguen linia escrita pel teclat
-     *
-     * @return
-     */
+
     public static int compressSize = 0;
     public static int descompressSize = 0;
+    
+     /**
+     * Metode que retorna la seguen linia escrita pel teclat
+     *
+     * @returnla la linia escrita per teclat.
+     */
     public static String escanejaLinia() {
         Scanner sc = new Scanner(System.in);
         String retorna = sc.nextLine();
@@ -78,7 +77,7 @@ public class Utils {
         /*While we have any entries left*/
         while (entries.hasMoreElements()) {
             ZipEntry entry = entries.nextElement();
-
+            
             /*Check that the entry is not a directory*/
             if (!entry.isDirectory()) {
                 /*Create the stream*/
@@ -147,7 +146,8 @@ public class Utils {
                 //System.out.println("Por cada imagen imprime el nombre:" + ze.getName());
                 if(!compruebaExt(ze.getName())) {
                     System.err.println("El fichero no tiene la extensión correcta");
-                    System.exit(0);
+                    convertToJPG(ze.getName(), "jpg");
+                    //System.exit(0);
                 }
                 
                 BufferedImage image = ImageIO.read(zis);

@@ -4,6 +4,7 @@
  * and open the template in the editor.
  */
 package Model;
+
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
@@ -19,31 +20,33 @@ import javax.imageio.ImageWriteParam;
 import javax.imageio.ImageWriter;
 import javax.imageio.stream.ImageOutputStream;
 
-    /**
-     * Classe que comprimeix en JPEG donada una certa qualitat com a parametre.
-     * @author Victor i Alvaro
-     */
-
+/**
+ * Classe que comprimeix en JPEG donada una certa qualitat com a parametre.
+ *
+ * @author Victor i Alvaro
+ */
 public class JPEGCompress {
+
     /**
      * Funcio que comprimeix en JPEG i ho fica dins de la ruta "name".
+     *
      * @param image
      * @param name
      * @param outputIName
      * @throws FileNotFoundException
-     * @throws IOException 
+     * @throws IOException
      */
-    public static void compressInJPEG(BufferedImage image,String name,String outputIName) throws FileNotFoundException, IOException{
-        
+    public static void compressInJPEG(BufferedImage image, String name, String outputIName) throws FileNotFoundException, IOException {
+
         //File imageFile = new File("Desert.jpg");
-        File compressedImageFile = new File(name+"/"+outputIName);
+        File compressedImageFile = new File(name + "/" + outputIName);
         //InputStream inputStream = new FileInputStream(imageFile);
         OutputStream outputStream = new FileOutputStream(compressedImageFile);
         float imageQuality = 0.3f;
         BufferedImage bufferedImage = image;
         //Get image writers
         Iterator<ImageWriter> imageWriters = ImageIO.getImageWritersByFormatName("jpg");
-        if (!imageWriters.hasNext()){
+        if (!imageWriters.hasNext()) {
             throw new IllegalStateException("Writers Not Found!!");
         }
         ImageWriter imageWriter = (ImageWriter) imageWriters.next();
@@ -59,5 +62,20 @@ public class JPEGCompress {
         outputStream.close();
         imageOutputStream.close();
         imageWriter.dispose();
-  }
+    }
+
+    public static void convertToJPG(String inputPath, String outputPath) {
+        File inputFile = new File(inputPath);
+        File outputFile = new File(outputPath);
+        try (InputStream is = new FileInputStream(inputFile)) {
+            BufferedImage image = ImageIO.read(is);
+            try (OutputStream os = new FileOutputStream(outputFile)) {
+                ImageIO.write(image, "jpg", os);
+            } catch (Exception exp) {
+                exp.printStackTrace();
+            }
+        } catch (Exception exp) {
+            exp.printStackTrace();
+        }
+    }
 }
