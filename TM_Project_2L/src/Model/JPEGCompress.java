@@ -64,6 +64,12 @@ public class JPEGCompress {
         imageWriter.dispose();
     }
 
+    /**
+     * El metodo converToJPG permite convertir una sola imagen a JPG, facilitando la ruta
+     * completa de la imagen de origen y la ruta de destino donde se guardara la imagen creada.
+     * @param inputPath
+     * @param outputPath 
+     */
     public static void convertToJPG(String inputPath, String outputPath) {
         File inputFile = new File(inputPath);
         File outputFile = new File(outputPath);
