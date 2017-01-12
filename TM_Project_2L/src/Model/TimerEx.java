@@ -48,23 +48,26 @@ public class TimerEx {
         task = new TimerTask() {
             @Override
             public void run(){
-                if(x == -1){
-                    //view = new Viewer();
-                    reprod = new Reproductor();
-                    reprod.setVisible(true);
-                    reprod.passaParams(timer,task);
-                    reprod.mostraImatgeAlFrame(llistaImatges.get(0));
+                
+                if (hashImatgesParam != null){
+                    if(x == -1){
+                        //view = new Viewer();
+                        reprod = new Reproductor();
+                        reprod.setVisible(true);
+                        reprod.passaParams(timer,task);
+                        reprod.mostraImatgeAlFrame(llistaImatges.get(0));
+                        x++;
+                    }else if (x < tamanyLlista){
+                        //System.out.println("Actualitza: " + x);
+                        reprod.mostraImatgeAlFrame(llistaImatges.get(x));
+                    } else {
+                        //System.out.println("finish");
+                        reprod.dispose();
+                        timer.cancel();
+                        timer.purge();
+                    }
                     x++;
-                }else if (x < tamanyLlista){
-                    //System.out.println("Actualitza: " + x);
-                    reprod.mostraImatgeAlFrame(llistaImatges.get(x));
-                } else {
-                    //System.out.println("finish");
-                    reprod.dispose();
-                    timer.cancel();
-                    timer.purge();
                 }
-                x++;
             }
             };
             // Empezamos dentro de 10ms y luego lanzamos la tarea cada 1000ms

@@ -45,7 +45,8 @@ public class Main {
      * @param args 
      */
     public static Settings settings;
-    
+    public static boolean encode;
+    public static boolean decode;
     public static void main(String[] args) {
         //Creem un settings i el jcommander.
         settings = new Settings();
@@ -54,8 +55,8 @@ public class Main {
         Controlador controlador = new Controlador(); //Instanciamos el controlador
 
         String rutaZip = settings.getInput(); 
-        boolean encode = settings.getEncode();
-        boolean decode = settings.getDecode();
+        encode = settings.getEncode();
+        decode = settings.getDecode();
         String output = settings.getOutput();
         String frames = settings.getFps();
         String ntiles = settings.getnTiles();

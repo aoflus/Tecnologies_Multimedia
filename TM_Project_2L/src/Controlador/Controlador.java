@@ -190,7 +190,7 @@ public class Controlador {
     }
     
     public void decode(int fps, int gop, int ntiles) {
-        //this.reprodueixZip(fps, "");
+        this.reprodueixZipDecoder(fps, "");
         long time_start, time_end;
         time_start = System.currentTimeMillis();
         System.out.println("Entramos en encode y comenzamos a medir el tiempo.");
@@ -198,7 +198,13 @@ public class Controlador {
         decode.decode();
         time_end = System.currentTimeMillis();
         System.out.println("La tarea ha costado "+ ( time_end - time_start ) +" milisegundos");
-       
+    }
+
+    public void reprodueixZipDecoder(int frames, String filtre) {
+        TimerEx tim = new TimerEx();
+        int ms = 1000;
+        int calculat = (int) Math.round(ms/frames);
+        tim.TimerExMain(null,calculat);
     }
     
     
