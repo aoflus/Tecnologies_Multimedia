@@ -175,8 +175,16 @@ public class Controlador {
             Logger.getLogger(Controlador.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    
+    
     /**
-     * Metode que realitza el encoding en cas de que s'hagi seleccionat per parametre.
+     * Metode que realitza el encoding en cas que s'hagi seleccionat per parametre. El metode
+     * crida a la classe codificador i mostra per pantalla el progres.
+     * @param fps
+     * @param gop
+     * @param ntiles
+     * @param seek
+     * @param quality 
      */
     public void encode(int fps, int gop, int ntiles, int seek, int quality) {
         this.reprodueixZip(fps, "");
@@ -189,6 +197,13 @@ public class Controlador {
         System.out.println("La tarea ha costado "+ ( time_end - time_start ) +" milisegundos");
     }
     
+    /**
+     * Metode que realitza el decoding en cas que s'hagi seleccionat per parametre. El metode crida
+     * a la classe decodificador i mostra per pantalla el progres.
+     * @param fps
+     * @param gop
+     * @param ntiles 
+     */
     public void decode(int fps, int gop, int ntiles) {
         this.reprodueixZipDecoder(fps, "");
         long time_start, time_end;
@@ -200,6 +215,12 @@ public class Controlador {
         System.out.println("La tarea ha costado "+ ( time_end - time_start ) +" milisegundos");
     }
 
+    /**
+     * Metode que reprodueix el zip un cop codificat i decodifcat. El metode crida a la
+     * classe TimerEx, que crea un reproductor per mostrar les imatges.
+     * @param frames
+     * @param filtre 
+     */
     public void reprodueixZipDecoder(int frames, String filtre) {
         TimerEx tim = new TimerEx();
         int ms = 1000;
