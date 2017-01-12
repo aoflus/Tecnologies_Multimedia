@@ -7,24 +7,13 @@ package Model;
 
 import Model.GestioImatge.Marc;
 import Model.GestioImatge.Tesseles;
-import static Model.JPEGCompress.compressInJPEG;
-import Vista.Viewer;
 import java.awt.Color;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipOutputStream;
 import javax.imageio.ImageIO;
 
 /**
@@ -90,11 +79,17 @@ public class Codificador {
         }
     }
 
+    /**
+     * El metode recorreGOP selecciona per cada un dels marcs generats a partir de les group
+     * of pictures (GOP) les tesseles de les imatges que configuran la llista que son compatibles 
+     * amb el marc, crea un marc nou amb la mitja de color obtingut entre les tesseles compatibles, i 
+     * guarda les imatges resultades un cop aplicat el marc en la llista comprimides.
+     */
     private void recorreGOP() {
         //System.out.println("recorreGOP");
         int x = 0;
-        Marc n = null;
-        Marc n_1 = null;
+        Marc n;
+        Marc n_1;
         for (int p = 0; p < listaListasGOP.size(); p++) {
             for (int z = 0; z < listaListasGOP.get(p).size() - 1; z++) {
                 n = (Marc) listaListasGOP.get(p).get(z);
@@ -119,6 +114,12 @@ public class Codificador {
 
     }
 
+    /**
+     * El metode subdividirImgTesseles, a partir de una imatge passada per parametre, divideix
+     * aquesta en tesseles, i les guarda en una arraylist que envia com a retorn de la funcio.
+     * @param image
+     * @return 
+     */
     public ArrayList<Tesseles> subdividirImgTesseles(BufferedImage image) {
         ArrayList<Tesseles> teseles = new ArrayList<>();
         Tesseles tesela;
