@@ -32,7 +32,7 @@ public class Settings {
     public String binarization;
     
     @Parameter(names = "--negative", description = "negative filter", required = false)
-    private boolean negative = true;
+    private boolean negative = false;
     
     @Parameter(names = "--averaging", description = "averaging  filter", required = false)
     private String averaging;
