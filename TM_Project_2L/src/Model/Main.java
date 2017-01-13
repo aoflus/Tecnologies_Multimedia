@@ -50,9 +50,6 @@ public class Main {
         //Creem un settings i el jcommander.
         settings = new Settings();
         new JCommander(settings, args); // simple one-liner
-       
-
-
         String rutaZip = settings.getInput(); 
         encode = settings.getEncode();
         decode = settings.getDecode();
@@ -74,6 +71,7 @@ public class Main {
             controlador.obreZip(rutaZip);
         }
         //Codificamos
+        filtresToApply(controlador);
         if(encode){
             int gop;
             if (settings.getGOP()!=null){
@@ -97,39 +95,8 @@ public class Main {
         if(decode){
             controlador.decode(fps, q, nTiles);
         }
-        
-        
-
-        
-//        /**
-//         * Filtros a parte de los del encode
-//         */
-//        String binarization = settings.getBinarization(); //Recogemos de las settings el parametro ya procesado con su respectivo getter
-//        if(binarization != null){
-//            //System.out.println("Fa la binaritzacio");
-//            //Se comprueba que el parametro no sea null, en el caso que sea null querrá decir que no se ha puesto como argumento, es decir, la funcionalidad
-//            //no la tendremos que hacer, por tanto si está, llamaremos a la funcion que ejecute lo que el parametro especifica en el documento TM_ProjectePractiques
-//            int thresh = Integer.valueOf(binarization);
-//            controlador.binaritzantImatge(thresh);
-//            controlador.reprodueixZip(fps,"bin");
-//        }
-//        
-//        //Si hi ha el parametre negatiu ho fem
-//        if (settings.getNegative()){
-//            //System.out.println("Fa el negatiu");
-//            controlador.inverteixNegatiuImatge();
-//            controlador.reprodueixZip(fps,"neg");
-//        }
-//        
-//        //Si hi ha el parametre average ho fem:
-//        String aver = settings.getAveraging();
-//        if (aver != null){
-//            int averNumb = Integer.valueOf(settings.getAveraging());
-//            controlador.averagingFilterImatge(averNumb);
-//            controlador.reprodueixZip(fps,"ave");
-//        }
-//
    }
+    
     /**
      * Si realizamos encode, tenemos que preguntar antes si hay que aplicar algun filtro.
      */
