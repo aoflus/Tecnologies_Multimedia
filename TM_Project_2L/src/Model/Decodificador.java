@@ -36,7 +36,6 @@ import java.util.HashMap;
  * @author Victor Fernandez - Alvaro Ortega
  */
 public class Decodificador {
-
     public ArrayList<Integer> ids;
     public ArrayList<Integer> xCoords;
     public ArrayList<Integer> yCoords;
@@ -72,7 +71,7 @@ public class Decodificador {
      * Constructor de la clase decode, que inicializa los metodos internos, y
      * selecciona el fichero de descompresion.
      */
-    public void decode() {
+    public ArrayList<BufferedImage> decode() {
         this.readZip();
         this.iterateImages();
         new File("src/decompressed/").mkdirs();
@@ -85,8 +84,9 @@ public class Decodificador {
             }
             comptador++;
         }
+        return this.imatges;
     }
-
+    
     /**
      * El metodo readZip permite leer un archivo zip codificado y descodificarlo
      * a la vez que descomprime el zip. Cuando se descomprime uno de los
@@ -126,7 +126,6 @@ public class Decodificador {
      * Metodo que reconstruye las imagenes.
      */
     private void iterateImages() {
-        
         this.tileWidth = this.imatges.get(0).getWidth() / nTiles;
         this.tileHeight = this.imatges.get(0).getHeight() / nTiles;
         BufferedImage iframe = null;
@@ -140,12 +139,7 @@ public class Decodificador {
             } else {
                 this.buildPFrames(iframe, frame);
             }
-//            if(x==0){
-//                newRepro.setVisible(true);
-//                newRepro.mostraImatgeAlFrame(this.imatges.get(x));
-//            }else{
-//                this.reprodueixZip(this.imatges.get(x));
-//            }
+            
         }
     }
 

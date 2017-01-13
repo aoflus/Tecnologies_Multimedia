@@ -91,7 +91,7 @@ public class Main {
             System.out.println("Parametros: " + " GOP: " + gop + " nTiles: " + nTiles + " quality: " + q+ " seekRange: " + seek);
             controlador.encode(fps, gop, nTiles, seek,q);
         }
-        
+
         if(decode){
             controlador.decode(fps, q, nTiles);
         }

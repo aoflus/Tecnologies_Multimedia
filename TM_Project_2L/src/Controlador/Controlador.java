@@ -89,22 +89,27 @@ public class Controlador {
      * @param frames
      * @param filtre 
      */
-    public void reprodueixZip(int frames,String filtre){
-        HashMap<Integer, Image> aux = null;
+    public void reprodueixZip(int frames,String filtre, ArrayList<BufferedImage> llista){
         int ms = 1000;
         int calculat = (int) Math.round(ms/frames);
-        if(filtre == AVE){
-            aux = bufferWithUnzippedImgAveraged;
-        }else if(filtre == NEG){
-            aux = bufferWithUnzippedImgNegative;
-        }else if (filtre == BIN){
-            aux = bufferWithUnzippedImgBinarized;
+        if(llista == null){
+            HashMap<Integer, Image> aux = null;
+            if(filtre == AVE){
+                aux = bufferWithUnzippedImgAveraged;
+            }else if(filtre == NEG){
+                aux = bufferWithUnzippedImgNegative;
+            }else if (filtre == BIN){
+                aux = bufferWithUnzippedImgBinarized;
+            }else{
+                aux = bufferWithUnzippedImg;
+            }
+
+            TimerEx tim = new TimerEx();
+            tim.TimerExMain(aux,calculat,llista);
         }else{
-            aux = bufferWithUnzippedImg;
+            TimerEx tim = new TimerEx();
+            tim.TimerExMain(null,calculat,llista);
         }
-        
-        TimerEx tim = new TimerEx();
-        tim.TimerExMain(aux,calculat);
         
     }
     
@@ -150,7 +155,7 @@ public class Controlador {
      * @param quality 
      */
     public void encode(int fps, int gop, int ntiles, int seek, int quality) {
-        this.reprodueixZip(fps, "");
+        this.reprodueixZip(fps, "", null);
         long time_start, time_end;
         time_start = System.currentTimeMillis();
         System.out.println("Entramos en encode y comenzamos a medir el tiempo.");
@@ -186,7 +191,8 @@ public class Controlador {
         time_start = System.currentTimeMillis();
         System.out.println("Entramos en decode y comenzamos a medir el tiempo.");
         Decodificador decode = new Decodificador(fps,gop,ntiles,output);
-        decode.decode();
+        ArrayList<BufferedImage> listacod = decode.decode();
+        this.reprodueixZip(fps, "", listacod);
         time_end = System.currentTimeMillis();
         System.out.println("La tarea ha costado "+ ( time_end - time_start ) +" milisegundos");
     }

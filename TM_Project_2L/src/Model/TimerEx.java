@@ -7,6 +7,7 @@ package Model;
 
 import Vista.Reproductor;
 import java.awt.Image;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Timer;
@@ -29,14 +30,19 @@ public class TimerEx {
      * @param hashImatgesParam
      * @param ms 
      */
-    public void TimerExMain(HashMap<Integer, Image> hashImatgesParam, int ms){
-        int limit = hashImatgesParam.size();
-        ArrayList<Image> llistaImatgesParam = new ArrayList<Image>();
-        for (int x=0 ; x<limit; x++){
-            llistaImatgesParam.add(hashImatgesParam.get(x));
-        }
+    public void TimerExMain(HashMap<Integer, Image> hashImatgesParam, int ms, ArrayList<BufferedImage> llista){
+        if(hashImatgesParam != null){
+            int limit = hashImatgesParam.size();
+            ArrayList<Image> llistaImatgesParam = new ArrayList<Image>();
+            for (int x=0 ; x<limit; x++){
+                llistaImatgesParam.add(hashImatgesParam.get(x));
+            }
+        
         this.tamanyLlista = llistaImatgesParam.size();
         this.llistaImatges = llistaImatgesParam;
+        }else{
+            this.tamanyLlista = llista.size();
+        }
         Timer timer;
         timer = new Timer();
 
@@ -62,6 +68,26 @@ public class TimerEx {
                         timer.purge();
                     }
                     x++;
+                }else{
+                    if(x == -1){
+                        //view = new Viewer();
+                        reprod = new Reproductor();
+                        reprod.setVisible(true);
+                        reprod.passaParams(timer,task);
+                        reprod.mostraImatgeAlFrame(llista.get(0));
+                        x++;
+                    }else if (x < tamanyLlista){
+                        //System.out.println("Actualitza: " + x);
+                        reprod.mostraImatgeAlFrame(llista.get(x));
+                    } else {
+                        //System.out.println("finish");
+                        reprod.dispose();
+                        timer.cancel();
+                        timer.purge();
+                    }
+                    x++;
+                
+                
                 }
             }
             };
