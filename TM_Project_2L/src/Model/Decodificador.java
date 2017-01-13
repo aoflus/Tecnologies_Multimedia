@@ -79,7 +79,7 @@ public class Decodificador {
         int comptador = 0;
         for (BufferedImage i : this.imatges) {
             try {
-                compressInJPEG(Filtres.average1(i, 7), "src/decompressed/", String.valueOf(comptador) + ".jpeg");
+                compressInJPEG(Filtres.average1(i, 3), "src/decompressed/", String.valueOf(comptador) + ".jpeg");
             } catch (IOException ex) {
                 Logger.getLogger(Decodificador.class.getName()).log(Level.SEVERE, null, ex);
             }

@@ -43,17 +43,9 @@ public class Codificador {
         this.seek = seek;
         this.quality = quality;
         this.unzippedImg = bufferWithUnzippedImg;
-        this.aplicaFiltres();
         this.ompleGOP();
         this.recorreGOP();
         
-    }
-
-    /**
-     * Metodo que aplica los filtros seleccionados por el user.
-     */
-    private void aplicaFiltres() {
-        System.out.println("Aplicamos filtros seleccionados por el usuario. No implementado."); //To change body of generated methods, choose Tools | Templates.
     }
 
     /**
@@ -286,8 +278,7 @@ public class Codificador {
         for (ArrayList<Marc> p : listaListasGOP) {
             p.forEach((f) -> {
                 try {
-                    JPEGCompress.compressInJPEG(f.getImage(), "src/resources/Compressed/",  "frame" +String.format("%03d", f.getId()));
-                    //ImageIO.write(f.getImage(), "jpeg", new File("src/resources/Compressed/frame" + String.format("%03d", f.getId()) + ".jpeg"));
+                    JPEGCompress.compressInJPEG(f.getImage(), "src/resources/Compressed/",  "marc" +String.format("%02d", f.getId()) + ".jpeg");
                 } catch (IOException ex) {
                     System.err.println("Excepcion IO detectada" + ex);
                 }
