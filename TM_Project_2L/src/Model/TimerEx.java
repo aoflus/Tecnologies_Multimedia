@@ -94,7 +94,7 @@ public class TimerEx {
             // Empezamos dentro de 10ms y luego lanzamos la tarea cada 1000ms
         if(x < this.tamanyLlista){
             //System.out.println("ms:" + ms);
-            timer.schedule(task, 10, ms);
+            timer.schedule(task, 1, (int) ms/4);
         }else{
             timer.cancel();
             timer.purge();
