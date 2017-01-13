@@ -10,7 +10,6 @@ import Model.Utils;
 import Model.Filtres;
 import static Model.JPEGCompress.compressInJPEG;
 import Model.TimerEx;
-import Vista.Viewer;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -29,12 +28,15 @@ public class Controlador {
     public static final String NEG = "neg";
     public static final String BIN = "bin";
     public int comptador = 0;
+    public String output;
     public HashMap<Integer, Image> bufferWithUnzippedImg = null;
     public HashMap<Integer, Image> bufferWithUnzippedImgNegative = new HashMap<Integer, Image>(); //Guardarem les sortides
     public HashMap<Integer, Image> bufferWithUnzippedImgBinarized = new HashMap<Integer, Image>();
     public HashMap<Integer, Image> bufferWithUnzippedImgAveraged = new HashMap<Integer, Image>();
     public HashMap<Integer, Image> unzippedImg = new HashMap<Integer, Image>();
-    public Controlador(){}
+    public Controlador(String output){
+        this.output=output;
+    }
     /**
      * Obre zip, crida al utils per a parsejar les imatges.
      */
@@ -103,25 +105,9 @@ public class Controlador {
         
         TimerEx tim = new TimerEx();
         tim.TimerExMain(aux,calculat);
+        
     }
     
-    
-    /**
-     * Obre una imatge qualsevol en un Jframe.
-     */
-    public static void obreJFrameAmbImatge() {
-        String rutaImatge=Utils.escanejaLinia();
-        newViewerPassantRutaParametre(" ");
-    }
-    
-    /**
-     * Crea una instancia del JFrame per una imatge.
-     * @param ruta String amb la ruta per obrir el fitxer en questió.
-     * @throws Exception 
-     */
-    public static void newViewerPassantRutaParametre(String ruta) {
-        Viewer viewer = new Viewer();
-    }
     
     
     /**
@@ -152,29 +138,6 @@ public class Controlador {
 //        Viewer view = new Viewer();
 //        view.mostraImatgeParam(prova,AVE);
     }
-    /** 
-     * Funció que realitza la sortida del programa, crea un directori amb nom fix prova i parseja totes les imatges a JPEG a dins de prova.
-     * 
-     * @param output 
-     */
-    public void sortidaPrograma(String output) {
-        String name = "prova";
-        try {
-            File theDir = new File(name);
-            theDir.mkdir();
-            boolean success=true;
-            if (!success) {
-                System.out.println("No s'ha pogut crear el directori");
-            }
-            String[] parts = output.split("\\.");
-            for(int x = 0 ; x<bufferWithUnzippedImg.size();x++){
-                String outputINom = parts[0] + x + "." +parts[1];
-                compressInJPEG((BufferedImage) bufferWithUnzippedImg.get(x),name,outputINom);
-            }
-        } catch (IOException ex) {
-            Logger.getLogger(Controlador.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
     
     
     /**
@@ -188,14 +151,28 @@ public class Controlador {
      */
     public void encode(int fps, int gop, int ntiles, int seek, int quality) {
         this.reprodueixZip(fps, "");
-        
         long time_start, time_end;
         time_start = System.currentTimeMillis();
         System.out.println("Entramos en encode y comenzamos a medir el tiempo.");
-        Codificador encode = new Codificador(bufferWithUnzippedImg, gop, ntiles, seek, quality);
+        Codificador encode = new Codificador(bufferWithUnzippedImg, gop, ntiles, seek, quality, output);
         time_end = System.currentTimeMillis();
         System.out.println("La tarea ha costado "+ ( time_end - time_start ) +" milisegundos");
+        this.setCompressSize();
     }
+    /**
+     * Imprimimos por pantalla los datos de tamaño de los archivos
+     * 
+     */
+    public void setCompressSize() {
+        File jpegFile = new File("material/Cubo.zip");
+        File outptFile = new File("src/resources/"+this.output);
+        System.out.println("Zip inicial:  " + jpegFile.length() + " Comprimido: " + outptFile.length());
+        System.out.println("El ratio de compresion es el siguiente: " + ((float)jpegFile.length()/(float)outptFile.length()));
+        System.out.println("-------------------Falta poner algun ratio de calidad!----------------------");
+        
+    }
+    
+    
     
     /**
      * Metode que realitza el decoding en cas que s'hagi seleccionat per parametre. El metode crida
@@ -205,27 +182,13 @@ public class Controlador {
      * @param ntiles 
      */
     public void decode(int fps, int gop, int ntiles) {
-        this.reprodueixZipDecoder(fps, "");
         long time_start, time_end;
         time_start = System.currentTimeMillis();
-        System.out.println("Entramos en encode y comenzamos a medir el tiempo.");
-        Decodificador decode = new Decodificador(gop,ntiles);
+        System.out.println("Entramos en decode y comenzamos a medir el tiempo.");
+        Decodificador decode = new Decodificador(fps,gop,ntiles,output);
         decode.decode();
         time_end = System.currentTimeMillis();
         System.out.println("La tarea ha costado "+ ( time_end - time_start ) +" milisegundos");
-    }
-
-    /**
-     * Metode que reprodueix el zip un cop codificat i decodifcat. El metode crida a la
-     * classe TimerEx, que crea un reproductor per mostrar les imatges.
-     * @param frames
-     * @param filtre 
-     */
-    public void reprodueixZipDecoder(int frames, String filtre) {
-        TimerEx tim = new TimerEx();
-        int ms = 1000;
-        int calculat = (int) Math.round(ms/frames);
-        tim.TimerExMain(null,calculat);
     }
     
     

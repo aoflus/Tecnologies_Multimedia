@@ -136,12 +136,14 @@ public class Utils {
         try {
             //get the zip file content
             ZipInputStream zis = new ZipInputStream(new FileInputStream(zipFile));
+            
             //get the zipped file list entry
             ZipEntry ze = zis.getNextEntry();
             compressSize = (int) ze.getSize();
 
             int pos;
             int cont = 0;
+            
             while (ze != null) {
                 //System.out.println("Por cada imagen imprime el nombre:" + ze.getName());
                 if(!compruebaExt(ze.getName())) {
@@ -339,19 +341,4 @@ public class Utils {
         }
     }
 
-    void setCompressSize(long length) {
-        descompressSize = (int) length;
-        System.out.println("Zip inicial: "  +  descompressSize);
-        System.out.println("Comprimido: "  + compressSize);
-        float rate =  (float)  descompressSize / (float) compressSize;
-        System.out.println("El ratio de compresion es el siguiente: " + rate);
-        System.out.println("-------------------Falta poner algun ratio de calidad!----------------------");
-        
-    }
-    
-    
-    
-    
-    
-    
 }

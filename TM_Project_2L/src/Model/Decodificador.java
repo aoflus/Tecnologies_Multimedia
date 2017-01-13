@@ -10,6 +10,9 @@ package Model;
  *
  * @author Victor i Alvaro
  */
+import static Controlador.Controlador.AVE;
+import static Controlador.Controlador.BIN;
+import static Controlador.Controlador.NEG;
 import Model.GestioImatge.Tesseles;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
@@ -24,6 +27,9 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import javax.imageio.ImageIO;
 import static Model.JPEGCompress.compressInJPEG;
+import Vista.Reproductor;
+import java.awt.Image;
+import java.util.HashMap;
 
 /**
  *
@@ -31,15 +37,17 @@ import static Model.JPEGCompress.compressInJPEG;
  */
 public class Decodificador {
 
-    private ArrayList<Integer> ids;
-    private ArrayList<Integer> xCoords;
-    private ArrayList<Integer> yCoords;
-    private ArrayList<BufferedImage> imatges;
-    private int gop;
-    private int tileWidth;
-    private int tileHeight;
-    private int nTiles;
-
+    public ArrayList<Integer> ids;
+    public ArrayList<Integer> xCoords;
+    public ArrayList<Integer> yCoords;
+    public ArrayList<BufferedImage> imatges;
+    public int gop;
+    public int tileWidth;
+    public int tileHeight;
+    public int nTiles;
+    public int fps;
+    Reproductor newRepro;
+    String output;
     /**
      * Clase decodificador, que a partir de una archivo comprimido codificado y
      * un documento con los parametros de codificacion, descomprime el archivo y
@@ -48,14 +56,16 @@ public class Decodificador {
      * @param gop
      * @param nTiles
      */
-    public Decodificador(int gop, int nTiles) {
+    public Decodificador(int fps ,int gop, int nTiles, String output) {
+        this.output = output;
+        this.fps = fps;
         this.gop = gop;
         this.nTiles = nTiles;
         this.ids = new ArrayList<>();
         this.xCoords = new ArrayList<>();
         this.yCoords = new ArrayList<>();
         this.imatges = new ArrayList<>();
-
+        this.newRepro = new Reproductor();
     }
 
     /**
@@ -69,7 +79,7 @@ public class Decodificador {
         int comptador = 0;
         for (BufferedImage i : this.imatges) {
             try {
-                compressInJPEG(i, "src/decompressed/", String.valueOf(comptador) + ".jpeg");
+                compressInJPEG(Filtres.average1(i, 7), "src/decompressed/", String.valueOf(comptador) + ".jpeg");
             } catch (IOException ex) {
                 Logger.getLogger(Decodificador.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -85,7 +95,7 @@ public class Decodificador {
      */
     public void readZip() {
         try {
-            File f = new File("src/resources/Compressed.zip");
+            File f = new File("src/resources/"+output);
             ZipFile z = new ZipFile(f);
             Enumeration<? extends ZipEntry> entries = z.entries();
 
@@ -116,6 +126,7 @@ public class Decodificador {
      * Metodo que reconstruye las imagenes.
      */
     private void iterateImages() {
+        
         this.tileWidth = this.imatges.get(0).getWidth() / nTiles;
         this.tileHeight = this.imatges.get(0).getHeight() / nTiles;
         BufferedImage iframe = null;
@@ -129,6 +140,12 @@ public class Decodificador {
             } else {
                 this.buildPFrames(iframe, frame);
             }
+//            if(x==0){
+//                newRepro.setVisible(true);
+//                newRepro.mostraImatgeAlFrame(this.imatges.get(x));
+//            }else{
+//                this.reprodueixZip(this.imatges.get(x));
+//            }
         }
     }
 
@@ -175,5 +192,9 @@ public class Decodificador {
         }
         return teseles;
     }
+    
 
+    public void reprodueixZip(BufferedImage imatge){
+        newRepro.setImatge(imatge);
+    }
 }

@@ -32,10 +32,12 @@ public class Codificador {
     ArrayList<Marc> comprimides = new ArrayList<Marc>();
     ArrayList<Tesseles> tesselesAcum = new ArrayList<>();
     Utils zipp;
-    public Codificador(HashMap<Integer, Image> bufferWithUnzippedImg, int gop, int ntiles, int seek, int quality) {
+    String output;
+    public Codificador(HashMap<Integer, Image> bufferWithUnzippedImg, int gop, int ntiles, int seek, int quality, String output) {
         this.zipp = new Utils();
         //System.out.println("Imagenes leidas");
         this.gop = gop;
+        this.output = output;
         //System.out.println("GOP: " + this.gop);
         this.ntiles = ntiles;
         this.seek = seek;
@@ -44,7 +46,7 @@ public class Codificador {
         this.aplicaFiltres();
         this.ompleGOP();
         this.recorreGOP();
-
+        
     }
 
     /**
@@ -280,10 +282,12 @@ public class Codificador {
      * La funcion guardarImagenes garda las imagenes una vez codificadas.
      */
     private void guardarImagenes() {
+        JPEGCompress jpegcomp = new JPEGCompress();
         for (ArrayList<Marc> p : listaListasGOP) {
             p.forEach((f) -> {
                 try {
-                    ImageIO.write(f.getImage(), "jpeg", new File("src/resources/Compressed/frame" + String.format("%03d", f.getId()) + ".jpeg"));
+                    JPEGCompress.compressInJPEG(f.getImage(), "src/resources/Compressed/",  "frame" +String.format("%03d", f.getId()));
+                    //ImageIO.write(f.getImage(), "jpeg", new File("src/resources/Compressed/frame" + String.format("%03d", f.getId()) + ".jpeg"));
                 } catch (IOException ex) {
                     System.err.println("Excepcion IO detectada" + ex);
                 }
@@ -301,10 +305,8 @@ public class Codificador {
         new File("src/resources/Compressed").mkdirs();
         this.zipp.crearTxTCoordenadas(this.tesselesAcum);
         this.guardarImagenes();
-        this.zipp.crearCarpetaZIP("src/resources/Compressed", "src/resources/Compressed.zip");
-        File outptFile = new File("src/resources/Compressed.zip");
-        this.zipp.setCompressSize(outptFile.length());
-
+        this.zipp.crearCarpetaZIP("src/resources/Compressed", "src/resources/"+this.output);
+        File outptFile = new File("src/resources/"+this.output);
         this.zipp.borrarDirectorio(new File("src/resources/Compressed"));
     }
 

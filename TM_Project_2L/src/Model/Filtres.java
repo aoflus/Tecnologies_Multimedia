@@ -93,45 +93,4 @@ public class Filtres {
         newPixel += blue;
         return newPixel;
     }
-    /**
-     * filtre de la mitja.
-     * @param image
-     * @param value
-     * @return 
-     */
-    public static BufferedImage average(BufferedImage image, int value){
-        BufferedImage avImage = new BufferedImage(image.getWidth(), image.getHeight(), image.getType());
-        
-        // Creem 3 "matriux" valor x valor per crear les mascares de convolució.
-        int[] avr = new int[value * value];
-        int[] avg = new int[value * value];
-        int[] avb = new int[value * value];
-        int iter = 0;
-        
- 
-         for (int i=1; i<image.getWidth()-1; i++){
-            for (int j=1; j<image.getHeight()-1; j++)  {
-                for (int ki = 0; ki<3; ki++){
-                    for(int kj = 0; kj<3; kj++){
-                        Color col = new Color(image.getRGB(i+ki-1, j+kj-1));
-                        avr[iter] = col.getRed();
-                        avg[iter] = col.getGreen();
-                        avb[iter] = col.getBlue();
-                        iter++;
-                    }
-                }
-                
-                // amb els value x value espais de la matriu plens, ordenem la array i agafem el valor central.
-                iter = 0;
-                Arrays.sort(avr);
-                Arrays.sort(avg);
-                Arrays.sort(avb);
-                Color avColor = new Color(avr[(value*value)/2], avg[(value*value)/2], avb[(value*value)/2]);
-                avImage.setRGB(i+1, j+1, avColor.getRGB());
-            }
-        }
-                
-        return avImage;
-    }
-    
 }

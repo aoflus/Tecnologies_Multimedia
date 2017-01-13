@@ -42,7 +42,7 @@ public class JPEGCompress {
         File compressedImageFile = new File(name + "/" + outputIName);
         //InputStream inputStream = new FileInputStream(imageFile);
         OutputStream outputStream = new FileOutputStream(compressedImageFile);
-        float imageQuality = 0.3f;
+        float imageQuality = 1.0f;
         BufferedImage bufferedImage = image;
         //Get image writers
         Iterator<ImageWriter> imageWriters = ImageIO.getImageWritersByFormatName("jpg");

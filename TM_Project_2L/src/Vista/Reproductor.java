@@ -8,11 +8,15 @@ package Vista;
 import java.awt.BorderLayout;
 import java.awt.Graphics;
 import java.awt.Image;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.util.Timer;
 import java.util.TimerTask;
 import javax.swing.ImageIcon;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.SwingUtilities;
 
 /**
  *  JFrame reproductor per defecte.
@@ -158,6 +162,14 @@ public class Reproductor extends javax.swing.JFrame {
         this.timer = timer;
         this.task = task;
     }
+    BufferedImage imatge;
+    int estado = 0;
 
-    
+    public void setImatge(BufferedImage imatge) {
+        JLabel picSecond = new JLabel(new ImageIcon(imatge));//<--Fact is I dont want to create another JLabel, I want to modify the pic location content in JLabel pic.
+        this.jLabel1.add(picSecond);
+        this.jLabel1.updateUI();
+        this.imatge = imatge;
+        this.estado = 1;
+    }
 }

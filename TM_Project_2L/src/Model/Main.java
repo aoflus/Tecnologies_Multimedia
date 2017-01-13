@@ -1,7 +1,6 @@
 package Model;
 
 import Controlador.Controlador;
-import Vista.Viewer;
 import com.beust.jcommander.JCommander;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -52,7 +51,7 @@ public class Main {
         settings = new Settings();
         new JCommander(settings, args); // simple one-liner
        
-        Controlador controlador = new Controlador(); //Instanciamos el controlador
+
 
         String rutaZip = settings.getInput(); 
         encode = settings.getEncode();
@@ -62,6 +61,7 @@ public class Main {
         String ntiles = settings.getnTiles();
         String seekRange=settings.getSeekRange();
         String quality = settings.getQuality();
+        Controlador controlador = new Controlador(output); //Instanciamos el controlador
         int fps, seek = 10, q = 2, nTiles=10;
         //Asignamos fps
         if (frames != null && !encode){
@@ -98,12 +98,6 @@ public class Main {
             controlador.decode(fps, q, nTiles);
         }
         
-        
-        //Sortida del arxiu
-        if(output!=null){
-            //System.out.println("Guarda la sequencia de sortida: "+output);
-            controlador.sortidaPrograma(output);
-        }
         
 
         

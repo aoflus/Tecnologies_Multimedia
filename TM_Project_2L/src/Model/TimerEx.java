@@ -6,15 +6,11 @@
 package Model;
 
 import Vista.Reproductor;
-import Vista.Viewer;
 import java.awt.Image;
-import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Classe timer, l'utilitzem per a controlar el fluxe de reproduccio de les imatges
@@ -24,7 +20,6 @@ import java.util.logging.Logger;
 
 public class TimerEx {
     ArrayList<Image> llistaImatges = new ArrayList<Image>();
-    Viewer view;
     int tamanyLlista;
     int x = -1;
     Reproductor reprod;
