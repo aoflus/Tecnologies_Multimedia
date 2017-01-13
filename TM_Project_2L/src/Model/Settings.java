@@ -50,7 +50,7 @@ public class Settings {
     private String quality;
     
     @Parameter(names = { "-b", "--batch" }, description = "--batch filter ", required = false)
-    private String batch;
+    private boolean batch = false;
 
     public String getInput() {
         return input;
@@ -148,11 +148,11 @@ public class Settings {
         this.quality = quality;
     }
 
-    public String getBatch() {
+    public boolean getBatch() {
         return batch;
     }
 
-    public void setBatch(String batch) {
+    public void setBatch(boolean batch) {
         this.batch = batch;
     }
 

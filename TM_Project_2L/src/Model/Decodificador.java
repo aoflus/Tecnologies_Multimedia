@@ -47,6 +47,7 @@ public class Decodificador {
     public int fps;
     Reproductor newRepro;
     String output;
+    public boolean batch = false;
     /**
      * Clase decodificador, que a partir de una archivo comprimido codificado y
      * un documento con los parametros de codificacion, descomprime el archivo y
@@ -56,6 +57,7 @@ public class Decodificador {
      * @param nTiles
      */
     public Decodificador(int fps ,int gop, int nTiles, String output) {
+        this.batch = batch;
         this.output = output;
         this.fps = fps;
         this.gop = gop;

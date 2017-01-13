@@ -60,7 +60,6 @@ public class Codificador {
                 //Si gop es 5, entra en el if en el 0, en el 5, en el 10...
                 if (!listaGOP.isEmpty()) {
                     if (x + 1 >= unzippedImg.size()) {
-
                         this.listaGOP.add(new Marc((BufferedImage) unzippedImg.get(x), x));
                     };
                     zipp.saveZip(listaGOP, "nouZip.zip");

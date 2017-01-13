@@ -34,8 +34,10 @@ public class Controlador {
     public HashMap<Integer, Image> bufferWithUnzippedImgBinarized = new HashMap<Integer, Image>();
     public HashMap<Integer, Image> bufferWithUnzippedImgAveraged = new HashMap<Integer, Image>();
     public HashMap<Integer, Image> unzippedImg = new HashMap<Integer, Image>();
-    public Controlador(String output){
+    public boolean batch = false;
+    public Controlador(String output,boolean batch){
         this.output=output;
+        this.batch = batch;
     }
     /**
      * Obre zip, crida al utils per a parsejar les imatges.
@@ -155,7 +157,7 @@ public class Controlador {
      * @param quality 
      */
     public void encode(int fps, int gop, int ntiles, int seek, int quality) {
-        this.reprodueixZip(fps, "", null);
+        if(!batch){this.reprodueixZip(fps, "", null);}
         long time_start, time_end;
         time_start = System.currentTimeMillis();
         System.out.println("Entramos en encode y comenzamos a medir el tiempo.");
@@ -173,7 +175,6 @@ public class Controlador {
         File outptFile = new File("src/resources/"+this.output);
         System.out.println("Zip inicial:  " + jpegFile.length() + " Comprimido: " + outptFile.length());
         System.out.println("El ratio de compresion es el siguiente: " + ((float)jpegFile.length()/(float)outptFile.length()));
-        System.out.println("-------------------Falta poner algun ratio de calidad!----------------------");
         
     }
     
@@ -192,7 +193,8 @@ public class Controlador {
         System.out.println("Entramos en decode y comenzamos a medir el tiempo.");
         Decodificador decode = new Decodificador(fps,gop,ntiles,output);
         ArrayList<BufferedImage> listacod = decode.decode();
-        this.reprodueixZip(fps, "", listacod);
+        if (!batch){
+        this.reprodueixZip(fps, "", listacod);}
         time_end = System.currentTimeMillis();
         System.out.println("La tarea ha costado "+ ( time_end - time_start ) +" milisegundos");
     }

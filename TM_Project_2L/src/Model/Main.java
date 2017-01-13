@@ -46,19 +46,27 @@ public class Main {
     public static Settings settings;
     public static boolean encode;
     public static boolean decode;
+    public static boolean batch;
+    public static String output;
+    public static String frames;
+    public static String seekRange;
+    public static String ntiles;
+    public static String quality;
+    public static String rutaZip;
     public static void main(String[] args) {
         //Creem un settings i el jcommander.
         settings = new Settings();
         new JCommander(settings, args); // simple one-liner
-        String rutaZip = settings.getInput(); 
+        rutaZip = settings.getInput(); 
         encode = settings.getEncode();
         decode = settings.getDecode();
-        String output = settings.getOutput();
-        String frames = settings.getFps();
-        String ntiles = settings.getnTiles();
-        String seekRange=settings.getSeekRange();
-        String quality = settings.getQuality();
-        Controlador controlador = new Controlador(output); //Instanciamos el controlador
+        output = settings.getOutput();
+        frames = settings.getFps();
+        ntiles = settings.getnTiles();
+        seekRange=settings.getSeekRange();
+        quality = settings.getQuality();
+        batch = settings.getBatch();
+        Controlador controlador = new Controlador(output, batch); //Instanciamos el controlador
         int fps, seek = 10, q = 2, nTiles=10;
         //Asignamos fps
         if (frames != null && !encode){
